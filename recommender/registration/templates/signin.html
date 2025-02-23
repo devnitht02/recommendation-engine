@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <br><br>
+    {% if messages %}
+        {% for message in messages %}
+            <p class="error text-red-500">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="/signin/" class="max-w-sm mx-auto bg-white p-6 shadow-md rounded-lg border"
+          style="background-color: white;">
+        {% csrf_token %}
+        <div class="mb-5">
+            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Your email</label>
+            <input type="email" name="email" id="email"
+                   class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg
+                  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required/>
+        </div>
+        <div class="mb-5">
+            <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Your password</label>
+            <input type="password" name="password" id="password"
+                   class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg
+                  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                   required/>
+        </div>
+        <div class="flex items-start mb-5">
+            <div class="flex items-center h-5">
+                <input id="remember" type="checkbox" value=""
+                       class="w-4 h-4 border border-gray-300 rounded-sm bg-white focus:ring-3 focus:ring-blue-300"
+                       required/>
+            </div>
+            <label for="remember" class="ms-2 text-sm font-medium text-gray-900">Remember me</label>
+        </div>
+        <button type="submit" class="custom-button">Signin</button>
+
+    </form>
+
+
+
+
+{% endblock %}
