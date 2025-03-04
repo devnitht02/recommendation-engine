@@ -42,5 +42,21 @@ main {
     color: #a1a1a1;
     cursor: not-allowed;
 }
+/*update btn*/
+
+.update-profile-btn {
+    background-color: #CB6040;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.update-profile-btn:hover {
+    background-color: #B35235;
+}
 
 

@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dashboard',
-    'registration',
+    'users',
+    'institutions',
+
 ]
 
 MIDDLEWARE = [
@@ -78,8 +80,8 @@ WSGI_APPLICATION = 'recommender.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'recommendation_engine',
-        'PORT': '3307',
+        'NAME': 'st_recommendation',
+        'PORT': '3306',
         'HOST': '127.0.0.1',
         'USER': 'root',
         'PASSWORD': '',

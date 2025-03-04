@@ -6,6 +6,9 @@ urlpatterns = [
 
     path('', include(('dashboard.urls', 'dashboard'), namespace='dashboard')),
 
-    path('', include(('registration.urls', 'registration'), namespace='registration')),
+    path('', include(('users.urls', 'users'), namespace='users')),
+
+    path('', include(('institutions.urls', 'institutions'), namespace='institutions')),
+
 
 ]

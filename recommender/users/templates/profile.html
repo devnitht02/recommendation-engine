@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css_cdn %}
+{#    <link rel="stylesheet" href="{% static 'profile.css' %}">#}
+{% endblock css_cdn %}
+
+{% block content %}
+    <div class="max-w-4xl mx-auto bg-white p-8 shadow-md rounded-lg border mt-10">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">My Profile</h2>
+
+        <!-- Display profile picture -->
+        <div class="flex items-center space-x-4 mb-6">
+            {% if profile.profile_picture %}
+                <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="w-24 h-24 rounded-full border">
+            {% else %}
+                <div class="w-24 h-24 rounded-full border flex items-center justify-center bg-gray-100">
+                    <span class="text-gray-500">No Image</span>
+                </div>
+            {% endif %}
+            <div>
+                <h3 class="text-xl font-medium text-gray-900">{{ profile.user_name }}</h3>
+                <p class="text-gray-600">{{ email }}</p>
+            </div>
+        </div>
+
+        <!-- Success Message -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="bg-green-100 text-green-700 p-3 rounded-md mb-4">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Profile Update Form -->
+        <form method="POST" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Full Name</label>
+                <input type="text" name="user_name" value="{{ profile.user_name }}" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" name="email" value="{{ profile.email }}" readonly class="w-full p-2 border border-gray-300 rounded-md bg-gray-100">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Phone Number</label>
+                <input type="text" name="phone_number" value="{{ profile.phone_number|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Country</label>
+                <input type="text" name="country" value="{{ profile.country|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Address</label>
+                <textarea name="address" class="w-full p-2 border border-gray-300 rounded-md">{{ profile.address|default_if_none:'' }}</textarea>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Date of Birth</label>
+                <input type="date" name="date_of_birth" value="{{ profile.date_of_birth|date:'Y-m-d' }}" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Gender</label>
+                <select name="user_gender" class="w-full p-2 border border-gray-300 rounded-md">
+                    <option value="" {% if not profile.user_gender %}selected{% endif %}>Select</option>
+                    <option value="male" {% if profile.user_gender == "male" %}selected{% endif %}>Male</option>
+                    <option value="female" {% if profile.user_gender == "female" %}selected{% endif %}>Female</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Stream</label>
+                <input type="text" name="stream" value="{{ profile.stream|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Total Percentage</label>
+                <input type="text" name="hsc_percentage" value="{{ profile.hsc_percentage|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">School Passing Year</label>
+                <input type="text" name="school_passed_out_year" value="{{ profile.school_passed_out_year|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Institution Type</label>
+                <input type="text" name="studied_institution_type" value="{{ profile.studied_institution_type|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Institution</label>
+                <input type="text" name="institution" value="{{ profile.institution|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">State</label>
+                <input type="text" name="state" value="{{ profile.state|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">District</label>
+                <input type="text" name="district" value="{{ profile.district|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+
+            <button type="submit" style="background-color: #CB6040" class="w-full text-white bg-[#CB6040] hover:bg-[#B35235] focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                Update Profile
+            </button>
+        </form>
+    </div>
+{% endblock %}

@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
     {% load static %}
     <link href="{% static 'base.css' %}" rel="stylesheet">
+    {% block css_cdn %} {% endblock css_cdn %}
     <title>Dashboard</title>
 </head>
 <body>
@@ -32,21 +33,35 @@
             <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0"
                 style="background-color: #CB6040; border-color: #d1d5db;">
                 <li>
-                    <a href="" class="block py-2 px-3 rounded-sm md:bg-transparent md:p-0"
+                    <a href="{% url 'dashboard:dashboard' %}"
+                       class="block py-2 px-3 rounded-sm md:bg-transparent md:p-0"
                        style="color: #ffffff;">Home</a>
                 </li>
                 <li>
-                    <a href="#" class="block py-2 px-3 rounded-sm md:p-0" style="color: #ffffff;">About</a>
+                    <a href="{% url 'institutions:courses' %}" class="block py-2 px-3 rounded-sm md:p-0"
+                       style="color: #ffffff;">Courses</a>
+                </li>
+
+
+                <li>
+                    <a href="/institutions" class="block py-2 px-3 rounded-sm md:p-0" style="color: #ffffff;">Institutions</a>
+                </li>
+
+
+                <li>
+                    <a href="/users" class="block py-2 px-3 rounded-sm md:p-0" style="color: #ffffff;">Profile</a>
                 </li>
                 <li>
-                    <a href="#" class="block py-2 px-3 rounded-sm md:p-0" style="color: #ffffff;">Services</a>
-                </li>
+                    <a href="/signin" class="block py-2 px-3 rounded-sm md:p-0 text-white">
+                        Sign In
+                    </a></li>
                 <li>
-                    <a href="#" class="block py-2 px-3 rounded-sm md:p-0" style="color: #ffffff;">My Profile</a>
-                </li>
-                <li>
-                    <a href="/signup/" class="block py-2 px-3 rounded-sm md:p-0 text-white">
+                    <a href="/signup" class="block py-2 px-3 rounded-sm md:p-0 text-white">
                         Sign Up
+                    </a></li>
+                <li>
+                    <a href="/signout/" class="block py-2 px-3 rounded-sm md:p-0 text-white">
+                        Logout
                     </a></li>
             </ul>
         </div>
