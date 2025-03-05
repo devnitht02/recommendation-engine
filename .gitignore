@@ -1,0 +1,51 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+*.env
+
+# Virtual environment
+venv/
+env/
+*.egg-info/
+*.egg
+
+# IDE configurations
+.idea/
+.vscode/
+
+# Logs
+*.log
+logs/
+*.sqlite3
+
+# Django Migrations
+*/migrations/__pycache__/
+*/migrations/*.pyc
+
+# Media and static files
+staticfiles/
+media/
+
+# Cache files
+*.cache
+*.mo
+*.pot
+
+# Coverage reports
+.coverage
+*.cover
+
+# Database
+*.db
+db.sqlite3
+
+# Secrets
+*.pem
+*.key
+
+# Node modules (if any frontend work is present)
+node_modules/
