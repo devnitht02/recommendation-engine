@@ -79,6 +79,7 @@ class WnLocationChoice(models.Model):
 
 
 class WnCourse(models.Model):
+    course_name = models.CharField(max_length=255)
     course_description = models.TextField()
     stream = models.ForeignKey('WnStream', models.DO_NOTHING, db_column='stream')
     degree = models.ForeignKey('WnDegree', models.DO_NOTHING, db_column='degree')

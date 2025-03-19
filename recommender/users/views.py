@@ -109,3 +109,7 @@ def user(request):
         "name": request.session.get('user_name'),
         "email": request.session.get('user_email')
     })
+
+
+def profile(request):
+    return render(request, "profile.html")

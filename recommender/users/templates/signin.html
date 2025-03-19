@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block css_cdn %}
-{#    <link rel="stylesheet" href="{% static 'profile.css' %}">#}
+    <link rel="stylesheet" href="{% static 'css/../../static/src/register.css' %}">
 {% endblock css_cdn %}
 
 {% block content %}
@@ -15,7 +15,7 @@
     {% endif %}
 
     <form method="POST" action="/signin/" class="max-w-sm mx-auto bg-white p-6 shadow-md rounded-lg border"
-          style="background-color: white;">
+          style="background-color: white; margin-top: 60px">
         {% csrf_token %}
         <div class="mb-5">
             <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Your email</label>
@@ -38,7 +38,7 @@
             </div>
             <label for="remember" class="ms-2 text-sm font-medium text-gray-900">Remember me</label>
         </div>
-        <button type="submit" class="custom-button">Signin</button>
+        <button type="submit" class="custom-button" style="background-color: #5521b5">Signin</button>
 
     </form>
 
