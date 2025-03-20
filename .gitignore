@@ -8,7 +8,7 @@ __pycache__/
 *.env
 
 # Virtual environment
-venv/
+django_env/
 env/
 *.egg-info/
 *.egg
