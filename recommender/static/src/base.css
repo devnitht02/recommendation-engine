@@ -1,13 +1,11 @@
-/* General styles */
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     background-color: #f4f7fb;
     margin: 0;
     padding: 0;
-    position: relative; /* Ensures that any element with z-index in the body will follow stacking context */
+    position: relative;
 }
 
-/* Navbar styling */
 header {
     position: fixed;
     top: 0;
@@ -15,7 +13,6 @@ header {
     width: 100%;
     background-color: white;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 9999; /* Increase z-index to ensure it stays on top of other elements */
+    z-index: 9999;
     height: 60px;
 }
-
