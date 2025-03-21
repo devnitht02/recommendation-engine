@@ -30,35 +30,36 @@ class WnUser(models.Model):
         ('female', 'Female'),
     ]
 
+    ACTIVE_CHOICES = [
+        ('0', 'Inactive'),
+        ('1', 'Active'),
+    ]
+
     user_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True, blank=True, null=True)
     password = models.CharField(max_length=255, null=False, blank=False)
-    phone_number = models.CharField(max_length=20, blank=True, null=True)
-    country = models.CharField(max_length=100, blank=True, null=True)
-    address = models.TextField(blank=True, null=True)
-    date_of_birth = models.DateField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to="profile_pics/", blank=True, null=True)
-    user_gender = models.CharField(max_length=20, choices=GENDER_CHOICES, blank=True, null=True)
+
+    # New fields from database structure
+    profile_picture = models.CharField(max_length=255, blank=True, null=True)  # Image path stored as string
+    user_gender = models.CharField(max_length=20, choices=GENDER_CHOICES, blank=True)
 
     # Academic details
     stream = models.CharField(max_length=255, blank=True, null=True)
     hsc_percentage = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     school_passed_out_year = models.PositiveIntegerField(blank=True, null=True)
-    studied_institution_type = models.CharField(max_length=50, blank=True, null=True)
-    institution = models.CharField(max_length=255, blank=True, null=True)
+    studied_institution_type = models.IntegerField(blank=True, null=True)  # Assuming it's an int field in SQL
 
     # Location details
-    state = models.ForeignKey(WnState, models.DO_NOTHING, db_column='state')
-    district = models.ForeignKey(WnDistrict, models.DO_NOTHING, db_column='district')
+    state = models.ForeignKey('WnState', models.DO_NOTHING, db_column='state')
+    district = models.ForeignKey('WnDistrict', models.DO_NOTHING, db_column='district')
 
     # Metadata
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
-    active = models.CharField(max_length=1)
+    active = models.CharField(max_length=1, choices=ACTIVE_CHOICES, default='1')
 
     def __str__(self):
         return self.user_name
 
     class Meta:
         db_table = 'wn_user'
-

@@ -4,7 +4,7 @@
     {% load static %}
 
 {% block css_cdn %}
-{#    <link rel="stylesheet" href="{% static 'profile.css' %}">#}
+    <link rel="stylesheet" href="{% static 'css/../../static/src/register.css' %}">
 {% endblock css_cdn %}
 
 
@@ -15,7 +15,7 @@
         {% endfor %}
     {% endif %}
 
-    <form method="POST" action="/signup/" class="max-w-sm mx-auto bg-white p-6 shadow-md rounded-lg border">
+    <form method="POST" action="/signup/" class="max-w-sm mx-auto bg-white p-6 shadow-md rounded-lg border" style="margin-top: 60px">
         {% csrf_token %}
         <div class="mb-5">
             <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Username</label>
@@ -51,11 +51,10 @@
                                                                                                   class="text-blue-600 hover:underline">terms
                 and conditions</a></label>
         </div>
-    <button type="submit" class="custom-button">Signup</button>
-
-
+    <button type="submit" class="custom-button" style="background-color: #5521b5" >Signup</button>
 
     </form>
+
 
 
 

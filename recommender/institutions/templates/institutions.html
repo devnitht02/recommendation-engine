@@ -2,11 +2,11 @@
 {% load static %}
 
 {% block css_cdn %}
-    {#    <link rel="stylesheet" href="{% static 'profile.css' %}">#}
+    {#    <link rel="stylesheet" href="{% src 'profile.css' %}">#}
 {% endblock css_cdn %}
 
 {% block content %}
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 items-stretch">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 items-stretch" style="margin-top: 10rem">
         {% for institution in institution_data %}
             <a href="{{ institution.website }}" target="_blank"
                class="block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between md:col-span-2">
@@ -27,4 +27,5 @@
 
 
 
+{% include 'footer.html' %}
 {% endblock content %}

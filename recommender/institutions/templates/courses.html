@@ -2,29 +2,41 @@
 {% load static %}
 
 {% block css_cdn %}
-{#    <link rel="stylesheet" href="{% static 'profile.css' %}">#}
+{# <link rel="stylesheet" href="{% src 'profile.css' %}"> #}
 {% endblock css_cdn %}
 
 {% block content %}
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 items-stretch">
-    {% for course in course_data %}
-        <a href="" target="_blank" class="block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
-            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
-                {{ course.course_description }}
-            </h5>
-            <p class="font-normal text-gray-700">
-                Degree: <span class="text-blue-500">{{ course.degree.degree_description }}</span>
-            </p>
-         <p class="font-normal text-gray-700">
-                Stream: <span class="text-blue-500">{{ course.stream.stream_name}}</span>
-            </p>
-        </a>
-    {% empty %}
-        <p class="text-center text-gray-700 col-span-3">No institutions available.</p>
-    {% endfor %}
-</div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 items-stretch" style="margin-top: 10rem">
+        {% for course in course_data %}
+            <a href="{% url 'institutions:view_course' course.id %}" target="_blank" class="block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
+                    {{ course.course_description }}
+                </h5>
+                <p class="font-normal text-gray-700">
+                    Degree:
+                    <span class="text-blue-500">
+                        {% if course.degree %}
+                            {{ course.degree.degree_description }}
+                        {% else %}
+                            No Degree Available
+                        {% endif %}
+                    </span>
+                </p>
+                <p class="font-normal text-gray-700">
+                    Stream:
+                    <span class="text-blue-500">
+                        {% if course.stream %}
+                            {{ course.stream.stream_name }}
+                        {% else %}
+                            No Stream Available
+                        {% endif %}
+                    </span>
+                </p>
+            </a>
+        {% empty %}
+            <p class="text-center text-gray-700 col-span-3">No courses available.</p>
+        {% endfor %}
+    </div>
 
-
-
-
+{% include 'footer.html' %}
 {% endblock content %}
