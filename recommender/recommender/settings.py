@@ -9,25 +9,23 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+import configparser
 import os
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+config_path = os.path.join(BASE_DIR, 'config.ini')
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
+config = configparser.ConfigParser()
+config.read(config_path)
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-a!s+=d^m3_du3mz04+tygwlh*0d^@imn*##!8@@si!5!*4jvme'
-
-# SECURITY WARNING: don't run with debug turned on in production!
+# Secret key
+SECRET_KEY = config.get('django', 'SECRET_KEY', fallback='default-secret-key')
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -54,6 +52,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'recommender.urls'
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 TEMPLATES = [
     {

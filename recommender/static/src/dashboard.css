@@ -19,7 +19,21 @@
 }
 
 .heading-div{
-    margin-right: 4rem;
+    position: relative;
+    right: 12rem;
+    top: 1rem;
+}
+
+.search-div{
+    width: 200%;
+    position: relative;
+    bottom: 15rem;
+    left: 34rem;
+    border: solid mediumpurple;
+    border-radius: 16px;
+    background-color: white;
+    opacity: 80%;
+
 }
 
 /* Buttons */
