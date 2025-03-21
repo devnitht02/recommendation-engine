@@ -1,3 +1,12 @@
+section.top-banner {
+    background-image: url("../assets/images/background.png");
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
 .heading1 {
     color: black;
     background-color: white;
@@ -5,7 +14,6 @@
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     padding: 10px;
     opacity: 0.8;
-
 }
 
 .heading2 {
@@ -18,22 +26,69 @@
     opacity: 0.7;
 }
 
-.heading-div{
+.heading-div {
     position: relative;
     right: 12rem;
     top: 1rem;
+    z-index: 1;
 }
 
-.search-div{
-    width: 200%;
+.search-div {
+    width: 260%;
     position: relative;
     bottom: 15rem;
-    left: 34rem;
+    left: 28rem;
     border: solid mediumpurple;
     border-radius: 16px;
     background-color: white;
     opacity: 80%;
+}
 
+/* Dropdown Suggestions List */
+.suggestion-list {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    opacity: 1;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 0;
+    list-style: none;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Individual list items in the dropdown */
+.suggestion-list li {
+    padding: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+}
+
+.suggestion-list li:hover {
+    background-color: #f0f0f0;
+}
+
+.suggestion-list .no-results {
+    padding: 8px;
+    color: #666;
+    text-align: center;
+}
+
+.search-div {
+    position: relative;
+}
+
+input[type="search"] {
+    border-radius: 1rem;
+    border: #5521b5;
+    background-color: white;
 }
 
 /* Buttons */
@@ -62,18 +117,36 @@
     transform: scale(0.98);
 }
 
-/* Disabled Button */
 .custom-button:disabled {
     background-color: #e2e8f0;
     color: #a1a1a1;
     cursor: not-allowed;
 }
 
-section.top-banner{
-    background-image: url("../assets/images/background.png");
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+@media (max-width: 1200px) {
+    .search-div {
+        width: 200%;
+        left: 20%;
+        bottom: 10rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .search-div {
+        width: 150%;
+        left: 10%;
+        bottom: 8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-div {
+        width: 100%;
+        left: 0%;
+        bottom: 5rem;
+    }
+    .heading-div {
+        right: 0;
+        top: 0;
+    }
 }

@@ -5,18 +5,86 @@
     <link rel="stylesheet" href="{% static 'src/dashboard.css' %}">
 {% endblock css_cdn %}
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="{% static 'js/search.js' %}"></script>
+{% block js_cdn %}
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+{% endblock js_cdn %}
+
 
 {% block content %}
+
+    <script>
+        $(document).ready(function () {
+            $('#search-form').submit(function (e) {
+                e.preventDefault(); // Prevent the default form submission
+
+                const query = $('#default-search').val().trim();
+                const suggestionsList = $('#suggestions-list');
+                const csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+
+                if (query.length > 0) {
+                    $.ajax({
+                        url: "{% url 'dashboard:search_suggestions' %}",
+                        type: "GET",
+                        data: {query: query},
+                        headers: {"X-CSRFToken": csrfToken},
+                        success: function (response) {
+                            const {courses, institutions} = response;
+                            suggestionsList.empty(); // Clear previous results
+
+                            if (courses.length === 0 && institutions.length === 0) {
+                                suggestionsList.append('<li style="padding: 8px; color: #666;">No results found</li>');
+                            } else {
+                                // Display courses
+                                if (courses.length > 0) {
+                                    suggestionsList.append('<li style="font-weight: bold; padding: 8px;">Courses</li>');
+                                    courses.forEach(course => {
+                                        suggestionsList.append(`<li style="padding: 8px; cursor: pointer;" data-value="${course.course_name}">${course.course_name}</li>`);
+                                    });
+                                }
+                                // Display institutions
+                                if (institutions.length > 0) {
+                                    suggestionsList.append('<li style="font-weight: bold; padding: 8px;">Institutions</li>');
+                                    institutions.forEach(institution => {
+                                        suggestionsList.append(`<li style="padding: 8px; cursor: pointer;" data-value="${institution.institution_name}">${institution.institution_name}</li>`);
+                                    });
+                                }
+                            }
+                            suggestionsList.show();
+                        },
+                        error: function (error) {
+                            console.error('Error fetching suggestions:', error);
+                            suggestionsList.empty().append('<li style="padding: 8px; color: #666;">Error fetching results. Please try again.</li>').show();
+                        }
+                    });
+                } else {
+                    suggestionsList.empty().append('<li style="padding: 8px; color: #666;">Please enter a valid search query</li>').show();
+                }
+            });
+
+            // Handle item selection
+            $(document).on('click', '#suggestions-list li', function () {
+                $('#default-search').val($(this).data('value'));
+                $('#suggestions-list').hide();
+            });
+
+            // Hide suggestions when clicking outside
+            $(document).click(function (e) {
+                if (!$(e.target).closest('.search-div').length) {
+                    $('#suggestions-list').hide();
+                }
+            });
+        });
+    </script>
+
 
     <section class="dashboard-container">
         <!-- TOP BANNER SECTION -->
         <section class="top-banner">
 
             {# SEARCH FORM #}
-            <form class="max-w-md mx-auto" action="{% url 'dashboard:search_suggestions' %}" method="GET"
-                  id="search-form">
+            <form class="max-w-md mx-auto" id="search-form">
                 {% csrf_token %}
                 <label for="default-search" class="mb-2 text-sm font-medium text-purple-900 sr-only">Search</label>
                 <div class="relative search-div">
@@ -37,11 +105,11 @@
                     </button>
 
                     <!-- Dropdown to Show Results -->
-                    <ul id="suggestions-list" style="position: absolute; top: 100%; left: 0; width: 100%; background-color: white; 
-            border: 1px solid #ccc; border-radius: 8px; padding: 0; list-style: none; z-index: 1000; display: none;">
+                    <ul id="suggestions-list" class="suggestion-list">
                     </ul>
                 </div>
             </form>
+
 
             {#HEADINGS#}
             <div class="grid max-w-screen-xl px-4 pt-20 pb-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 lg:pt-28">
