@@ -1,40 +1,69 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% block css_cdn %}
-{# <link rel="stylesheet" href="{% src 'profile.css' %}"> #}
+    <link rel="stylesheet" href="{% static 'src/view_course.css' %}">
 {% endblock css_cdn %}
 
+
 {% block content %}
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 items-stretch" style="margin-top: 20px">
-        {% for course in course_data %}
-            <a href="#" target="_blank" class="block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
-                    {{ course.course_description }}
-                </h5>
-                <p class="font-normal text-gray-700">
-                    Degree:
-                    <span class="text-blue-500">
-                        {% if course.degree %}
-                            {{ course.degree.degree_description }}
-                        {% else %}
-                            No Degree Available
-                        {% endif %}
-                    </span>
+
+    <div class="max-w-4xl mx-auto p-6 bg-white border border-gray-200 shadow-lg rounded-lg mt-10 container-div">
+        <center><h1
+                class="text-4xl font-extrabold text-gray-900 mb-6 main-heading">{{ institution_data.institution_name }}</h1>
+        </center>
+
+        <div class="space-y-4 courses-div">
+            <div class="items">
+
+                <p class="text-gray-700 text-xl mb-2 font-medium">
+                    <i class="fa-solid fa-globe fa-lg" style="color: #824dd8;"></i>
+                    &nbsp; Website: <a href="{{ institution_data.website }}">{{ institution_data.website }}</a></p>
+            </div>
+
+            <div class="items">
+
+                <p class="text-gray-700 text-xl mb-2 font-medium"><i class="fa-solid fa-building-columns fa-lg"
+                                                                     style="color: #824dd8;"></i>
+                    &nbsp;State: {{ institution_data.state.name }}
                 </p>
-                <p class="font-normal text-gray-700">
-                    Stream:
-                    <span class="text-blue-500">
-                        {% if course.stream %}
-                            {{ course.stream.stream_name }}
-                        {% else %}
-                            No Stream Available
-                        {% endif %}
-                    </span>
-                </p>
+
+            </div>
+
+            <div class="items">
+
+                <p class="text-gray-700 text-xl mb-2 font-medium">
+                    <i class="fa-solid fa-map-location-dot fa-lg" style="color: #824dd8;"></i>&nbsp;
+                    District: {{ institution_data.district.name }}</p>
+
+            </div>
+            <br>
+            <div class="items">
+                <h1 class="text-2xl font-bold text-gray-900 mb-6">Sponsored Degree Programs</h1>
+                {% for course in course_data %}
+                    <p class="text-gray-700 text-xl mb-2 font-medium ins-para">
+                        <i class="fa-solid fa-user-graduate fa-lg"
+                           style="color: #824dd8;"></i> <a
+                            href="{% url 'institutions:view_course' course.id %}">{{ course.degree.degree_name }}
+                        in {{ course.course_name }}
+                        ({{ course.stream.stream_name }})</a>
+                    </p>
+                {% endfor %}
+
+
+            </div>
+
+        </div>
+
+        <div class="mt-6 flex justify-start reverse-btn">
+            <a href="{% url 'institutions:institutions' %}"
+               class="bg-purple-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-700 transition duration-300 ease-in-out">
+                Back to Institutions
             </a>
-        {% empty %}
-            <p class="text-center text-gray-700 col-span-3">No courses available.</p>
-        {% endfor %}
+        </div>
     </div>
+
+
+    {% include 'footer.html' %}
 {% endblock content %}
+
+

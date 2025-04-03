@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import configparser
 import os
 from pathlib import Path
+import pymysql
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 config_path = os.path.join(BASE_DIR, 'config.ini')
@@ -38,6 +39,8 @@ INSTALLED_APPS = [
     'users',
     'institutions',
     'recommender',
+    # "recommendations.apps.RecommendationsConfig",
+    "recommendations"
 
 ]
 
@@ -55,11 +58,9 @@ ROOT_URLCONF = 'recommender.urls'
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # 'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -78,6 +79,8 @@ WSGI_APPLICATION = 'recommender.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+pymysql.install_as_MySQLdb()
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -88,6 +91,7 @@ DATABASES = {
         'PASSWORD': '',
         'OPTIONS': {
             'autocommit': 'True',
+            'charset': 'utf8mb4'
 
         }
 
@@ -112,6 +116,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+GOOGLE_CLIENT_ID = "1051342845649-8qlcc0h41kq2sf3dakaogfdgv2omks4p.apps.googleusercontent.com"
+GOOGLE_REDIRECT_URI = "http://localhost:8000/google_login/"
+GOOGLE_CLIENT_SECRET = "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"
+
 COMPRESS_ROOT = os.path.join(BASE_DIR, 'static')
 
 COMPRESS_ENABLED = True
@@ -122,6 +131,11 @@ STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+
+# LOGIN_URL = '/signin/'  # Ensure this points to your login page
+#
+# LOGIN_REDIRECT_URL = '/user_profile/'  # Ensure this matches the URL pattern in urls.py
+
 
 TIME_ZONE = 'UTC'
 

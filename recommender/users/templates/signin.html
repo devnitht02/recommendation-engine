@@ -2,10 +2,38 @@
 {% load static %}
 
 {% block css_cdn %}
-    <link rel="stylesheet" href="{% static 'css/../../static/src/register.css' %}">
+    <link rel="stylesheet" href="{% static '/src/register.css' %}">
 {% endblock css_cdn %}
 
 {% block content %}
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+{#   <script>#}
+{#    function handleCredentialResponse(response) {#}
+{#        // Decode the Google token to get the user's info#}
+{#        const userObject = jwt_decode(response.credential);  // Decode JWT token#}
+{#        console.log(userObject);#}
+{##}
+{#        // Send this response to your backend to register or login the user#}
+{#        fetch('/google-login/', {#}
+{#            method: 'POST',#}
+{#            headers: {#}
+{#                'Content-Type': 'application/json',#}
+{#            },#}
+{#            body: JSON.stringify({#}
+{#                credential: response.credential#}
+{#            })#}
+{#        }).then(res => res.json())#}
+{#          .then(data => {#}
+{#              console.log('User Logged In:', data);#}
+{#              // Redirect user or display login success#}
+{#              window.location.href = "/home/";  // Redirect after login (adjust accordingly)#}
+{#          })#}
+{#          .catch(err => console.error('Error:', err));#}
+{#    }#}
+{#</script>#}
+
 
     <br><br>
     {% if messages %}
@@ -38,9 +66,44 @@
             </div>
             <label for="remember" class="ms-2 text-sm font-medium text-gray-900">Remember me</label>
         </div>
-        <button type="submit" class="custom-button" style="background-color: #5521b5">Signin</button>
+        <button type="submit" class="custom-button" style="background-color: #5521b5">Signin</button>&nbsp;
+
+        <!-- Google Sign-In Button -->
+        <div id="g_id_onload"
+             data-client_id="1051342845649-8qlcc0h41kq2sf3dakaogfdgv2omks4p.apps.googleusercontent.com"
+             data-callback="handleCredentialResponse"
+             data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin" data-type="standard"></div>
+
 
     </form>
+
+
+    <script>
+    function handleCredentialResponse(response) {
+        const data = response.credential; // Contains the JWT
+        const userData = {
+            token: data
+        };
+
+        fetch('google_auth_callback', {
+            method: 'POST',
+            body: JSON.stringify(userData),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '/dashboard:dashboard';  // Redirect to your dashboard or profile page
+            } else {
+                alert("Authentication failed.");
+            }
+        });
+    }
+</script>
 
 
 

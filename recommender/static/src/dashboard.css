@@ -36,12 +36,13 @@ section.top-banner {
 .search-div {
     width: 260%;
     position: relative;
-    bottom: 15rem;
-    left: 28rem;
+    bottom: 14rem;
+    left: 27rem;
     border: solid mediumpurple;
     border-radius: 16px;
     background-color: white;
-    opacity: 80%;
+    /* opacity: 80%; */
+    z-index: 1000;
 }
 
 /* Dropdown Suggestions List */

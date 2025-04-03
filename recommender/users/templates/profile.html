@@ -2,17 +2,20 @@
 {% load static %}
 
 {% block css_cdn %}
-{#    <link rel="stylesheet" href="{% src 'profile.css' %}">#}
+    {#    <link rel="stylesheet" href="{% src 'profile.css' %}">#}
 {% endblock css_cdn %}
 
 {% block content %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <div class="max-w-4xl mx-auto bg-white p-8 shadow-md rounded-lg border mt-10" style="margin-top: 8rem">
         <h2 class="text-2xl font-semibold text-gray-900 mb-4">My Profile</h2>
 
         <!-- Display profile picture -->
         <div class="flex items-center space-x-4 mb-6">
             {% if profile.profile_picture %}
-                <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="w-24 h-24 rounded-full border">
+                <img src="{{ profile.profile_picture.url }}" alt="Profile Picture"
+                     class="w-24 h-24 rounded-full border">
             {% else %}
                 <div class="w-24 h-24 rounded-full border flex items-center justify-center bg-gray-100">
                     <span class="text-gray-500">No Image</span>
@@ -34,37 +37,32 @@
         {% endif %}
 
         <!-- Profile Update Form -->
-        <form method="POST" enctype="multipart/form-data" class="space-y-4">
+        <form method="POST" action="{% url 'users:user_profile' %}" enctype="multipart/form-data" class="space-y-4"
+              id="profileForm">
             {% csrf_token %}
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">Full Name</label>
-                <input type="text" name="user_name" value="{{ profile.user_name }}" class="w-full p-2 border border-gray-300 rounded-md">
+                <input type="text" name="user_name" value="{{ profile.user_name }}"
+                       class="w-full p-2 border border-gray-300 rounded-md">
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" name="email" value="{{ profile.email }}" readonly class="w-full p-2 border border-gray-300 rounded-md bg-gray-100">
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Phone Number</label>
-                <input type="text" name="phone_number" value="{{ profile.phone_number|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
+                <input type="email" name="email" value="{{ profile.email }}" readonly
+                       class="w-full p-2 border border-gray-300 rounded-md bg-gray-100">
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">Country</label>
-                <input type="text" name="country" value="{{ profile.country|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Address</label>
-                <textarea name="address" class="w-full p-2 border border-gray-300 rounded-md">{{ profile.address|default_if_none:'' }}</textarea>
+                <input type="text" name="country" value="{{ profile.country|default_if_none:'' }}"
+                       class="w-full p-2 border border-gray-300 rounded-md">
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">Date of Birth</label>
-                <input type="date" name="date_of_birth" value="{{ profile.date_of_birth|date:'Y-m-d' }}" class="w-full p-2 border border-gray-300 rounded-md">
+                <input type="date" name="date_of_birth" value="{{ profile.date_of_birth|date:'Y-m-d' }}"
+                       class="w-full p-2 border border-gray-300 rounded-md">
             </div>
 
             <div>
@@ -78,44 +76,130 @@
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">Stream</label>
-                <input type="text" name="stream" value="{{ profile.stream|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
+                <input type="text" name="stream" value="{{ profile.stream|default_if_none:'' }}"
+                       class="w-full p-2 border border-gray-300 rounded-md">
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700">Total Percentage</label>
-                <input type="text" name="hsc_percentage" value="{{ profile.hsc_percentage|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
+                <label class="block text-sm font-medium text-gray-700">Total HSC Percentage</label>
+                <input type="text" name="hsc_percentage" value="{{ profile.hsc_percentage|default_if_none:'' }}"
+                       class="w-full p-2 border border-gray-300 rounded-md">
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">School Passing Year</label>
-                <input type="text" name="school_passed_out_year" value="{{ profile.school_passed_out_year|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
+                <input type="text" name="school_passed_out_year"
+                       value="{{ profile.school_passed_out_year|default_if_none:'' }}"
+                       class="w-full p-2 border border-gray-300 rounded-md">
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">Institution Type</label>
-                <input type="text" name="studied_institution_type" value="{{ profile.studied_institution_type|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
+                <select id="institution_type" name="institution_type" class="w-full p-2 border border-gray-300 rounded-md">
+                    <option value="">Select a Type</option>
+                    <option value="public" {% if profile.institution_type == "public" %}selected{% endif %}>Public</option>
+                    <option value="private" {% if profile.institution_type == "private" %}selected{% endif %}>Private</option>
+                </select>
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700">Institution</label>
-                <input type="text" name="institution" value="{{ profile.institution|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
+                <label for="state" class="block text-sm font-medium text-gray-700">Select State:</label>
+                <select id="state" name="state" class="w-full p-2 border border-gray-300 rounded-md">
+                    <option value="">Select a State</option>
+                    {% for state in states %}
+                        <option value="{{ state.id }}" {% if state.id == profile.state %}selected{% endif %}>
+                            {{ state.name }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700">State</label>
-                <input type="text" name="state" value="{{ profile.state|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
+                <label for="district" class="block text-sm font-medium text-gray-700">District:</label>
+                <select id="district" name="district" class="w-full p-2 border border-gray-300 rounded-md">
+                    <option value="">Select District</option>
+                </select>
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700">District</label>
-                <input type="text" name="district" value="{{ profile.district|default_if_none:'' }}" class="w-full p-2 border border-gray-300 rounded-md">
-            </div>
-
-            <button type="submit" style="background-color: #5521b5" class="w-full text-white bg-[#CB6040] hover:bg-[#B35235] focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+            <button type="submit" id="updateProfileBtn"
+                    style="background-color: #5521b5"
+                    class="w-full text-white bg-[#CB6040] hover:bg-[#B35235] focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                 Update Profile
             </button>
         </form>
+
     </div>
 
-{% include 'footer.html' %}
+    {% include 'footer.html' %}
+
+   <script>
+    $(document).ready(function() {
+        // When the user selects a state, fetch the districts dynamically.
+        $("#state").change(function() {
+            let stateId = $(this).val();
+            if (stateId) {
+                $.ajax({
+                    url: "/district-list/"+ stateId+"/",
+                    type: "GET",
+                    dataType: "json",
+                    success: function(response) {
+                        console.log(response);
+                        let districtDropdown = $("#district");
+                        districtDropdown.empty();
+                        districtDropdown.append('<option value="">Select District</option>');
+                        $.each(response, function(index, district) {
+                            districtDropdown.append('<option value="' + district.id + '">' + district.name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $("#district").empty().append('<option value="">Select District</option>');
+            }
+        });
+
+        // Handle update profile button click
+        $("#updateProfileButton").click(function() {
+            // Collect all form data
+            const formData = {
+                name: $("#name").val(),
+                email: $("#email").val(),
+                country: $("#country").val(),
+                dob: $("#dob").val(),
+                gender: $("#gender").val(),
+                school_year: $("#school_year").val(),
+                state_id: $("#state").val(),
+                district_id: $("#district").val(),
+                stream: $("#stream").val(),
+                hsc: $("#hsc").val(),
+                institution_type: $("#institution_type").val(),
+            };
+
+            // Send data to the backend via AJAX
+            $.ajax({
+                url: "/update_user_profile/",
+                type: "POST",
+                data: formData,
+                success: function(response) {
+                    // Handle success response (e.g., display success message)
+                    alert("Profile updated successfully!");
+                    // Update the displayed values without reloading the page
+                    $("#name").val(response.name);
+                    $("#email").val(response.email);
+                    $("#country").val(response.country);
+                    $("#dob").val(response.dob);
+                    $("#gender").val(response.gender);
+                    $("#school_year").val(response.school_year);
+                    $("#state").val(response.state_id);
+                    $("#district").val(response.district_id);
+                    $("#stream").val(response.stream);
+                    $("#hsc").val(response.hsc);
+                    $("#institution_type").val(response.institution_type);
+                },
+                error: function() {
+                    alert("There was an error updating the profile.");
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

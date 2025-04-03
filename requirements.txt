@@ -5,3 +5,8 @@ pillow==11.1.0
 PyMySQL==1.1.1
 sqlparse==0.5.3
 tzdata==2025.1
+
+configparser~=7.2.0
+pandas~=2.2.3
+SQLAlchemy~=2.0.39
+scikit-learn~=1.6.1

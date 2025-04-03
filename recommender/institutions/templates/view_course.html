@@ -6,18 +6,20 @@
 
 
 {% block content %}
-   <div class="max-w-4xl mx-auto p-6 bg-white border border-gray-200 shadow-lg rounded-lg mt-10">
-        <h1 class="text-4xl font-extrabold text-gray-900 mb-6">{{ course.course_name }}</h1>
 
-        <div class="space-y-4">
+   <div class="max-w-4xl mx-auto p-6 bg-white border border-gray-200 shadow-lg rounded-lg mt-10 container-div">
+       <center><h1 class="text-4xl font-extrabold text-gray-900 mb-6 main-heading">{{ course.course_name }}</h1></center>
+
+        <div class="space-y-4 courses-div">
             <div>
-                <p class="text-gray-700 text-xl mb-2 font-medium">Course Description:</p>
-                <p class="text-gray-800 text-lg">{{ course.course_description }}</p>
+                <p class="text-gray-700 text-xl mb-2 font-medium"><i class="fa-solid fa-book-open fa-lg" style="color: #824dd8;"></i>&nbsp;
+                    Course Description: </p>
+                <p class="text-gray-800 text-lg"> {{ course.course_description }}</p>
             </div>
 
             <div>
-                <p class="text-gray-700 text-xl mb-2 font-medium">Degree:</p>
-                <p class="text-blue-500 text-lg">
+                <p class="text-gray-700 text-xl mb-2 font-medium"><i class="fa-solid fa-user-graduate fa-lg"
+                           style="color: #824dd8;"></i>&nbsp; Degree:
                     {% if course.degree %}
                         {{ course.degree.degree_description }}
                     {% else %}
@@ -27,8 +29,7 @@
             </div>
 
             <div>
-                <p class="text-gray-700 text-xl mb-2 font-medium">Stream:</p>
-                <p class="text-blue-500 text-lg">
+                <p class="text-gray-700 text-xl mb-2 font-medium"><i class="fa-solid fa-graduation-cap fa-lg" style="color: #824dd8;"></i>&nbsp;Stream:
                     {% if course.stream %}
                         {{ course.stream.stream_name }}
                     {% else %}
@@ -38,12 +39,17 @@
             </div>
 
             <div>
-                <p class="text-gray-700 text-xl mb-2 font-medium">Duration:</p>
+                <p class="text-gray-700 text-xl mb-2 font-medium"><i class="fa-solid fa-clock fa-lg" style="color: #824dd8;"></i>&nbsp; Duration:</p>
                 <p class="font-semibold text-lg text-gray-800">{{ course.duration }}</p>
+            </div>
+         <div>
+                <p class="text-gray-700 text-xl mb-2 font-medium"><i class="fa-solid fa-credit-card fa-lg" style="color: #824dd8;"></i>&nbsp;
+                    Price:  price here</p>
+
             </div>
         </div>
 
-        <div class="mt-6 flex justify-start">
+        <div class="mt-6 flex justify-start reverse-btn">
             <a href="{% url 'institutions:courses' %}" class="bg-purple-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-700 transition duration-300 ease-in-out">
                 Back to Courses
             </a>
