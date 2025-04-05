@@ -62,7 +62,8 @@ class WnDistrict(models.Model):
 class WnInstitution(models.Model):
     institution_name = models.CharField(max_length=500, blank=True, null=True)
     website = models.TextField(blank=True, null=True)
-    institution_type = models.ForeignKey('WnInstitutionType', models.DO_NOTHING, db_column='institution_type', blank=True, null=True)
+    institution_type = models.ForeignKey('WnInstitutionType', models.DO_NOTHING, db_column='institution_type',
+                                         blank=True, null=True)
     state = models.ForeignKey('WnState', models.DO_NOTHING)
     district = models.ForeignKey(WnDistrict, models.DO_NOTHING)
     created_date = models.DateTimeField()
@@ -88,7 +89,8 @@ class WnInstitutionChoice(models.Model):
 
 
 class WnInstitutionCourse(models.Model):
-    institution = models.OneToOneField(WnInstitution, models.DO_NOTHING, primary_key=True)  # The composite primary key (institution_id, course_id) found, that is not supported. The first column is selected.
+    institution = models.OneToOneField(WnInstitution, models.DO_NOTHING,
+                                       primary_key=True)  # The composite primary key (institution_id, course_id) found, that is not supported. The first column is selected.
     course = models.ForeignKey(WnCourse, models.DO_NOTHING)
     created_date = models.DateTimeField()
     modified_date = models.DateTimeField()
@@ -193,3 +195,13 @@ class WnUser(models.Model):
     class Meta:
         managed = False
         db_table = 'wn_user'
+
+
+class ContactMessage(models.Model):
+    email = models.EmailField(max_length=255)
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.email} - {self.subject}"

@@ -143,6 +143,14 @@
                         <a href="{% url 'users:user_profile' %}"
                            class="block py-2 pl-3 pr-4 {% if request.resolver_match.url_name == 'user_profile' %}text-purple-600{% else %}text-gray-700 hover:text-purple-600{% endif %}">Profile</a>
                     </li>
+                 <li>
+                        <a href="{% url 'dashboard:contact_page' %}"
+                           class="block py-2 pl-3 pr-4 {% if request.resolver_match.url_name == 'user_profile' %}text-purple-600{% else %}text-gray-700 hover:text-purple-600{% endif %}">Contact</a>
+                    </li>
+                 <li>
+                        <a href="{% url 'users:user_profile' %}"
+                           class="block py-2 pl-3 pr-4 {% if request.resolver_match.url_name == 'user_profile' %}text-purple-600{% else %}text-gray-700 hover:text-purple-600{% endif %}">About</a>
+                    </li>
                 </ul>
             </div>
 

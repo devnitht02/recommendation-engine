@@ -33,7 +33,7 @@ def search_suggestions(request):
             'institutions': [
                 {'id': institution.id, 'institution_name': institution.institution_name, 'type': 'institution'} for
                 institution in institution_results],
-            "search_data" : search_data
+            "search_data": search_data
         }
     else:
         # If query is empty, return empty results for both
@@ -55,3 +55,13 @@ def redirect_to_item(request, item_id):
             return redirect('institutions:view_institution', institution_id=institution.id)
         except WnInstitution.DoesNotExist:
             return redirect('dashboard:dashboard')  # Fallback to dashboard if no course/institution found
+
+
+def contact_page(request):
+    if request.method == "POST":
+        email = request.POST.get("name")
+        subject = request.POST.get("subject")
+
+
+
+    return render(request, 'contact.html')

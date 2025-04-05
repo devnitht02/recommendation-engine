@@ -50,7 +50,7 @@ def signin(request):
     if request.method == 'POST':
         email = request.POST.get("email")
         password = request.POST.get("password")
-# for GOOGLE SIGN IN add the user id username email in the session
+        # for GOOGLE SIGN IN add the user id username email in the session
         user = WnUser.objects.filter(email=email).first()
 
         if user and check_password(password, user.password):
@@ -116,6 +116,7 @@ def google_login(request):
 
     return JsonResponse({'status': 'error', 'message': 'Only POST requests allowed'})
 
+
 def google_auth_callback(request):
     """Handle Google's OAuth response."""
     code = request.GET.get('code')  # Get the 'code' from the query string
@@ -157,6 +158,7 @@ def google_auth_callback(request):
 
     # Redirect to dashboard or profile page
     return redirect('dashboard:dashboard')
+
 
 def signout(request):
     if 'user_id' in request.session:
@@ -250,9 +252,9 @@ def update_user_profile(request):
     return JsonResponse({"error": "Invalid request"}, status=400)
 
 
-def get_district(request,state_id):
+def get_district(request, state_id):
     try:
         district = list(WnDistrict.objects.filter(state_id=state_id).values())
-        return JsonResponse(district,safe=False,status=200)
+        return JsonResponse(district, safe=False, status=200)
     except WnUser.DoesNotExist:
         return JsonResponse({"status": "error", "message": "User profile not found"}, status=404)
