@@ -2,7 +2,7 @@ from django.urls import path
 
 from institutions.views import view_course, view_institution
 from . import views
-from .views import dashboard, contact_page
+from .views import dashboard, contact_page, about
 
 urlpatterns = [
     path('', dashboard, name="dashboard"),
@@ -16,4 +16,6 @@ urlpatterns = [
     path('institution/<int:institution_id>/', view_institution, name='institution_view'),
 
     path('contact.html', contact_page, name='contact_page'),
+
+    path('about.html', about, name='about_page'),
 ]

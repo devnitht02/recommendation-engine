@@ -62,6 +62,8 @@ def contact_page(request):
         email = request.POST.get("name")
         subject = request.POST.get("subject")
 
-
-
     return render(request, 'contact.html')
+
+
+def about(request):
+    return render(request, 'about.html')
