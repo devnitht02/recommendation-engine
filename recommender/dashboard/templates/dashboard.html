@@ -18,7 +18,7 @@
     <script>
         $(document).ready(function () {
             let typingTimer;
-            const typingDelay = 300; 
+            const typingDelay = 300;
 
             $('#default-search').on('input', function () {
                 clearTimeout(typingTimer);
@@ -49,13 +49,12 @@
                                     //     suggestionsList.append(`<li style="padding: 8px; cursor: pointer;" data-value="${course.course_name}">${course.course_name}</li>`);
                                     // });
                                     search_data.forEach(data => {
-                                        if(data.type == "course"){
+                                        if (data.type == "course") {
                                             suggestionsList.append(`
                                                 <a href="/view_course/${data.id}">
                                                 <li style="padding: 8px; cursor: pointer;">${data.name} (Course)</li>
                                             `);
-                                        }
-                                        else{
+                                        } else {
                                             suggestionsList.append(`
                                                 <a href="/view_institution/${data.id}">
                                                 <li style="padding: 8px; cursor: pointer;">${data.name} (Insitution)</li>
@@ -114,18 +113,18 @@
                     .then(response => response.json())
                     .then(data => {
                         if (isCourseSearch && data.courses.length > 0) {
-                            let course = data.courses[0]; 
+                            let course = data.courses[0];
                             if (course && course.course_id) {
-                                let courseId = course.course_id; 
-                                window.location.href = `/view_course/${courseId}`; 
+                                let courseId = course.course_id;
+                                window.location.href = `/view_course/${courseId}`;
                             } else {
                                 alert("No valid course ID found.");
                             }
                         } else if (isInstitutionSearch && data.institutions.length > 0) {
-                            let institution = data.institutions[0]; 
+                            let institution = data.institutions[0];
                             if (institution && institution.institution_id) {
-                                let institutionId = institution.institution_id; 
-                                window.location.href = `/view_institution/${institutionId}`; 
+                                let institutionId = institution.institution_id;
+                                window.location.href = `/view_institution/${institutionId}`;
                             } else {
                                 alert("No valid institution ID found.");
                             }
@@ -190,11 +189,40 @@
                 </div>
             </div>
         </section>
-    
+
+        {#COURSE TYPES LIST#}
+        <!-- Scrolling Categories -->
+        <section class="bg-white py-8 overflow-hidden relative">
+            <div class="animate-scroll whitespace-nowrap flex items-center space-x-24 font-poppins">
+                <span id="type"
+                      class="text-gray-900 text-2xl font-semibold text-uppercase">Information Technology</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Business Management</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Computer Science</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Data Science</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Environmental Science</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Engineering</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Fine Arts</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Accounting</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Agriculture</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Biotechnology</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Psychology</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Sociology</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Physics</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Chemistry</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Mathematics</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Medicine</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Law</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Economics</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Education</span>
+                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Nursing</span>
+
+            </div>
+        </section>
+
 
         <!-- TOP RATED COURSES SECTION -->
         <section class="bg-gray-50 top-rated top-rated pt-24">
-            <div class="max-w-screen-xl px-4 mx-auto">
+            <div class="max-w-screen-xl px-4 mx-auto" id="top-rated">
                 <!-- Title -->
                 <h1 class="text-3xl font-bold text-gray-900">TOP RATED COURSES</h1>
 
@@ -213,16 +241,68 @@
                                 </a>
                                 <div class="p-5">
                                     <a href="#">
-                                        <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900">
+                                        <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 line-clamp-2">
                                             {{ course.course_name }}
                                         </h5>
+
+                                    </a>
+
+                                    <a href="{% url 'institutions:courses' %}"
+                                       class="inline-flex items-center px-3 py-2 text-sm font-medium text-center
+                                        text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none
+                                        focus:ring-blue-300 read-more"
+                                       style="background-color: #5521b5;">
+                                        Read more
+                                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"
+                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                  stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOP RATED INSTITUTIONS SECTION -->
+        <section class="bg-gray-50 top-rated top-rated pt-24">
+            <div class="max-w-screen-xl px-4 mx-auto" id="top-rated">
+                <!-- Title -->
+                <h1 class="text-3xl font-bold text-gray-900">TOP RATED INSTITUTIONS</h1>
+
+                <!-- Horizontal Scroll Wrapper -->
+                <div class="relative">
+                    <div class="flex overflow-x-auto space-x-6 pb-4 scrollbar-hide"
+                         style="scroll-snap-type: x mandatory; overflow-y: hidden; white-space: nowrap;">
+                        <!-- Card 1 -->
+                        {% for institution in institution_data %}
+                            <div class="flex-shrink-0 w-72 bg-white border border-gray-200 rounded-lg shadow-sm
+                            scroll-snap-align-start"
+                                 style="max-height: 35rem; display: inline-block;">
+                                <a href="{{ institution.website }}">
+                                    <img class="rounded-t-lg object-cover h-40 w-full"
+                                         src="{% static '/assets/images/image-1.jpg' %}" alt=""/>
+                                </a>
+                                <div class="p-5">
+                                    <a href="#">
+                                        <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 line-clamp-2">
+                                            {{ institution.institution_name }}
+                                        </h5>
+
                                     </a>
                                     <p class="mb-3 font-normal text-gray-700"
                                        style="max-height: 10rem; overflow: hidden;">
-                                        {{ course.course_description }}
+                                        {{ institution.state.name }}
+                                    </p>
+                                    <p class="mb-3 font-normal text-gray-700"
+                                       style="max-height: 10rem; overflow: hidden;">
+                                        {{ institution.district.name }}
                                     </p>
 
-                                    <a href="{% url 'institutions:courses' %}"
+                                    <a href="{% url 'institutions:institutions' %}"
                                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-center
                                         text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none
                                         focus:ring-blue-300 read-more"
@@ -244,6 +324,9 @@
     </section>
 
     <!-- End block -->
+
+
+
     <!-- Start block -->
     <section class="bg-white dark:bg-gray-900">
         <div

@@ -27,14 +27,6 @@
             </div>
         </div>
 
-        <!-- Success Message -->
-        {% if messages %}
-            {% for message in messages %}
-                <div class="bg-green-100 text-green-700 p-3 rounded-md mb-4">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
 
         <!-- Profile Update Form -->
         <form method="POST" action="{% url 'users:user_profile' %}" enctype="multipart/form-data" class="space-y-4"

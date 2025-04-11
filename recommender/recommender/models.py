@@ -197,7 +197,8 @@ class WnUser(models.Model):
         db_table = 'wn_user'
 
 
-class ContactMessage(models.Model):
+class WnContact(models.Model):
+    name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255)
     subject = models.CharField(max_length=255)
     message = models.TextField()
@@ -205,3 +206,7 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"{self.email} - {self.subject}"
+
+    class Meta:
+        managed = False
+        db_table = 'wn_contact'

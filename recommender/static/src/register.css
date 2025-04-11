@@ -1,4 +1,3 @@
-
 /*register buttons*/
 .custom-button {
     background-color: #5521b5;
@@ -33,6 +32,7 @@
     color: #a1a1a1;
     cursor: not-allowed;
 }
+
 /*update btn*/
 
 .update-profile-btn {
@@ -50,4 +50,11 @@
     background-color: #5521b5;
 }
 
+#auth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 8rem;
+    background-color: #f7f9fc;
 
+}
