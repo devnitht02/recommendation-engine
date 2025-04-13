@@ -13,6 +13,7 @@ django_env/
 env/
 *.egg-info/
 *.egg
+.config.ini
 
 # IDE configurations
 .idea/
