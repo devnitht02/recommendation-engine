@@ -102,6 +102,41 @@
 
 
             $('#search-form').on('submit', handleSubmit);
+
+            $(document).on('click', '.bookmark-btn', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const button = $(this);
+                const courseId = button.data('course-id') || null;
+                const institutionId = button.data('institution-id') || null;
+
+                $.ajax({
+                    url: "{% url 'institutions:toggle_favourite' %}",
+                    type: "POST",
+                    headers: {'X-Requested-With': 'XMLHttpRequest'},
+                    data: {
+                        course_id: courseId,
+                        institution_id: institutionId,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        if (response.status === 'added') {
+                            button.addClass('text-yellow-400').removeClass('text-purple-700');
+                        } else if (response.status === 'removed') {
+                            button.removeClass('text-yellow-400').addClass('text-purple-700');
+                        }
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 403) {
+                            alert("You must log in to bookmark items.");
+                        } else {
+                            alert("Error while bookmarking. Please try again.");
+                        }
+                    }
+                });
+            });
+
         });
     </script>
 
@@ -137,24 +172,40 @@
         </div>
     </form>
 
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 items-stretch" style="margin-top: 10rem">
         {% for institution in institution_data %}
-            <a href="{% url 'institutions:view_institution' institution.id %}" target="_blank"
-               class="block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between md:col-span-2 cards">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
-                    {{ institution.institution_name }}
-                </h5>
-                <p class="font-normal text-gray-700">
-                    State: <span class="text-blue-500">{{ institution.state.name }}</span>
-                </p>
-                <p class="font-normal text-gray-700">
-                    District: <span class="text-blue-500">{{ institution.district.name }}</span>
-                </p>
-            </a>
+            <div class="relative p-6 bg-white border border-purple-500 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
+                <a href="{% url 'institutions:view_institution' institution.id %}" target="_blank" class="flex-1">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
+                        {{ institution.institution_name }}
+                    </h5>
+                    <p class="font-normal text-gray-700">
+                        State: <span class="text-blue-500">{{ institution.state.name }}</span>
+                    </p>
+                    <p class="font-normal text-gray-700">
+                        District: <span class="text-blue-500">{{ institution.district.name }}</span>
+                    </p>
+                </a>
+
+                <!-- Bookmark Button Bottom Right -->
+                <div class="" style="position: absolute; left:26rem; top: 6rem;">
+                    <button type="button"
+                            class="bookmark-btn text-purple-700 hover:text-yellow-400"
+                            data-institution-id="{{ institution.id }}"
+                            title="Bookmark this institution">
+                        <i class="fa-solid fa-bookmark fa-lg" style="color: #5521b5;"></i>
+                    </button>
+
+                </div>
+
+
+            </div>
         {% empty %}
             <p class="text-center text-gray-700 col-span-3">No institutions available.</p>
         {% endfor %}
     </div>
+
 
 
     {% include 'footer.html' %}

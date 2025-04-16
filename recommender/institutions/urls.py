@@ -18,5 +18,6 @@ urlpatterns = [
 
     path('search_suggestions_institutions/', views.search_suggestions_institutions,
          name='search_suggestions_institutions'),
+    path('toggle_favourite/', views.toggle_favourite, name='toggle_favourite'),
 
 ]

@@ -203,3 +203,43 @@ input[type="search"] {
 .text-uppercase {
     text-transform: uppercase;
 }
+
+/* Testimonials */
+
+.scroll-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.scroll-inner {
+  display: flex;
+  gap: 1.5rem;
+  animation: scroll-left 40s linear infinite;
+}
+
+.testimonial-card {
+  flex: None;
+    height: 380px;
+}
+
+.inner-card{
+    height: 257px;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.success-title {
+  text-transform: uppercase;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #4c1d95;
+}

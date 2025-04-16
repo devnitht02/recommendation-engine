@@ -5,6 +5,7 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -177,6 +178,7 @@ class WnStreamChoice(models.Model):
 
 
 class WnUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, db_column='auth_user_id', blank=True, null=True)
     user_name = models.CharField(max_length=255)
     hsc_percentage = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     user_gender = models.CharField(max_length=20)
@@ -210,3 +212,27 @@ class WnContact(models.Model):
     class Meta:
         managed = False
         db_table = 'wn_contact'
+
+
+class WnFavourite(models.Model):
+    user = models.ForeignKey('WnUser', models.DO_NOTHING, db_column='user')
+    course = models.ForeignKey('WnCourse', models.DO_NOTHING, db_column='course', blank=True, null=True)
+    institution = models.ForeignKey('WnInstitution', models.DO_NOTHING, db_column='institution', blank=True, null=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    active = models.CharField(max_length=1, default='Y')
+
+    class Meta:
+        managed = False
+        db_table = 'wn_favourite'
+        unique_together = (
+            ('user', 'course'),
+            ('user', 'institution'),
+        )
+
+    def __str__(self):
+        if self.course:
+            return f"{self.user.user_name} → Course: {self.course.course_name}"
+        elif self.institution:
+            return f"{self.user.user_name} → Institution: {self.institution.institution_name}"
+        return f"{self.user.user_name} → Unknown"

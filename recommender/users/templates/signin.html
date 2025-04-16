@@ -5,6 +5,10 @@
     <link rel="stylesheet" href="{% static '/src/register.css' %}">
 {% endblock css_cdn %}
 
+{% block js_cdn %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock js_cdn %}
+
 {% block content %}
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -74,15 +78,38 @@
 
             </form>
 
+            <!-- Tailwind Modal -->
+            <div id="feedback-modal"
+                 class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+                <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">Message</h2>
+                    {% for message in messages %}
+                        <p class="{% if message.tags == 'success' %}text-green-600{% else %}text-red-600{% endif %} mb-4">{{ message }}</p>
+                    {% endfor %}
+                    <div class="flex justify-end">
+                        <button id="close-modal"
+                                class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                            try again
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                $(document).ready(function () {
+                    {% if messages %}
+                        $('#feedback-modal').removeClass('hidden');
+                    {% endif %}
+
+                    $('#close-modal').click(function () {
+                        $('#feedback-modal').addClass('hidden');
+                    });
+                });
+            </script>
+
 
         </div>
     </div>
-
-
-
-
-
-
 
 
 {% endblock %}

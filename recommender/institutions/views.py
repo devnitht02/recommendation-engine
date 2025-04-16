@@ -1,25 +1,35 @@
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 
-from recommender.models import WnDegree
+from recommender.models import WnDegree, WnFavourite
+from users.models import WnUser
 from .models import WnInstitution, WnCourse
 
 
 def institutions(request):
     institution_data = WnInstitution.objects.select_related("state", "district")
+    wn_user = None
+    if request.user.is_authenticated:
+        wn_user = WnUser.objects.filter(email=request.user.email).first()
     search_suggestion_institutions = request.GET.get('query', '')
     return render(request, 'institutions.html', {'institution_data': institution_data,
-                                                 'search_suggestions_institutions': search_suggestion_institutions})
+                                                 'search_suggestions_institutions': search_suggestion_institutions,
+                                                 'wn_user': wn_user})
 
 
 def courses(request):
     course_data = WnCourse.objects.select_related("degree", "stream").all()
     degree_data = WnDegree.objects.all()
-    return render(request, 'courses.html', {'course_data': course_data, 'degree_data': degree_data})
 
+    wn_user = None
+    if request.user.is_authenticated:
+        wn_user = WnUser.objects.filter(email=request.user.email).first()
 
-def favourites(request):
-    return render(request, 'favourites.html')
+    return render(request, 'courses.html', {
+        'course_data': course_data,
+        'degree_data': degree_data,
+        'wn_user': wn_user,
+    })
 
 
 def view_course(request, course_id):
@@ -64,3 +74,60 @@ def search_suggestions_institutions(request):
         return JsonResponse({'institutions': institution_data})
     else:
         return JsonResponse({'institutions': []})
+
+
+def favourites(request):
+    if not request.user.is_authenticated:
+        return render(request, 'favourites.html', {'favourite': None, 'anonymous': True})
+
+    wn_user = WnUser.objects.filter(email=request.user.email).first()
+    if wn_user:
+        favourite = WnFavourite.objects.filter(user=wn_user)
+        return render(request, 'favourites.html', {'favourite': favourite, 'anonymous': False})
+
+    return render(request, 'favourites.html', {'favourite': None, 'anonymous': True})
+
+
+def toggle_favourite(request):
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        course_id = request.POST.get('course_id')
+        institution_id = request.POST.get('institution_id')
+
+        # Get the Django user from session
+        if not 'user_id' in request.session:
+            return JsonResponse({'status': 'error', 'message': 'Login required'}, status=403)
+
+        try:
+            wn_user = WnUser.objects.get(pk=request.session['user_id'])
+        except WnUser.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'WnUser not linked'}, status=404)
+
+        if course_id:
+            try:
+                course = WnCourse.objects.get(id=course_id)
+                print(wn_user)
+                print(course)
+                # created = WnFavourite.objects.create(user=wn_user, course=course)
+                ins= WnFavourite(user=wn_user, course=course)
+                ins.save()
+                if not ins:
+                    # fav.delete()
+                    return JsonResponse({'status': 'removed', 'type': 'course'})
+                return JsonResponse({'status': 'added', 'type': 'course'})
+            except WnCourse.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': 'Course not found'}, status=404)
+
+        if institution_id:
+            try:
+                institution = WnInstitution.objects.get(id=institution_id)
+                fav, created = WnFavourite.objects.get_or_create(user=wn_user, institution=institution)
+                if not created:
+                    fav.delete()
+                    return JsonResponse({'status': 'removed', 'type': 'institution'})
+                return JsonResponse({'status': 'added', 'type': 'institution'})
+            except WnInstitution.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': 'Institution not found'}, status=404)
+
+        return JsonResponse({'status': 'error', 'message': 'Missing IDs'}, status=400)
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)

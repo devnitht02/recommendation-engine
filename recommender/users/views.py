@@ -29,7 +29,7 @@ def signup(request):
         # Check if user already exists
         if WnUser.objects.filter(email=email).exists():
             messages.error(request, "Email already registered.")
-            return redirect('users:signup')
+            return redirect('users:signin')
 
         # Save new user
         user = WnUser(user_name=name, email=email, password=make_password(password))
@@ -41,7 +41,7 @@ def signup(request):
         request.session['user_email'] = user.email
 
         messages.success(request, "Signup successful! You are now logged in.")
-        return redirect('users:user_profile')
+        return redirect('users:signin')
 
     return render(request, "signup.html")
 

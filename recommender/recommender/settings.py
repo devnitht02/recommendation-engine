@@ -117,9 +117,16 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-GOOGLE_CLIENT_ID = "1051342845649-8qlcc0h41kq2sf3dakaogfdgv2omks4p.apps.googleusercontent.com"
-GOOGLE_REDIRECT_URI = "http://localhost:8000/google_login/"
-GOOGLE_CLIENT_SECRET = "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"
+# GOOGLE_CLIENT_ID = "1051342845649-8qlcc0h41kq2sf3dakaogfdgv2omks4p.apps.googleusercontent.com"
+# GOOGLE_REDIRECT_URI = "http://localhost:8000/google_login/"
+# GOOGLE_CLIENT_SECRET = "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"
+
+config = configparser.ConfigParser()
+config.read("config.ini")
+
+GOOGLE_CLIENT_ID = config["google"]["GOOGLE_CLIENT_ID"]
+GOOGLE_REDIRECT_URI = config["google"]["GOOGLE_REDIRECT_URI"]
+GOOGLE_CLIENT_SECRET = config["google"]["GOOGLE_CLIENT_SECRET"]
 
 COMPRESS_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -142,6 +149,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
