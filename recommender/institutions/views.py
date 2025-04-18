@@ -33,7 +33,6 @@ def courses(request):
     })
 
 
-
 def view_course(request, course_id):
     course = get_object_or_404(WnCourse, pk=course_id)
     return render(request, 'view_course.html', {'course': course})

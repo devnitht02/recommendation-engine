@@ -79,10 +79,13 @@ class WnCourse(models.Model):
     course_description = models.TextField()
     stream = models.ForeignKey('WnStream', models.DO_NOTHING, db_column='stream')
     degree = models.ForeignKey('WnDegree', models.DO_NOTHING, db_column='degree')
+    rank = models.IntegerField(null=True, blank=True, db_column='rank')
+    degree_price = models.IntegerField(blank=True, null=True, db_column='degree_price')
+    duration_years = models.IntegerField(blank=True, null=True, db_column='duration_years')
     created_date = models.DateTimeField()
     modified_date = models.DateTimeField()
     active = models.CharField(max_length=1)
-    rank = models.IntegerField(null=True, blank=True, db_column='rank')
+
 
     class Meta:
         managed = False

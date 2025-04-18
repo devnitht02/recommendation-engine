@@ -39,12 +39,11 @@
             </div>
 
             <div>
-                <p class="text-gray-700 text-xl mb-2 font-medium"><i class="fa-solid fa-clock fa-lg" style="color: #824dd8;"></i>&nbsp; Duration:</p>
-                <p class="font-semibold text-lg text-gray-800">{{ course.duration }}</p>
+                <p class="text-gray-700 text-xl mb-2 font-medium"><i class="fa-solid fa-clock fa-lg" style="color: #824dd8;"></i>&nbsp; Duration: {{ course.duration_years }} Years</p>
             </div>
          <div>
                 <p class="text-gray-700 text-xl mb-2 font-medium"><i class="fa-solid fa-credit-card fa-lg" style="color: #824dd8;"></i>&nbsp;
-                    Price:  price here</p>
+                    Price: INR(₹) {{ course.degree_price }}</p>
 
             </div>
         </div>
