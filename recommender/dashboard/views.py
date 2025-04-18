@@ -1,10 +1,12 @@
 import configparser
 import os
 import smtplib
+
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
+
 from institutions.models import WnCourse
 from institutions.models import WnInstitution
 from recommendations.services.recommendation_service import RecommendationService
@@ -33,12 +35,26 @@ def dashboard(request):
         "english, hindi, political science": "https://images.pexels.com/photos/540518/pexels-photo-540518.jpeg",
         "economics with foreign trade": "https://images.pexels.com/photos/257362/pexels-photo-257362.jpeg",
     }
+
+    # institution_images = {
+    #     "iit": "https://images.pexels.com/photos/3844581/pexels-photo-3844581.jpeg",
+    #     "nit": "https://images.pexels.com/photos/256559/pexels-photo-256559.jpeg",
+    #     "university": "https://images.pexels.com/photos/207691/pexels-photo-207691.jpeg",
+    #     "institute of technology": "https://images.pexels.com/photos/256541/pexels-photo-256541.jpeg",
+    #     "college": "https://images.pexels.com/photos/1184578/pexels-photo-1184578.jpeg",
+    #     "engineering": "https://images.pexels.com/photos/256559/pexels-photo-256559.jpeg",
+    #     "management": "https://images.pexels.com/photos/3184298/pexels-photo-3184298.jpeg",
+    #     "medical": "https://images.pexels.com/photos/3844581/pexels-photo-3844581.jpeg",
+    #     "law": "https://images.pexels.com/photos/6077322/pexels-photo-6077322.jpeg",
+    # }
+
     course_data = WnCourse.objects.select_related("degree", "stream").all()
     institution_data = WnInstitution.objects.select_related("state", "district").all()
     search_suggestion = request.GET.get('query', '')
-    top_ranked = WnCourse.objects.filter(rank__isnull=False).order_by('rank')[:20]
+    top_ranked_courses = WnCourse.objects.filter(rank__isnull=False).order_by('rank')[:20]
+    top_ranked_institutions = WnInstitution.objects.filter(rank__isnull=False).order_by('rank')[:20]
 
-    for course in top_ranked:
+    for course in top_ranked_courses:
         assigned = False
         name = course.course_name.lower()
         for key, url in course_images.items():
@@ -49,8 +65,21 @@ def dashboard(request):
         if not assigned:
             course.image_url = "https://via.placeholder.com/400x200?text=No+Image"
 
+    # for institution in top_ranked_institutions:
+    #     assigned = False
+    #     name = institution.institution_name.lower()
+    #     for key, url in institution_images.items():
+    #         if key in name:
+    #             institution.image_url = url
+    #             assigned = True
+    #             break
+    #     if not assigned:
+    #         institution.image_url = "https://via.placeholder.com/400x200?text=No+Image"
+
     return render(request, 'dashboard.html', {'course_data': course_data, 'search_suggestion': search_suggestion,
-                                              'institution_data': institution_data, 'top_ranked': top_ranked})
+                                              'institution_data': institution_data,
+                                              'top_ranked_courses': top_ranked_courses,
+                                              'top_ranked_institutions': top_ranked_institutions})
 
 
 def search_suggestions(request):

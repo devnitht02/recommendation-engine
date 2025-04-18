@@ -10,6 +10,7 @@ class WnInstitution(models.Model):
                                          blank=True, null=True)
     state = models.ForeignKey(WnState, models.DO_NOTHING)
     district = models.ForeignKey(WnDistrict, models.DO_NOTHING)
+    rank = models.PositiveIntegerField(blank=True, null=True, db_column='rank')
     created_date = models.DateTimeField()
     modified_date = models.DateTimeField()
     active = models.CharField(max_length=1)

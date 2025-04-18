@@ -225,13 +225,12 @@
         <div class="max-w-screen-xl px-4 mx-auto">
             <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">TOP RATED COURSES</h2>
 
-            <!-- Horizontal Scroll Wrapper -->
-            <div class="scroll-wrapper scroll-horizontal-wrapper auto-scroll"
+            <!-- Correct Scroll Wrapper -->
+            <div class=" scroll-horizontal-wrapper auto-scroll"
                  onmouseenter="this.classList.add('scroll-pause')"
                  onmouseleave="this.classList.remove('scroll-pause')">
-
-                <div class="scroll-inner">
-                    {% for course in top_ranked %}
+                <div class="scroll-inner px-4"> <!-- Add padding here for clean sides -->
+                    {% for course in top_ranked_courses %}
                         <div class="course-card">
                             <img
                                     class="course-image"
@@ -257,9 +256,9 @@
                     {% endfor %}
                 </div>
             </div>
-
         </div>
     </section>
+
 
 
     <!-- TOP RATED INSTITUTIONS SECTION -->
@@ -268,25 +267,26 @@
             <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">TOP RATED INSTITUTIONS</h2>
 
             <!-- Horizontal Scroll Wrapper -->
-            <div class="scroll-wrapper scroll-horizontal-wrapper auto-scroll"
+            <div class=" class= max-w-screen-xl px-4 mx-auto scroll-wrapper scroll-horizontal-wrapper auto-scroll"
                  onmouseenter="this.classList.add('scroll-pause')"
                  onmouseleave="this.classList.remove('scroll-pause')">
 
                 <div class="scroll-inner">
-                    {% for course in top_ranked %}
+                    {% for institution in top_ranked_institutions %}
                         <div class="course-card">
                             <img
                                     class="course-image"
-                                    src="{{ course.image_url }}"
-                                    alt="{{ course.course_name }}"
+                                    src="https://images.pexels.com/photos/256559/pexels-photo-256559.jpeg"
+                                    alt="{{ institution.institution_name }}"
                                     onerror="this.onerror=null;this.src='https://via.placeholder.com/400x200?text=No+Image';"
                             />
                             <div class="course-content">
                                 <h5 class="course-title">
-                                    <span class="course-rank">{{ course.rank }}.</span>
-                                    {{ course.course_name }}
+                                    <span class="course-rank">{{ institution.rank }}.</span>
+                                    {{ institution.institution_name }}
                                 </h5>
-                                <a href="{% url 'institutions:view_course' course.id %}" class="read-more-button">
+                                <a href="{% url 'institutions:view_institution' institution.id %}"
+                                   class="read-more-button">
                                     Read more
                                     <svg class="w-3.5 h-3.5 ms-2" fill="none" stroke="currentColor" stroke-width="2"
                                          viewBox="0 0 14 10" xmlns="http://www.w3.org/2000/svg">
@@ -299,7 +299,6 @@
                     {% endfor %}
                 </div>
             </div>
-
         </div>
     </section>
 
