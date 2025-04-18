@@ -243,3 +243,136 @@ input[type="search"] {
   font-size: 1.5rem;
   color: #4c1d95;
 }
+
+/* Horizontal scrolling container */
+.scroll-horizontal-wrapper {
+  display: flex;
+  overflow-x: auto;
+  gap: 1.5rem;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 1rem;
+  scrollbar-width: none;
+}
+.scroll-horizontal-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+/* Each course card */
+.course-card {
+  flex: 0 0 auto;
+  width: 18rem;
+  height: 420px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Course image */
+.course-image {
+  height: 10rem;
+  width: 100%;
+  object-fit: cover;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+}
+
+/* Course content box */
+.course-content {
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Course title */
+.course-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+/* Rank styling */
+.course-rank {
+  color: #7c3aed;
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+
+/* Button styling */
+.read-more-button {
+  align-self: flex-end;
+  background-color: #7c3aed;
+  color: white;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.read-more-button:hover {
+  background-color: #6d28d9;
+}
+
+/* Auto-scroll animation */
+@keyframes scroll-horizontal {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.scroll-horizontal-wrapper.auto-scroll {
+  animation: scroll-horizontal 40s linear infinite;
+}
+
+.scroll-horizontal-wrapper.scroll-pause {
+  animation-play-state: paused;
+}
+.scroll-wrapper {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  white-space: nowrap;
+  width: 100%;
+  position: relative;
+}
+
+.scroll-inner {
+  display: flex;
+  gap: 1.5rem;
+  min-width: max-content; /* Prevent wrapping */
+  animation: scroll-left 60s linear infinite;
+}
+
+.scroll-pause .scroll-inner {
+  animation-play-state: paused;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Hide scrollbar (optional) */
+.scroll-wrapper::-webkit-scrollbar {
+  display: none;
+}
+.scroll-wrapper {
+  scrollbar-width: none;
+}

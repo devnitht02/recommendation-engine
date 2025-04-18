@@ -1,24 +1,56 @@
 import configparser
 import os
 import smtplib
-
 from django.contrib import messages
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
-
-from institutions.models import WnCourse, WnInstitution
+from django.shortcuts import redirect
+from django.shortcuts import render
+from institutions.models import WnCourse
+from institutions.models import WnInstitution
 from recommendations.services.recommendation_service import RecommendationService
 from recommender.models import WnContact
 
 
-# Create your views here.
 def dashboard(request):
+    course_images = {
+        "computer application": "https://images.pexels.com/photos/3862140/pexels-photo-3862140.jpeg",
+        "economics, computer science, statistics": "https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg",
+        "economics, computer application and political science": "https://images.pexels.com/photos/669619/pexels-photo-669619.jpeg",
+        "business administration": "https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg",
+        "accounting and financial management": "https://images.pexels.com/photos/3944403/pexels-photo-3944403.jpeg",
+        "economics, journalism and mass communication": "https://images.pexels.com/photos/261679/pexels-photo-261679.jpeg",
+        "economics, journalism, kannada": "https://images.pexels.com/photos/267569/pexels-photo-267569.jpeg",
+        "development economics": "https://images.pexels.com/photos/353667/pexels-photo-353667.jpeg",
+        "economics, computer application, applied statistics": "https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg",
+        "economics, computer applications, psychology": "https://images.pexels.com/photos/356043/pexels-photo-356043.jpeg",
+        "design(honours)": "https://images.pexels.com/photos/296895/pexels-photo-296895.jpeg",
+        "economics and history": "https://images.pexels.com/photos/207216/pexels-photo-207216.jpeg",
+        "english literature": "https://images.pexels.com/photos/818996/pexels-photo-818996.jpeg",
+        "journalism": "https://images.pexels.com/photos/374820/pexels-photo-374820.jpeg",
+        "advertising and sales management": "https://images.pexels.com/photos/3183168/pexels-photo-3183168.jpeg",
+        "criminology and police administration": "https://images.pexels.com/photos/4506105/pexels-photo-4506105.jpeg",
+        "economics": "https://images.pexels.com/photos/4386373/pexels-photo-4386373.jpeg",
+        "english, hindi, political science": "https://images.pexels.com/photos/540518/pexels-photo-540518.jpeg",
+        "economics with foreign trade": "https://images.pexels.com/photos/257362/pexels-photo-257362.jpeg",
+    }
     course_data = WnCourse.objects.select_related("degree", "stream").all()
     institution_data = WnInstitution.objects.select_related("state", "district").all()
-    search_suggestion = request.GET.get('query', '')  # Capture the search suggestion if it exists
+    search_suggestion = request.GET.get('query', '')
+    top_ranked = WnCourse.objects.filter(rank__isnull=False).order_by('rank')[:20]
+
+    for course in top_ranked:
+        assigned = False
+        name = course.course_name.lower()
+        for key, url in course_images.items():
+            if key in name:
+                course.image_url = url
+                assigned = True
+                break
+        if not assigned:
+            course.image_url = "https://via.placeholder.com/400x200?text=No+Image"
 
     return render(request, 'dashboard.html', {'course_data': course_data, 'search_suggestion': search_suggestion,
-                                              'institution_data': institution_data})
+                                              'institution_data': institution_data, 'top_ranked': top_ranked})
 
 
 def search_suggestions(request):
@@ -28,13 +60,11 @@ def search_suggestions(request):
     if query:
         ins = RecommendationService()
         search_data = ins.global_search(query)
-        # Fetch courses that match the query (case insensitive)
+
         course_results = WnCourse.objects.filter(course_name__icontains=query)
 
-        # Fetch institutions that match the query (case insensitive)
         institution_results = WnInstitution.objects.filter(institution_name__icontains=query)
 
-        # Prepare data for both courses and institutions with type
         data = {
             'courses': [{'id': course.id, 'course_name': course.course_name, 'type': 'course'} for course in
                         course_results],
@@ -44,20 +74,18 @@ def search_suggestions(request):
             "search_data": search_data
         }
     else:
-        # If query is empty, return empty results for both
+
         data = {'courses': [], 'institutions': []}
 
     return JsonResponse(data)
 
 
-
 def redirect_to_item(request, item_id):
-    # Try to find a course with the given ID
     try:
         course = WnCourse.objects.get(id=item_id)
         return redirect('institutions:view_course', course_id=course.id)
     except WnCourse.DoesNotExist:
-        # If no course found, check for an institution
+
         try:
             institution = WnInstitution.objects.get(id=item_id)
             return redirect('institutions:view_institution', institution_id=institution.id)

@@ -1,8 +1,5 @@
 from django.db import models
-
 from users.models import WnDistrict, WnState, WnUser
-
-
 # from courses.models import WnCourse
 
 
@@ -48,7 +45,7 @@ class WnInstitutionChoice(models.Model):
 
 class WnInstitutionCourse(models.Model):
     institution = models.OneToOneField(WnInstitution, models.DO_NOTHING,
-                                       primary_key=True)  # The composite primary key (institution_id, course_id) found, that is not supported. The first column is selected.
+                                       primary_key=True)
     course = models.ForeignKey("WnCourse", models.DO_NOTHING)
     created_date = models.DateTimeField()
     modified_date = models.DateTimeField()
@@ -58,7 +55,6 @@ class WnInstitutionCourse(models.Model):
         managed = False
         db_table = 'wn_institution_course'
         unique_together = (('institution', 'course'),)
-
 
 
 class WnLocationChoice(models.Model):
@@ -77,7 +73,6 @@ class WnLocationChoice(models.Model):
 
 # courses
 
-
 class WnCourse(models.Model):
     course_name = models.CharField(max_length=255)
     course_description = models.TextField()
@@ -86,6 +81,7 @@ class WnCourse(models.Model):
     created_date = models.DateTimeField()
     modified_date = models.DateTimeField()
     active = models.CharField(max_length=1)
+    rank = models.IntegerField(null=True, blank=True, db_column='rank')
 
     class Meta:
         managed = False

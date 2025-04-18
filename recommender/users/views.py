@@ -40,7 +40,7 @@ def signup(request):
         request.session['user_name'] = user.user_name
         request.session['user_email'] = user.email
 
-        messages.success(request, "Signup successful! You are now logged in.")
+        messages.success(request, "Signup successful! Please log-in")
         return redirect('users:signin')
 
     return render(request, "signup.html")

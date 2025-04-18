@@ -1,7 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 
-from recommender.models import WnDegree, WnFavourite
+from institutions.models import WnDegree
+from recommender.models import WnFavourite
 from users.models import WnUser
 from .models import WnInstitution, WnCourse
 
@@ -30,6 +31,7 @@ def courses(request):
         'degree_data': degree_data,
         'wn_user': wn_user,
     })
+
 
 
 def view_course(request, course_id):
@@ -77,10 +79,10 @@ def search_suggestions_institutions(request):
 
 
 def favourites(request):
-    if not request.user.is_authenticated:
+    if 'user_id' not in request.session:
         return render(request, 'favourites.html', {'favourite': None, 'anonymous': True})
 
-    wn_user = WnUser.objects.filter(email=request.user.email).first()
+    wn_user = WnUser.objects.filter(pk=request.session['user_id']).first()
     if wn_user:
         favourite = WnFavourite.objects.filter(user=wn_user)
         return render(request, 'favourites.html', {'favourite': favourite, 'anonymous': False})
@@ -108,7 +110,7 @@ def toggle_favourite(request):
                 print(wn_user)
                 print(course)
                 # created = WnFavourite.objects.create(user=wn_user, course=course)
-                ins= WnFavourite(user=wn_user, course=course)
+                ins = WnFavourite(user=wn_user, course=course)
                 ins.save()
                 if not ins:
                     # fav.delete()

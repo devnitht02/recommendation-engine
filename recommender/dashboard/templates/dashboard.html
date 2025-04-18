@@ -142,270 +142,264 @@
 
 
     <section class="dashboard-container">
-        <!-- TOP BANNER SECTION -->
-        <section class="top-banner">
+    <!-- TOP BANNER SECTION -->
+    <section class="top-banner">
 
-            {# SEARCH FORM #}
-            <form action="{% url 'dashboard:search_suggestions' %}" method="GET" class="max-w-md mx-auto"
-                  id="search-form">
-                {#                {% csrf_token %}#}
-                <label for="default-search" class="mb-2 text-sm font-medium text-purple-900 sr-only">Search</label>
-                <div class="relative search-div">
-                    <input type="search" id="default-search"
-                           class="block w-full p-4 ps-10 text-sm text-purple-900 border border-purple-300 rounded-lg bg-purple-50 focus:ring-purple-500 focus:border-purple-500"
-                           placeholder="Search for Degrees and Institutions..." required>
-                    <button type="submit"
-                            class="text-white absolute end-2.5 bottom-2.5 bg-purple-700 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2">
-                        Search
-                    </button>
+        {# SEARCH FORM #}
+        <form action="{% url 'dashboard:search_suggestions' %}" method="GET" class="max-w-md mx-auto"
+              id="search-form">
+            {#                {% csrf_token %}#}
+            <label for="default-search" class="mb-2 text-sm font-medium text-purple-900 sr-only">Search</label>
+            <div class="relative search-div">
+                <input type="search" id="default-search"
+                       class="block w-full p-4 ps-10 text-sm text-purple-900 border border-purple-300 rounded-lg bg-purple-50 focus:ring-purple-500 focus:border-purple-500"
+                       placeholder="Search for Degrees and Institutions..." required>
+                <button type="submit"
+                        class="text-white absolute end-2.5 bottom-2.5 bg-purple-700 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2">
+                    Search
+                </button>
 
-                    <!-- Dropdown to Show Results -->
-                    <ul id="suggestions-list" class="suggestion-list"
-                        style="position: absolute; width: 100%; background-color: white; border: 1px solid #ccc; display: none; margin-top: 3.42rem; ">
-                    </ul>
-                </div>
-            </form>
+                <!-- Dropdown to Show Results -->
+                <ul id="suggestions-list" class="suggestion-list"
+                    style="position: absolute; width: 100%; background-color: white; border: 1px solid #ccc; display: none; margin-top: 3.42rem; ">
+                </ul>
+            </div>
+        </form>
 
 
-            {#HEADINGS#}
-            <div class="grid max-w-screen-xl px-4 pt-20 pb-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 lg:pt-28">
-                <div class="mr-auto place-self-center lg:col-span-7 heading-div">
-                    <h1
-                            class="max-w-2xl mb-4 text-4xl font-extrabold leading-none tracking-tight md:text-5xl xl:text-6xl
+        {#HEADINGS#}
+        <div class="grid max-w-screen-xl px-4 pt-20 pb-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 lg:pt-28">
+            <div class="mr-auto place-self-center lg:col-span-7 heading-div">
+                <h1
+                        class="max-w-2xl mb-4 text-4xl font-extrabold leading-none tracking-tight md:text-5xl xl:text-6xl
                               heading1">
-                        Discover the Best Degree & Institution for You </h1>
-                    <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl heading2"
-                       style="color: black; font-weight: bold">
-                        a vast selection of degree programs and institutions, all in one place!</p>
-                    <div class="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
-                        <a href="{% url 'users:signup' %}"
-                           class="inline-flex items-center justify-center w-64 px-5 py-3 text-sm font-medium text-center
+                    Discover the Best Degree & Institution for You </h1>
+                <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl heading2"
+                   style="color: black; font-weight: bold">
+                    a vast selection of degree programs and institutions, all in one place!</p>
+                <div class="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+                    <a href="{% url 'users:signup' %}"
+                       class="inline-flex items-center justify-center w-64 px-5 py-3 text-sm font-medium text-center
                            text-white border border-purple-500 rounded-lg bg-purple-700 hover:bg-purple-800 focus:ring-4
                            focus:ring-purple-300"
-                           style="color: white">
-                            Get Started
-                        </a>
-                    </div>
+                       style="color: white">
+                        Get Started
+                    </a>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        {#COURSE TYPES LIST#}
-        <!-- Scrolling Categories -->
-        <section class="bg-white py-8 overflow-hidden relative">
-            <div class="animate-scroll whitespace-nowrap flex items-center space-x-24 font-poppins">
+    {#COURSE TYPES LIST#}
+    <!-- Scrolling Categories -->
+    <section class="bg-white py-8 overflow-hidden relative">
+        <div class="animate-scroll whitespace-nowrap flex items-center space-x-24 font-poppins">
                 <span id="type"
                       class="text-gray-900 text-2xl font-semibold text-uppercase">Information Technology</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Business Management</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Computer Science</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Data Science</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Environmental Science</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Engineering</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Fine Arts</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Accounting</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Agriculture</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Biotechnology</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Psychology</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Sociology</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Physics</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Chemistry</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Mathematics</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Medicine</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Law</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Economics</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Education</span>
-                <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Nursing</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Business Management</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Computer Science</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Data Science</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Environmental Science</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Engineering</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Fine Arts</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Accounting</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Agriculture</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Biotechnology</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Psychology</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Sociology</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Physics</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Chemistry</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Mathematics</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Medicine</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Law</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Economics</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Education</span>
+            <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Nursing</span>
 
+        </div>
+    </section>
+
+
+    <!-- TOP RATED COURSES SECTION -->
+    <section class="pt-24" id="top-rated-courses">
+        <div class="max-w-screen-xl px-4 mx-auto">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">TOP RATED COURSES</h2>
+
+            <!-- Horizontal Scroll Wrapper -->
+            <div class="scroll-wrapper scroll-horizontal-wrapper auto-scroll"
+                 onmouseenter="this.classList.add('scroll-pause')"
+                 onmouseleave="this.classList.remove('scroll-pause')">
+
+                <div class="scroll-inner">
+                    {% for course in top_ranked %}
+                        <div class="course-card">
+                            <img
+                                    class="course-image"
+                                    src="{{ course.image_url }}"
+                                    alt="{{ course.course_name }}"
+                                    onerror="this.onerror=null;this.src='https://via.placeholder.com/400x200?text=No+Image';"
+                            />
+                            <div class="course-content">
+                                <h5 class="course-title">
+                                    <span class="course-rank">{{ course.rank }}.</span>
+                                    {{ course.course_name }}
+                                </h5>
+                                <a href="{% url 'institutions:view_course' course.id %}" class="read-more-button">
+                                    Read more
+                                    <svg class="w-3.5 h-3.5 ms-2" fill="none" stroke="currentColor" stroke-width="2"
+                                         viewBox="0 0 14 10" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-        </section>
+
+        </div>
+    </section>
 
 
-        <!-- TOP RATED COURSES SECTION -->
-        <section class="bg-gray-50 top-rated top-rated pt-24">
-            <div class="max-w-screen-xl px-4 mx-auto" id="top-rated">
-                <!-- Title -->
-                <h1 class="text-3xl font-bold text-gray-900">TOP RATED COURSES</h1>
+    <!-- TOP RATED INSTITUTIONS SECTION -->
+    <section class="pt-24" id="top-rated-courses">
+        <div class="max-w-screen-xl px-4 mx-auto">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">TOP RATED INSTITUTIONS</h2>
 
-                <!-- Horizontal Scroll Wrapper -->
-                <div class="relative">
-                    <div class="flex overflow-x-auto space-x-6 pb-4 scrollbar-hide"
-                         style="scroll-snap-type: x mandatory; overflow-y: hidden; white-space: nowrap;">
-                        <!-- Card 1 -->
-                        {% for course in course_data %}
-                            <div class="flex-shrink-0 w-72 bg-white border border-gray-200 rounded-lg shadow-sm
+            <!-- Horizontal Scroll Wrapper -->
+            <div class="scroll-wrapper scroll-horizontal-wrapper auto-scroll"
+                 onmouseenter="this.classList.add('scroll-pause')"
+                 onmouseleave="this.classList.remove('scroll-pause')">
+
+                <div class="scroll-inner">
+                    {% for course in top_ranked %}
+                        <div class="course-card">
+                            <img
+                                    class="course-image"
+                                    src="{{ course.image_url }}"
+                                    alt="{{ course.course_name }}"
+                                    onerror="this.onerror=null;this.src='https://via.placeholder.com/400x200?text=No+Image';"
+                            />
+                            <div class="course-content">
+                                <h5 class="course-title">
+                                    <span class="course-rank">{{ course.rank }}.</span>
+                                    {{ course.course_name }}
+                                </h5>
+                                <a href="{% url 'institutions:view_course' course.id %}" class="read-more-button">
+                                    Read more
+                                    <svg class="w-3.5 h-3.5 ms-2" fill="none" stroke="currentColor" stroke-width="2"
+                                         viewBox="0 0 14 10" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- TOP RECOMMENDED COURSES SECTION -->
+    <section class="bg-gray-50 top-rated top-rated pt-24">
+        <div class="max-w-screen-xl px-4 mx-auto" id="top-rated">
+            <!-- Title -->
+            <h1 class="text-3xl font-bold text-gray-900">TOP RECOMMENDED COURSES</h1>
+
+            <!-- Horizontal Scroll Wrapper -->
+            <div class="relative">
+                <div class="flex overflow-x-auto space-x-6 pb-4 scrollbar-hide"
+                     style="scroll-snap-type: x mandatory; overflow-y: hidden; white-space: nowrap;">
+                    <!-- Card 1 -->
+                    {% for course in course_data %}
+                        <div class="flex-shrink-0 w-72 bg-white border border-gray-200 rounded-lg shadow-sm
                             scroll-snap-align-start"
-                                 style="max-height: 35rem; display: inline-block;">
+                             style="max-height: 35rem; display: inline-block;">
+                            <a href="#">
+                                <img class="rounded-t-lg object-cover h-40 w-full"
+                                     src="{% static '/assets/images/image-1.jpg' %}" alt=""/>
+                            </a>
+                            <div class="p-5">
                                 <a href="#">
-                                    <img class="rounded-t-lg object-cover h-40 w-full"
-                                         src="{% static '/assets/images/image-1.jpg' %}" alt=""/>
+                                    <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 line-clamp-2">
+                                        {{ course.course_name }}
+                                    </h5>
+
                                 </a>
-                                <div class="p-5">
-                                    <a href="#">
-                                        <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 line-clamp-2">
-                                            {{ course.course_name }}
-                                        </h5>
 
-                                    </a>
-
-                                    <a href="{% url 'institutions:courses' %}"
-                                       class="inline-flex items-center px-3 py-2 text-sm font-medium text-center
+                                <a href="{% url 'institutions:courses' %}"
+                                   class="inline-flex items-center px-3 py-2 text-sm font-medium text-center
                                         text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none
                                         focus:ring-blue-300 read-more"
-                                       style="background-color: #5521b5;">
-                                        Read more
-                                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"
-                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                  stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                                        </svg>
-                                    </a>
-                                </div>
+                                   style="background-color: #5521b5;">
+                                    Read more
+                                    <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"
+                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                              stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                    </svg>
+                                </a>
                             </div>
-                        {% endfor %}
-                    </div>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- TOP RATED INSTITUTIONS SECTION -->
-        <section class="bg-gray-50 top-rated top-rated pt-24">
-            <div class="max-w-screen-xl px-4 mx-auto" id="top-rated">
-                <!-- Title -->
-                <h1 class="text-3xl font-bold text-gray-900">TOP RATED INSTITUTIONS</h1>
+    <!-- TOP RECOMMENDED INSTITUTIONS SECTION -->
+    <section class="bg-gray-50 top-rated top-rated pt-24">
+        <div class="max-w-screen-xl px-4 mx-auto" id="top-rated">
+            <!-- Title -->
+            <h1 class="text-3xl font-bold text-gray-900">TOP RECOMMENDED INSTITUTIONS</h1>
 
-                <!-- Horizontal Scroll Wrapper -->
-                <div class="relative">
-                    <div class="flex overflow-x-auto space-x-6 pb-4 scrollbar-hide"
-                         style="scroll-snap-type: x mandatory; overflow-y: hidden; white-space: nowrap;">
-                        <!-- Card 1 -->
-                        {% for institution in institution_data %}
-                            <div class="flex-shrink-0 w-72 bg-white border border-gray-200 rounded-lg shadow-sm
+            <!-- Horizontal Scroll Wrapper -->
+            <div class="relative">
+                <div class="flex overflow-x-auto space-x-6 pb-4 scrollbar-hide"
+                     style="scroll-snap-type: x mandatory; overflow-y: hidden; white-space: nowrap;">
+                    <!-- Card 1 -->
+                    {% for institution in institution_data %}
+                        <div class="flex-shrink-0 w-72 bg-white border border-gray-200 rounded-lg shadow-sm
                             scroll-snap-align-start"
-                                 style="max-height: 35rem; display: inline-block;">
-                                <a href="{{ institution.website }}">
-                                    <img class="rounded-t-lg object-cover h-40 w-full"
-                                         src="{% static '/assets/images/image-1.jpg' %}" alt=""/>
+                             style="max-height: 35rem; display: inline-block;">
+                            <a href="{{ institution.website }}">
+                                <img class="rounded-t-lg object-cover h-40 w-full"
+                                     src="{% static '/assets/images/image-1.jpg' %}" alt=""/>
+                            </a>
+                            <div class="p-5">
+                                <a href="#">
+                                    <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 line-clamp-2">
+                                        {{ institution.institution_name }}
+                                    </h5>
+
                                 </a>
-                                <div class="p-5">
-                                    <a href="#">
-                                        <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 line-clamp-2">
-                                            {{ institution.institution_name }}
-                                        </h5>
+                                <p class="mb-3 font-normal text-gray-700"
+                                   style="max-height: 10rem; overflow: hidden;">
+                                    {{ institution.state.name }}
+                                </p>
+                                <p class="mb-3 font-normal text-gray-700"
+                                   style="max-height: 10rem; overflow: hidden;">
+                                    {{ institution.district.name }}
+                                </p>
 
-                                    </a>
-                                    <p class="mb-3 font-normal text-gray-700"
-                                       style="max-height: 10rem; overflow: hidden;">
-                                        {{ institution.state.name }}
-                                    </p>
-                                    <p class="mb-3 font-normal text-gray-700"
-                                       style="max-height: 10rem; overflow: hidden;">
-                                        {{ institution.district.name }}
-                                    </p>
-
-                                    <a href="{% url 'institutions:institutions' %}"
-                                       class="inline-flex items-center px-3 py-2 text-sm font-medium text-center
+                                <a href="{% url 'institutions:institutions' %}"
+                                   class="inline-flex items-center px-3 py-2 text-sm font-medium text-center
                                         text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none
                                         focus:ring-blue-300 read-more"
-                                       style="background-color: #5521b5;">
-                                        Read more
-                                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"
-                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                  stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                                        </svg>
-                                    </a>
-                                </div>
+                                   style="background-color: #5521b5;">
+                                    Read more
+                                    <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"
+                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                              stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                    </svg>
+                                </a>
                             </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </section>
-    </section>
-
-
-
-
-
-    <section class="bg-white dark:bg-gray-900">
-        <div
-                class="items-center max-w-screen-xl px-4 py-8 mx-auto lg:grid lg:grid-cols-4 lg:gap-16 xl:gap-24 lg:py-24 lg:px-6">
-            <div class="col-span-2 mb-8">
-                <p class="text-lg font-medium text-purple-600 dark:text-purple-500">Trusted Worldwide</p>
-                <h2 class="mt-3 mb-4 text-3xl font-extrabold tracking-tight text-gray-900 md:text-3xl dark:text-white">
-                    Trusted by over 600 million users and 10,000 teams</h2>
-                <p class="font-light text-gray-500 sm:text-xl dark:text-gray-400">Our rigorous security and compliance
-                    standards are at the heart of all we do. We work tirelessly to protect you and your customers.</p>
-                <div class="pt-6 mt-6 space-y-4 border-t border-gray-200 dark:border-gray-700">
-                    <div>
-                        <a href="#"
-                           class="inline-flex items-center text-base font-medium text-purple-600 hover:text-purple-800 dark:text-purple-500 dark:hover:text-purple-700">
-                            Explore Legality Guide
-                            <svg class="w-5 h-5 ml-1" fill="currentColor" viewBox="0 0 20 20"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                      d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                                      clip-rule="evenodd"></path>
-                            </svg>
-                        </a>
-                    </div>
-                    <div>
-                        <a href="#"
-                           class="inline-flex items-center text-base font-medium text-purple-600 hover:text-purple-800 dark:text-purple-500 dark:hover:text-purple-700">
-                            Visit the Trust Center
-                            <svg class="w-5 h-5 ml-1" fill="currentColor" viewBox="0 0 20 20"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                      d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                                      clip-rule="evenodd"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-span-2 space-y-8 md:grid md:grid-cols-2 md:gap-12 md:space-y-0">
-                <div>
-                    <svg class="w-10 h-10 mb-2 text-purple-600 md:w-12 md:h-12 dark:text-purple-500" fill="currentColor"
-                         viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                              d="M2 5a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm14 1a1 1 0 11-2 0 1 1 0 012 0zM2 13a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2zm14 1a1 1 0 11-2 0 1 1 0 012 0z"
-                              clip-rule="evenodd"></path>
-                    </svg>
-                    <h3 class="mb-2 text-2xl font-bold dark:text-white">99.99% uptime</h3>
-                    <p class="font-light text-gray-500 dark:text-gray-400">For Landwind, with zero maintenance
-                        downtime</p>
-                </div>
-                <div>
-                    <svg class="w-10 h-10 mb-2 text-purple-600 md:w-12 md:h-12 dark:text-purple-500" fill="currentColor"
-                         viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                                d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z">
-                        </path>
-                    </svg>
-                    <h3 class="mb-2 text-2xl font-bold dark:text-white">600M+ Users</h3>
-                    <p class="font-light text-gray-500 dark:text-gray-400">Trusted by over 600 milion users around the
-                        world</p>
-                </div>
-                <div>
-                    <svg class="w-10 h-10 mb-2 text-purple-600 md:w-12 md:h-12 dark:text-purple-500" fill="currentColor"
-                         viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z"
-                              clip-rule="evenodd"></path>
-                    </svg>
-                    <h3 class="mb-2 text-2xl font-bold dark:text-white">100+ countries</h3>
-                    <p class="font-light text-gray-500 dark:text-gray-400">Have used Landwind to create functional
-                        websites</p>
-                </div>
-                <div>
-                    <svg class="w-10 h-10 mb-2 text-purple-600 md:w-12 md:h-12 dark:text-purple-500" fill="currentColor"
-                         viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                                d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z">
-                        </path>
-                    </svg>
-                    <h3 class="mb-2 text-2xl font-bold dark:text-white">5+ Million</h3>
-                    <p class="font-light text-gray-500 dark:text-gray-400">Transactions per day</p>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -413,137 +407,6 @@
 
 
 
-    <section class="bg-white py-16">
-        <h2 class="success-title text-center mb-8">Stories of Success</h2>
-
-        <div class="scroll-wrapper">
-            <div class="scroll-inner space-x-4 flex">
-
-                <!-- Success Story 1 -->
-                <div class="testimonial-card flex-none">
-                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start">
-                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
-                             src="https://randomuser.me/api/portraits/women/65.jpg" alt="Student">
-                        <h3 class="text-lg font-semibold text-gray-800 text-center">Aparna Sharma</h3>
-                        <p class="text-sm text-gray-700 text-center">Lucknow, Uttar Pradesh</p>
-                        <p class="mt-4 text-gray-700 text-sm text-center">With limited guidance after 10+2, Aparna found
-                            the B.Sc. in Food Science at Amity University. She now interns with Nestlé India.</p>
-                    </div>
-                </div>
-
-                <!-- Success Story 2 -->
-                <div class="testimonial-card flex-none">
-                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start">
-                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
-                             src="https://randomuser.me/api/portraits/men/22.jpg" alt="Student">
-                        <h3 class="text-lg font-semibold text-gray-800 text-center">Ravi Mehta</h3>
-                        <p class="text-sm text-gray-700 text-center">Indore, Madhya Pradesh</p>
-                        <p class="mt-4 text-gray-700 text-sm text-center">Ravi used this platform to discover B.Tech. in
-                            Mechanical Engineering at Manipal Institute of Technology. He now works at Tata Motors.</p>
-                    </div>
-                </div>
-
-                <!-- Success Story 3 -->
-                <div class="testimonial-card flex-none">
-                    <div class="w-80 h-[400px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start inner-card">
-                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
-                             src="https://randomuser.me/api/portraits/women/10.jpg" alt="Student">
-                        <h3 class="text-lg font-semibold text-gray-800 text-center">Neha Kaur</h3>
-                        <p class="text-sm text-gray-700 text-center">Chandigarh, Punjab</p>
-                        <p class="mt-4 text-gray-700 text-sm text-center">Neha enrolled in B.Des. in Communication
-                            Design at Pearl Academy. She's now a Junior Designer at Ogilvy.</p>
-                    </div>
-                </div>
-
-                <!-- Success Story 4 -->
-                <div class="testimonial-card flex-none">
-                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start inner-card">
-                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
-                             src="https://randomuser.me/api/portraits/men/55.jpg" alt="Student">
-                        <h3 class="text-lg font-semibold text-gray-800 text-center">Arjun Iyer</h3>
-                        <p class="text-sm text-gray-700 text-center">Bangalore, Karnataka</p>
-                        <p class="mt-4 text-gray-700 text-sm text-center">This platform helped Arjun get into the
-                            B.Tech. in Artificial Intelligence at VIT. He now researches ML applications at Microsoft
-                            Research India.</p>
-                    </div>
-                </div>
-
-                <!-- Success Story 5 -->
-                <div class="testimonial-card flex-none">
-                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start">
-                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
-                             src="https://randomuser.me/api/portraits/women/33.jpg" alt="Student">
-                        <h3 class="text-lg font-semibold text-gray-800 text-center">Shruti Verma</h3>
-                        <p class="text-sm text-gray-700 text-center">Bhopal, Madhya Pradesh</p>
-                        <p class="mt-4 text-gray-700 text-sm text-center">Shruti followed her passion for healthcare and
-                            enrolled in B.Sc. in Nursing at Christian Medical College. She's now preparing for
-                            NEET-PG.</p>
-                    </div>
-                </div>
-
-                <!-- Success Story 6 -->
-                <div class="testimonial-card flex-none">
-                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start inner-card">
-                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
-                             src="https://randomuser.me/api/portraits/men/85.jpg" alt="Student">
-                        <h3 class="text-lg font-semibold text-gray-800 text-center">Farhan Sheikh</h3>
-                        <p class="text-sm text-gray-700 text-center">Hyderabad, Telangana</p>
-                        <p class="mt-4 text-gray-700 text-sm text-center">After A/Ls, Farhan selected the B.Com. (Hons)
-                            in Finance at St. Xavier’s College. He now works as an analyst at Deloitte.</p>
-                    </div>
-                </div>
-
-                <!-- Success Story 7 -->
-                <div class="testimonial-card flex-none">
-                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start">
-                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
-                             src="https://randomuser.me/api/portraits/women/14.jpg" alt="Student">
-                        <h3 class="text-lg font-semibold text-gray-800 text-center">Priya Nair</h3>
-                        <p class="text-sm text-gray-700 text-center">Kochi, Kerala</p>
-                        <p class="mt-4 text-gray-700 text-sm text-center">Priya pursued her love for science with B.Sc.
-                            in Biotechnology at Jain University. She is now a research assistant at Biocon.</p>
-                    </div>
-                </div>
-
-                <!-- Success Story 8 -->
-                <div class="testimonial-card flex-none">
-                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start">
-                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
-                             src="https://randomuser.me/api/portraits/men/30.jpg" alt="Student">
-                        <h3 class="text-lg font-semibold text-gray-800 text-center">Kunal Patil</h3>
-                        <p class="text-sm text-gray-700 text-center">Nagpur, Maharashtra</p>
-                        <p class="mt-4 text-gray-700 text-sm text-center">Kunal found the Bachelor of Architecture at
-                            SRM University through this platform. He’s currently interning with a firm in Pune.</p>
-                    </div>
-                </div>
-
-                <!-- Success Story 9 -->
-                <div class="testimonial-card flex-none">
-                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start">
-                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
-                             src="https://randomuser.me/api/portraits/women/70.jpg" alt="Student">
-                        <h3 class="text-lg font-semibold text-gray-800 text-center">Megha Rajput</h3>
-                        <p class="text-sm text-gray-700 text-center">Jaipur, Rajasthan</p>
-                        <p class="mt-4 text-gray-700 text-sm text-center">Megha discovered BBA in Marketing at Christ
-                            University. She now manages digital campaigns for a startup.</p>
-                    </div>
-                </div>
-
-                <!-- Success Story 10 -->
-                <div class="testimonial-card flex-none">
-                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start">
-                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
-                             src="https://randomuser.me/api/portraits/men/41.jpg" alt="Student">
-                        <h3 class="text-lg font-semibold text-gray-800 text-center">Ankit Reddy</h3>
-                        <p class="text-sm text-gray-700 text-center">Vizag, Andhra Pradesh</p>
-                        <p class="mt-4 text-gray-700 text-sm text-center">Ankit selected B.Tech. in Electronics at IIIT
-                            Hyderabad. He now contributes to embedded systems at Intel India.</p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
 
     <section class="bg-white dark:bg-gray-900">
         <div class="max-w-screen-xl px-4 py-8 mx-auto lg:py-24 lg:px-6">
@@ -552,14 +415,13 @@
                     Built for students seeking the right direction
                 </h2>
                 <p class="mb-5 font-light text-gray-500 sm:text-xl dark:text-gray-400">
-                    PathFinder AI is designed to support students at critical crossroads in their academic journey.
+                    PathFinder is designed to support students at critical crossroads in their academic journey.
                     Whether you're uncertain after your 10+2 or exploring higher studies, our platform connects your
                     interests with real opportunities and institutions across India.
                 </p>
             </div>
         </div>
     </section>
-
 
 
 
@@ -704,24 +566,137 @@
     </section>
 
 
+    <section class="bg-white">
+        <h2 class="success-title text-center mb-8">Stories of Success</h2>
 
-    <section class="bg-gray-50 dark:bg-gray-800">
-        <div class="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
-            <div class="max-w-screen-sm mx-auto text-center">
-                <h2 class="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-white">
-                    Start your free trial today</h2>
-                <p class="mb-6 font-light text-gray-500 dark:text-gray-400 md:text-lg">Try Landwind Platform for 30
-                    days. No credit card required.</p>
-                <a href="#"
-                   class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800">Free
-                    trial for 30 days</a>
+        <div class="scroll-wrapper">
+            <div class="scroll-inner space-x-4 flex">
+
+                <!-- Success Story 1 -->
+                <div class="testimonial-card flex-none">
+                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start">
+                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
+                             src="https://randomuser.me/api/portraits/women/65.jpg" alt="Student">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">Aparna Sharma</h3>
+                        <p class="text-sm text-gray-700 text-center">Lucknow, Uttar Pradesh</p>
+                        <p class="mt-4 text-gray-700 text-sm text-center">With limited guidance after 10+2, Aparna found
+                            the B.Sc. in Food Science at Amity University. She now interns with Nestlé India.</p>
+                    </div>
+                </div>
+
+                <!-- Success Story 2 -->
+                <div class="testimonial-card flex-none">
+                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start">
+                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
+                             src="https://randomuser.me/api/portraits/men/22.jpg" alt="Student">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">Ravi Mehta</h3>
+                        <p class="text-sm text-gray-700 text-center">Indore, Madhya Pradesh</p>
+                        <p class="mt-4 text-gray-700 text-sm text-center">Ravi used this platform to discover B.Tech. in
+                            Mechanical Engineering at Manipal Institute of Technology. He now works at Tata Motors.</p>
+                    </div>
+                </div>
+
+                <!-- Success Story 3 -->
+                <div class="testimonial-card flex-none">
+                    <div class="w-80 h-[400px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start inner-card">
+                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
+                             src="https://randomuser.me/api/portraits/women/10.jpg" alt="Student">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">Neha Kaur</h3>
+                        <p class="text-sm text-gray-700 text-center">Chandigarh, Punjab</p>
+                        <p class="mt-4 text-gray-700 text-sm text-center">Neha enrolled in B.Des. in Communication
+                            Design at Pearl Academy. She's now a Junior Designer at Ogilvy.</p>
+                    </div>
+                </div>
+
+                <!-- Success Story 4 -->
+                <div class="testimonial-card flex-none">
+                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start inner-card">
+                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
+                             src="https://randomuser.me/api/portraits/men/55.jpg" alt="Student">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">Arjun Iyer</h3>
+                        <p class="text-sm text-gray-700 text-center">Bangalore, Karnataka</p>
+                        <p class="mt-4 text-gray-700 text-sm text-center">This platform helped Arjun get into the
+                            B.Tech. in Artificial Intelligence at VIT. He now researches ML applications at Microsoft
+                            Research India.</p>
+                    </div>
+                </div>
+
+                <!-- Success Story 5 -->
+                <div class="testimonial-card flex-none">
+                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start">
+                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
+                             src="https://randomuser.me/api/portraits/women/33.jpg" alt="Student">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">Shruti Verma</h3>
+                        <p class="text-sm text-gray-700 text-center">Bhopal, Madhya Pradesh</p>
+                        <p class="mt-4 text-gray-700 text-sm text-center">Shruti followed her passion for healthcare and
+                            enrolled in B.Sc. in Nursing at Christian Medical College. She's now preparing for
+                            NEET-PG.</p>
+                    </div>
+                </div>
+
+                <!-- Success Story 6 -->
+                <div class="testimonial-card flex-none">
+                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start inner-card">
+                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
+                             src="https://randomuser.me/api/portraits/men/85.jpg" alt="Student">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">Farhan Sheikh</h3>
+                        <p class="text-sm text-gray-700 text-center">Hyderabad, Telangana</p>
+                        <p class="mt-4 text-gray-700 text-sm text-center">After A/Ls, Farhan selected the B.Com. (Hons)
+                            in Finance at St. Xavier’s College. He now works as an analyst at Deloitte.</p>
+                    </div>
+                </div>
+
+                <!-- Success Story 7 -->
+                <div class="testimonial-card flex-none">
+                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start">
+                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
+                             src="https://randomuser.me/api/portraits/women/14.jpg" alt="Student">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">Priya Nair</h3>
+                        <p class="text-sm text-gray-700 text-center">Kochi, Kerala</p>
+                        <p class="mt-4 text-gray-700 text-sm text-center">Priya pursued her love for science with B.Sc.
+                            in Biotechnology at Jain University. She is now a research assistant at Biocon.</p>
+                    </div>
+                </div>
+
+                <!-- Success Story 8 -->
+                <div class="testimonial-card flex-none">
+                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start">
+                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
+                             src="https://randomuser.me/api/portraits/men/30.jpg" alt="Student">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">Kunal Patil</h3>
+                        <p class="text-sm text-gray-700 text-center">Nagpur, Maharashtra</p>
+                        <p class="mt-4 text-gray-700 text-sm text-center">Kunal found the Bachelor of Architecture at
+                            SRM University through this platform. He’s currently interning with a firm in Pune.</p>
+                    </div>
+                </div>
+
+                <!-- Success Story 9 -->
+                <div class="testimonial-card flex-none">
+                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start">
+                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
+                             src="https://randomuser.me/api/portraits/women/70.jpg" alt="Student">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">Megha Rajput</h3>
+                        <p class="text-sm text-gray-700 text-center">Jaipur, Rajasthan</p>
+                        <p class="mt-4 text-gray-700 text-sm text-center">Megha discovered BBA in Marketing at Christ
+                            University. She now manages digital campaigns for a startup.</p>
+                    </div>
+                </div>
+
+                <!-- Success Story 10 -->
+                <div class="testimonial-card flex-none">
+                    <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start">
+                        <img class="w-12 h-12 rounded-full mb-4 mx-auto"
+                             src="https://randomuser.me/api/portraits/men/41.jpg" alt="Student">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">Ankit Reddy</h3>
+                        <p class="text-sm text-gray-700 text-center">Vizag, Andhra Pradesh</p>
+                        <p class="mt-4 text-gray-700 text-sm text-center">Ankit selected B.Tech. in Electronics at IIIT
+                            Hyderabad. He now contributes to embedded systems at Intel India.</p>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
-
-
-
-
 
 
     {% include 'footer.html' %}
