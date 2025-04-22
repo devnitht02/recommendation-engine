@@ -37,7 +37,7 @@ class WnUser(models.Model):
     active = models.CharField(max_length=1)
     email = models.CharField(max_length=250, blank=True, null=True)
     password = models.CharField(max_length=255)
-    profile_picture = models.CharField(max_length=255, blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     stream = models.CharField(max_length=255, blank=True, null=True)
     last_login = models.DateTimeField(null=True, blank=True)
 

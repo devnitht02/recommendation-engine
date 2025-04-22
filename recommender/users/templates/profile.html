@@ -11,32 +11,71 @@
     <div class="max-w-4xl mx-auto bg-white p-8 shadow-md rounded-lg border mt-10" style="margin-top: 8rem">
         <h2 class="text-2xl font-semibold text-gray-900 mb-4">My Profile</h2>
 
-        <!-- Display profile picture -->
-        <div class="flex items-center space-x-4 mb-6">
-            {% if profile.profile_picture %}
-                <img src="{{ profile.profile_picture.url }}" alt="Profile Picture"
-                     class="w-24 h-24 rounded-full border">
-            {% else %}
-                <div class="w-24 h-24 rounded-full border flex items-center justify-center bg-gray-100">
-                    <span class="text-gray-500">No Image</span>
-                </div>
-            {% endif %}
-            <div>
-                <h3 class="text-xl font-medium text-gray-900">{{ profile.user_name }}</h3>
-                <p class="text-gray-600">{{ email }}</p>
-            </div>
-        </div>
+        <script>
+            document.getElementById('profile_picture').addEventListener('change', function (e) {
+                const [file] = e.target.files;
+                if (!file) return;
+
+                // Show preview immediately
+                const preview = document.getElementById('profile-picture-preview');
+                preview.src = URL.createObjectURL(file);
+
+                // Upload via AJAX
+                const formData = new FormData();
+                formData.append('profile_picture', file);
+
+                fetch("{% url 'users:upload_profile_picture' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: formData
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === "success") {
+                            console.log("Profile photo updated!");
+                        } else {
+                            alert("Upload failed: " + data.message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error("AJAX error:", err);
+                    });
+            });
+        </script>
 
 
         <!-- Profile Update Form -->
         <form method="POST" action="{% url 'users:user_profile' %}" enctype="multipart/form-data" class="space-y-4"
               id="profileForm">
             {% csrf_token %}
+            <!-- Profile Picture Upload Section -->
+            <div class="flex items-center space-x-4 mb-6">
+                <div class="relative">
+                    {% if profile.profile_picture %}
+                        <img id="profile-picture-preview"
+                             src="{{ profile.profile_picture.url }}"
+                             class="w-24 h-24 rounded-full object-cover border"
+                             alt="Profile Picture"/>
+                    {% else %}
+                        <img id="profile-picture-preview"
+                             src="{% static "/assets/images/avatar.jpg" %}"
+                             class="w-24 h-24 rounded-full object-cover border"
+                             alt="No Profile Picture"/>
+                    {% endif %}
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Full Name</label>
-                <input type="text" name="user_name" value="{{ profile.user_name }}"
-                       class="w-full p-2 border border-gray-300 rounded-md">
+
+
+                    <input type="file" name="profile_picture" id="profile_picture"
+                           class="absolute top-0 left-0 w-24 h-24 opacity-0 cursor-pointer"
+                           accept="image/*">
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-medium text-gray-900">{{ profile.user_name }}</h3>
+                    <p class="text-gray-600">{{ profile.email }}</p>
+                </div>
             </div>
 
             <div>
@@ -45,11 +84,6 @@
                        class="w-full p-2 border border-gray-300 rounded-md bg-gray-100">
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Country</label>
-                <input type="text" name="country" value="{{ profile.country|default_if_none:'' }}"
-                       class="w-full p-2 border border-gray-300 rounded-md">
-            </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">Date of Birth</label>
@@ -85,14 +119,13 @@
                        class="w-full p-2 border border-gray-300 rounded-md">
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Institution Type</label>
-                <select id="institution_type" name="institution_type" class="w-full p-2 border border-gray-300 rounded-md">
-                    <option value="">Select a Type</option>
-                    <option value="public" {% if profile.institution_type == "public" %}selected{% endif %}>Public</option>
-                    <option value="private" {% if profile.institution_type == "private" %}selected{% endif %}>Private</option>
-                </select>
-            </div>
+            <label for="institution_type">Institution Type</label>
+            <select name="institution_type" id="institution_type" required
+                    class="w-full border rounded p-2">
+                <option value="">Select Type</option>
+                <option value="0" {% if profile.studied_institution_type == 0 %}selected{% endif %}>Public</option>
+                <option value="1" {% if profile.studied_institution_type == 1 %}selected{% endif %}>Private</option>
+            </select>
 
             <div>
                 <label for="state" class="block text-sm font-medium text-gray-700">Select State:</label>
@@ -122,76 +155,85 @@
 
     </div>
 
-    {% include 'footer.html' %}
 
-   <script>
-    $(document).ready(function() {
-        // When the user selects a state, fetch the districts dynamically.
-        $("#state").change(function() {
-            let stateId = $(this).val();
-            if (stateId) {
-                $.ajax({
-                    url: "/district-list/"+ stateId+"/",
-                    type: "GET",
-                    dataType: "json",
-                    success: function(response) {
-                        console.log(response);
-                        let districtDropdown = $("#district");
-                        districtDropdown.empty();
-                        districtDropdown.append('<option value="">Select District</option>');
-                        $.each(response, function(index, district) {
-                            districtDropdown.append('<option value="' + district.id + '">' + district.name + '</option>');
-                        });
-                    }
-                });
-            } else {
-                $("#district").empty().append('<option value="">Select District</option>');
-            }
-        });
-
-        // Handle update profile button click
-        $("#updateProfileButton").click(function() {
-            // Collect all form data
-            const formData = {
-                name: $("#name").val(),
-                email: $("#email").val(),
-                country: $("#country").val(),
-                dob: $("#dob").val(),
-                gender: $("#gender").val(),
-                school_year: $("#school_year").val(),
-                state_id: $("#state").val(),
-                district_id: $("#district").val(),
-                stream: $("#stream").val(),
-                hsc: $("#hsc").val(),
-                institution_type: $("#institution_type").val(),
-            };
-
-            // Send data to the backend via AJAX
-            $.ajax({
-                url: "/update_user_profile/",
-                type: "POST",
-                data: formData,
-                success: function(response) {
-                    // Handle success response (e.g., display success message)
-                    alert("Profile updated successfully!");
-                    // Update the displayed values without reloading the page
-                    $("#name").val(response.name);
-                    $("#email").val(response.email);
-                    $("#country").val(response.country);
-                    $("#dob").val(response.dob);
-                    $("#gender").val(response.gender);
-                    $("#school_year").val(response.school_year);
-                    $("#state").val(response.state_id);
-                    $("#district").val(response.district_id);
-                    $("#stream").val(response.stream);
-                    $("#hsc").val(response.hsc);
-                    $("#institution_type").val(response.institution_type);
-                },
-                error: function() {
-                    alert("There was an error updating the profile.");
+    <script>
+        $(document).ready(function () {
+            $("#state").change(function () {
+                let stateId = $(this).val();
+                if (stateId) {
+                    $.ajax({
+                        url: "/district-list/" + stateId + "/",
+                        type: "GET",
+                        dataType: "json",
+                        success: function (response) {
+                            console.log(response);
+                            let districtDropdown = $("#district");
+                            districtDropdown.empty();
+                            districtDropdown.append('<option value="">Select District</option>');
+                            $.each(response, function (index, district) {
+                                districtDropdown.append('<option value="' + district.id + '">' + district.name + '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    $("#district").empty().append('<option value="">Select District</option>');
                 }
             });
+
+            $("#updateProfileButton").click(function () {
+                const formData = {
+                    name: $("#name").val(),
+                    email: $("#email").val(),
+                    country: $("#country").val(),
+                    dob: $("#dob").val(),
+                    gender: $("#gender").val(),
+                    school_year: $("#school_year").val(),
+                    state_id: $("#state").val(),
+                    district_id: $("#district").val(),
+                    stream: $("#stream").val(),
+                    hsc: $("#hsc").val(),
+                    institution_type: $("#institution_type").val(),
+                };
+
+                $.ajax({
+                    url: "/update_user_profile/",
+                    type: "POST",
+                    data: formData,
+                    success: function (response) {
+                        // Handle success response (e.g., display success message)
+                        alert("Profile updated successfully!");
+                        // Update the displayed values without reloading the page
+                        $("#name").val(response.name);
+                        $("#email").val(response.email);
+                        $("#country").val(response.country);
+                        $("#dob").val(response.dob);
+                        $("#gender").val(response.gender);
+                        $("#school_year").val(response.school_year);
+                        $("#state").val(response.state_id);
+                        $("#district").val(response.district_id);
+                        $("#stream").val(response.stream);
+                        $("#hsc").val(response.hsc);
+                        $("#institution_type").val(response.institution_type);
+                    },
+                    error: function () {
+                        alert("There was an error updating the profile.");
+                    }
+                });
+            });
         });
-    });
-</script>
+    </script>
+
+    <script>
+        document.getElementById('profile_picture').addEventListener('change', function (e) {
+            const [file] = e.target.files;
+            if (file) {
+                const preview = document.getElementById('profile-picture-preview');
+                preview.src = URL.createObjectURL(file);
+            }
+        });
+    </script>
+
+    {% include 'footer.html' %}
+
+
 {% endblock %}

@@ -6,7 +6,6 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
-
 from institutions.models import WnCourse
 from institutions.models import WnInstitution
 from recommendations.services.recommendation_service import RecommendationService

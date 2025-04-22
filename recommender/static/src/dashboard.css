@@ -187,7 +187,6 @@ input[type="search"] {
 
 
   /*Animated category strip*/
-
 @keyframes scroll {
     0%   { transform: translateX(0%);  }
     100% { transform: translateX(-50%); }
@@ -210,10 +209,8 @@ input[type="search"] {
     gap: 1.5rem;
     padding: 0 2rem;
     margin: 0 auto;
-    /* Firefox */
     scrollbar-width: thin;
     scrollbar-color: #c1c1c1 #f1f1f1;
-    /* IE */
     -ms-overflow-style: auto;
 }
 
@@ -237,7 +234,7 @@ input[type="search"] {
     gap: 1.5rem;
 }
 
-/*Course card styling (unchanged)*/
+/*Course card styling*/
 .course-card {
     flex: 0 0 auto;
     width: 18rem;
@@ -295,17 +292,20 @@ input[type="search"] {
 
 /*Testimonials strip — visible scrollbar*/
 .scroll-wrapper {
-    display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    /* Firefox */
-    scrollbar-width: thin;
-    scrollbar-color: #c1c1c1 #f1f1f1;
-    /* IE */
-    -ms-overflow-style: auto;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+.scroll-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
 
 .scroll-wrapper::-webkit-scrollbar {
     height: 8px;
@@ -321,10 +321,20 @@ input[type="search"] {
 
 .testimonial-card {
     flex: none;
-    height: 380px;
+    width: 320px;
+    flex: none;
+    height: 300px;
 }
 .inner-card {
-    height: 257px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  padding: 1.5rem;
+  overflow-wrap: break-word;
 }
+
+
 
 

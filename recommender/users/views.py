@@ -1,23 +1,19 @@
-import datetime
+import json
 
-from django.contrib.auth import login, get_user_model
-from django.contrib.auth.hashers import make_password, check_password
-from django.shortcuts import render, redirect
+import requests
+from django.conf import settings
 from django.contrib import messages
-from django.utils.timezone import now
 from django.contrib.auth import login
+from django.contrib.auth.hashers import make_password, check_password
+from django.http import JsonResponse
+from django.shortcuts import redirect
+from django.shortcuts import render
+from django.utils.timezone import now
+from django.views.decorators.csrf import csrf_exempt
+
+from institutions.models import WnState, WnDistrict
 from recommender import settings
 from users.models import WnUser
-from institutions.models import WnState, WnDistrict
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
-import json
-import requests
-from django.shortcuts import redirect
-from django.http import JsonResponse
-from django.conf import settings
 
 
 def signup(request):
@@ -170,31 +166,67 @@ def signout(request):
 
 
 # PROFILE SECTION
-# @login_required  # Ensures only logged-in users can access the profile
+# @login_required
+
+# @csrf_exempt
 def user_profile(request):
-    """Retrieve the logged-in user's profile details."""
-    # user = request.user  # Get the currently logged-in user
     if "user_id" not in request.session:
         return redirect('users:signin')
-    print(request.session['user_id'])
-    try:
-        wn_user = WnUser.objects.filter(pk=int(request.session['user_id'])).first()
-        state = WnState.objects.all()
-        district = WnDistrict.objects.all()
-        print(wn_user)
-        context = {
-            "profile": wn_user,
-            "states": state,
-            "districts": district,
 
-        }
+    wn_user = WnUser.objects.filter(pk=int(request.session['user_id'])).first()
+    state = WnState.objects.all()
+    district = WnDistrict.objects.all()
 
-        return render(request, 'profile.html', context)
-    except WnUser.DoesNotExist:
-        return JsonResponse({"status": "error", "message": "User profile not found"}, status=404)
+    if request.method == 'POST':
+        wn_user.user_name = request.POST.get('user_name')
+        wn_user.email = request.POST.get('email')
+        wn_user.user_gender = request.POST.get('user_gender')
+        wn_user.school_passed_out_year = request.POST.get('school_passed_out_year')
+        wn_user.studied_institution_type = request.POST.get('institution_type')
+        wn_user.stream = request.POST.get('stream')
+
+        hsc_raw = request.POST.get('hsc_percentage')
+        wn_user.hsc_percentage = float(hsc_raw) if hsc_raw else None
+
+        wn_user.state_id = request.POST.get('state')
+        wn_user.district_id = request.POST.get('district')
+
+        # ✅ Handle the profile picture upload
+        if request.FILES.get('profile_picture'):
+            print("Saving profile picture...")
+            wn_user.profile_picture = request.FILES['profile_picture']
+
+        wn_user.save()  # ✅ Important: commit changes
+        print("User saved:", wn_user.profile_picture)
+
+        return redirect('users:user_profile')
+
+    context = {
+        "profile": wn_user,
+        "states": state,
+        "districts": district,
+    }
+    return render(request, 'profile.html', context)
 
 
-# @csrf_exempt  # Disable CSRF for simplicity, but use CSRF tokens in production
+# @csrf_exempt
+def upload_profile_picture(request):
+    if request.method == 'POST' and request.FILES.get('profile_picture'):
+        try:
+            user_id = request.session.get('user_id')
+            if not user_id:
+                return JsonResponse({'status': 'error', 'message': 'Not logged in'}, status=403)
+
+            user = WnUser.objects.get(pk=user_id)
+            user.profile_picture = request.FILES['profile_picture']
+            user.save()
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
+
+# @csrf_exempt
 # @login_required
 def update_user_profile(request):
     """Update the user profile based on the incoming data."""
@@ -202,7 +234,7 @@ def update_user_profile(request):
         user_id = request.session.get("user_id")
 
         if user_id:
-            # Get the data from the POST request
+
             name = request.POST.get("name")
             email = request.POST.get("email")
             country = request.POST.get("country")
@@ -215,7 +247,6 @@ def update_user_profile(request):
             hsc = request.POST.get("hsc")
             institution_type = request.POST.get("institution_type")
 
-            # Fetch the user and update the fields
             try:
                 user = WnUser.objects.get(pk=user_id)
                 user.name = name
@@ -231,7 +262,6 @@ def update_user_profile(request):
                 user.institution_type = institution_type
                 user.save()
 
-                # Return updated data as response
                 return JsonResponse({
                     "name": user.name,
                     "email": user.email,
