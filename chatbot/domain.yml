@@ -1,0 +1,66 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - mood_great
+  - mood_unhappy
+  - bot_challenge
+  - ask_recommendation
+  - ask_course_info
+  - ask_institution_info
+  - ask_application_process
+  - ask_profile_update
+  - ask_saved_courses
+  - ask_system_features
+  - ask_feedback
+
+responses:
+  utter_greet:
+    - text: "Hey! How can I help you today? 😊"
+
+  utter_cheer_up:
+    - text: "Here's something to brighten your day:"
+      image: "https://images.unsplash.com/photo-1596495577886-d920f1fb7238?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60"
+
+  utter_did_that_help:
+    - text: "Did that help you out?"
+
+  utter_happy:
+    - text: "Great, let’s keep going! 🎉"
+
+  utter_goodbye:
+    - text: "Goodbye! Feel free to reach out anytime. 👋"
+
+  utter_iamabot:
+    - text: "I'm Pathfinder Assistant, a bot here to help you discover the best educational options."
+
+  utter_ask_recommendation:
+    - text: "Would you like a course or institution recommendation based on your preferences and profile?"
+
+  utter_ask_course_info:
+    - text: "Sure! Let me know the course name or field you're interested in."
+
+  utter_ask_institution_info:
+    - text: "Which institution are you curious about? I can pull up rankings, programs, and admission info."
+
+  utter_ask_application_process:
+    - text: "You can apply through your dashboard. Want me to guide you to the application section?"
+
+  utter_ask_profile_update:
+    - text: "Would you like to update your academic background, preferred location, or goals?"
+
+  utter_ask_saved_courses:
+    - text: "Here are your saved courses. Do you want to explore them or delete any?"
+
+  utter_ask_system_features:
+    - text: "Our system gives you tailored course and institution suggestions, compares academic options, and even tracks your progress. Would you like a quick demo?"
+
+  utter_ask_feedback:
+    - text: "We’d love your feedback. What can we improve to serve you better?"
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

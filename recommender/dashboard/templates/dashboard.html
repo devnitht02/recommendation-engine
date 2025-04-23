@@ -3,6 +3,8 @@
 
 {% block css_cdn %}
     <link rel="stylesheet" href="{% static 'src/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'src/chatbot.css' %}">
+
 {% endblock css_cdn %}
 
 {% block js_cdn %}
@@ -10,7 +12,9 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 
+
 {% endblock js_cdn %}
+
 
 
 {% block content %}
@@ -166,7 +170,6 @@
     </script>
 
 
-
     <section class="dashboard-container">
         <!-- TOP BANNER SECTION -->
         <section class="top-banner">
@@ -214,6 +217,8 @@
                     </div>
                 </div>
             </div>
+
+
         </section>
 
         {#COURSE TYPES LIST#}
@@ -572,9 +577,9 @@
             <div class="max-w-screen-xl px-4 mx-auto">
                 <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">STORIES OF SUCCESS</h2>
 
-            
+
                 <div id="testimonialScroll" class="scroll-wrapper flex space-x-4 overflow-x-auto pb-4">
-                    
+
                     <!-- Success Story 1 -->
                     <div class="testimonial-card flex-none">
                         <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start inner-card">
@@ -582,7 +587,8 @@
                                  src="https://randomuser.me/api/portraits/women/65.jpg" alt="Student">
                             <h3 class="text-lg font-semibold text-gray-800 text-center">Aparna Sharma</h3>
                             <p class="text-sm text-gray-700 text-center">Lucknow, Uttar Pradesh</p>
-                            <p class="text-sm text-gray-700 text-center break-words leading-relaxed max-w-[280px]">With limited guidance after 10+2,
+                            <p class="text-sm text-gray-700 text-center break-words leading-relaxed max-w-[280px]">With
+                                limited guidance after 10+2,
                                 Aparna found
                                 the B.Sc. in Food Science at Amity University. She now interns with Nestlé
                                 India.</p>
@@ -721,9 +727,74 @@
             </div>
         </section>
 
-
     </section>
 
+    <button class="chat-toggle-button" onclick="toggleChat()">
+        ✉
+    </button>
+
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-header">PathFinder Assistant</div>
+        <div class="chat-body" id="chatBody">
+            <div><strong>Bot:</strong> Hey! How can I help you today?</div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="userInput" placeholder="Type here..."
+                   onkeypress="if(event.key === 'Enter'){sendMessage()}"/>
+            <button onclick="sendMessage()">➤</button>
+        </div>
+    </div>
+
+
+{#    CHATBOT JS#}
+    <script>
+        function toggleChat() {
+            const panel = document.getElementById("chatPanel");
+            panel.style.display = (panel.style.display === "none" || panel.style.display === "") ? "flex" : "none";
+        }
+
+        function sendMessage() {
+            const input = document.getElementById("userInput");
+            const chat = document.getElementById("chatBody");
+            const message = input.value.trim();
+
+            if (!message) return;
+            
+            const userDiv = document.createElement("div");
+            userDiv.innerHTML = `<strong>You:</strong> ${message}`;
+            chat.appendChild(userDiv);
+            input.value = "";
+
+            fetch("http://localhost:5005/webhooks/rest/webhook", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({sender: "user", message: message})
+            })
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(resp => {
+                        if (resp.text) {
+                            const botDiv = document.createElement("div");
+                            botDiv.innerHTML = `<strong>Bot:</strong> ${resp.text}`;
+                            chat.appendChild(botDiv);
+                        }
+
+                        if (resp.image) {
+                            const img = document.createElement("img");
+                            img.src = resp.image;
+                            img.alt = "Bot image";
+                            img.className = "bot-image"; 
+                            chat.appendChild(img);
+                        }
+
+                        chat.scrollTop = chat.scrollHeight;
+                    });
+                })
+                .catch(err => {
+                    console.error("Failed to send message:", err);
+                });
+        }
+    </script>
 
 
 

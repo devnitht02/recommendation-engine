@@ -17,7 +17,8 @@
     <link rel="manifest" href="{% static 'site.webmanifest' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet">
 
 
     <!-- CSS Files -->
@@ -33,6 +34,8 @@
 
     {% block js_cdn %} {% endblock js_cdn %}
 
+
+
     <!--CDN -->
     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -44,7 +47,6 @@
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-
 
 
 </head>
@@ -69,7 +71,8 @@
                          data-dropdown-placement="bottom-start"
                          class="w-10 h-10 rounded-full cursor-pointer account-img" style="margin-right: 1rem "
                          src="{{ request.user.profile.avatar.url }}" alt="User dropdown">&nbsp;
-                    <a href="{% url 'users:signout' %}" class="text-gray-700 hover:text-purple-700" style="color: #5521b5">
+                    <a href="{% url 'users:signout' %}" class="text-gray-700 hover:text-purple-700"
+                       style="color: #5521b5">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                              stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -97,10 +100,10 @@
                                 <a href="{% url 'institutions:favourites' %}"
                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Favourites</a>
                             </li>
-                             <li>
-                               <a href="{% url 'users:signout' %}"
-                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" style="color: red">Log
-                                Out</a>
+                            <li>
+                                <a href="{% url 'users:signout' %}"
+                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" style="color: red">Log
+                                    Out</a>
                             </li>
                         </ul>
                     </div>
@@ -147,11 +150,11 @@
                         <a href="{% url 'users:user_profile' %}"
                            class="block py-2 pl-3 pr-4 {% if request.resolver_match.url_name == 'user_profile' %}text-purple-600{% else %}text-gray-700 hover:text-purple-600{% endif %}">Profile</a>
                     </li>
-                 <li>
+                    <li>
                         <a href="{% url 'dashboard:contact_page' %}"
                            class="block py-2 pl-3 pr-4 {% if request.resolver_match.url_name == 'user_profile' %}text-purple-600{% else %}text-gray-700 hover:text-purple-600{% endif %}">Contact</a>
                     </li>
-                 <li>
+                    <li>
                         <a href="{% url 'dashboard:about_page' %}"
                            class="block py-2 pl-3 pr-4 {% if request.resolver_match.url_name == 'user_profile' %}text-purple-600{% else %}text-gray-700 hover:text-purple-600{% endif %}">About</a>
                     </li>
