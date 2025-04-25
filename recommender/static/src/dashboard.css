@@ -33,7 +33,7 @@ section.top-banner {
     z-index: 1;
 }
 
-/* Search box */
+
 .search-div {
     width: 260%;
     position: relative;
@@ -78,7 +78,7 @@ section.top-banner {
     text-align: center;
 }
 
-/* Utility IDs */
+
 #course-types {
     padding-top: 50px;
 }
@@ -158,7 +158,6 @@ input[type="search"] {
     cursor: not-allowed;
 }
 
-/* Responsive tweaks */
 @media (max-width: 1200px) {
     .search-div {
         width: 200%;
@@ -214,7 +213,7 @@ input[type="search"] {
     -ms-overflow-style: auto;
 }
 
-/* WebKit browsers */
+/*!* WebKit browsers *!*/
 .scroll-horizontal-wrapper::-webkit-scrollbar {
     height: 8px;
 }
@@ -290,51 +289,70 @@ input[type="search"] {
     background-color: #6d28d9;
 }
 
-/*Testimonials strip — visible scrollbar*/
-.scroll-wrapper {
+/*Success stories*/
+#testimonialScroll {
   display: flex;
   overflow-x: auto;
-  overflow-y: hidden;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  white-space: nowrap;
+  gap: 1rem;
+  padding: 0 2rem;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
-.scroll-wrapper::-webkit-scrollbar {
+#testimonialScroll::-webkit-scrollbar {
   display: none;
 }
 
-
-.scroll-wrapper::-webkit-scrollbar {
-    height: 8px;
-}
-.scroll-wrapper::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-.scroll-wrapper::-webkit-scrollbar-thumb {
-    background-color: #c1c1c1;
-    border-radius: 4px;
-    border: 2px solid #f1f1f1;
-}
-
 .testimonial-card {
-    flex: none;
-    width: 320px;
-    flex: none;
-    height: 300px;
+  flex: 0 0 auto;
+  width: 20rem;
+  height: 25rem;
+  scroll-snap-align: start;
 }
+
 .inner-card {
-  text-align: center;
+  width: 100%;
+  height: 100%;
+  background-color: #f3f4f6;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: start;
-  padding: 1.5rem;
-  overflow-wrap: break-word;
+  text-align: center;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
+.inner-card img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
 
+.inner-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.25rem;
+}
 
+.inner-card .text-sm {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.inner-card p {
+  font-size: 0.875rem;
+  color: #374151;
+  line-height: 1.4;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
 

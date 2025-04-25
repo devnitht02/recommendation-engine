@@ -44,29 +44,21 @@
                             const {search_data} = response;
                             suggestionsList.empty();
 
-                            if (search_data.length === 0 && institutions.length === 0) {
+                            if (search_data.length === 0) {
                                 suggestionsList.append('<li style="padding: 8px; color: #666;">No results found</li>');
                             } else {
-                                if (search_data.length > 0) {
-                                    // suggestionsList.append('<li style="font-weight: bold; padding: 8px;">Courses</li>');
-                                    // courses.forEach(course => {
-                                    //     suggestionsList.append(`<li style="padding: 8px; cursor: pointer;" data-value="${course.course_name}">${course.course_name}</li>`);
-                                    // });
-                                    search_data.forEach(data => {
-                                        if (data.type == "course") {
-                                            suggestionsList.append(`
-                                                <a href="/view_course/${data.id}">
-                                                <li style="padding: 8px; cursor: pointer;">${data.name} (Course)</li>
-                                            `);
-                                        } else {
-                                            suggestionsList.append(`
-                                                <a href="/view_institution/${data.id}">
-                                                <li style="padding: 8px; cursor: pointer;">${data.name} (Insitution)</li>
-                                            `);
-                                        }
-                                    });
-                                    console.log(search_data)
-                                }
+                                search_data.forEach(data => {
+                                    if (data.type == "course") {
+                                        suggestionsList.append(`
+                                        <li><a href="/view_course/${data.id}" style="display: block; padding: 8px; cursor: pointer;">${data.name} (Course)</a></li>
+                                    `);
+                                    } else {
+                                        suggestionsList.append(`
+                                        <li><a href="/view_institution/${data.id}" style="display: block; padding: 8px; cursor: pointer;">${data.name} (Institution)</a></li>
+                                    `);
+                                    }
+                                });
+                                console.log(search_data);
                             }
                             suggestionsList.show();
                         },
@@ -78,13 +70,6 @@
                 }, typingDelay);
             });
 
-            // Handle item selection
-            // $(document).on('click', '#suggestions-list li', function (event) {
-            //     event.preventDefault(); // Prevent form submission
-            //     $('#default-search').val($(this).data('value'));
-            //     $('#suggestions-list').hide();
-            // });
-
             // Hide suggestions when clicking outside
             $(document).click(function (e) {
                 if (!$(e.target).closest('.search-div').length) {
@@ -94,41 +79,35 @@
 
             // Handle form submit
             function handleSubmit(event) {
-                event.preventDefault();  // Prevent the default form submission
+                event.preventDefault();
 
                 let query = document.getElementById("default-search").value.trim();
                 if (!query) return;
 
-                // Detect if the query is about a course or institution
-                let isCourseSearch = /course|program|degree/i.test(query);  // Check if the query mentions course-related words
-                let isInstitutionSearch = /university|college|institution|academy/i.test(query);  // Check if the query mentions institution-related words
+                let isCourseSearch = /course|program|degree/i.test(query);
+                let isInstitutionSearch = /university|college|institution|academy/i.test(query);
 
-                // If neither, ask the user to clarify
                 if (!isCourseSearch && !isInstitutionSearch) {
                     alert("Please clarify your search. It seems like you're looking for both courses and institutions.");
                     return;
                 }
 
-                // Decide the correct endpoint based on the detected type
                 let url = isCourseSearch ? `/search_suggestions_courses/?query=${query}` : `/search_suggestions_institutions/?query=${query}`;
 
-                // Fetch results based on the type (course or institution)
                 fetch(url)
                     .then(response => response.json())
                     .then(data => {
                         if (isCourseSearch && data.courses.length > 0) {
                             let course = data.courses[0];
                             if (course && course.course_id) {
-                                let courseId = course.course_id;
-                                window.location.href = `/view_course/${courseId}`;
+                                window.location.href = `/view_course/${course.course_id}`;
                             } else {
                                 alert("No valid course ID found.");
                             }
                         } else if (isInstitutionSearch && data.institutions.length > 0) {
                             let institution = data.institutions[0];
                             if (institution && institution.institution_id) {
-                                let institutionId = institution.institution_id;
-                                window.location.href = `/view_institution/${institutionId}`;
+                                window.location.href = `/view_institution/${institution.institution_id}`;
                             } else {
                                 alert("No valid institution ID found.");
                             }
@@ -139,18 +118,20 @@
                     .catch(error => console.error("Error:", error));
             }
 
-            // Bind form submission event
             document.getElementById('search-form').addEventListener('submit', handleSubmit);
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
+
+            {#Success stories#}
             const container = document.getElementById("testimonialScroll");
+            const duration = 30000;
+            const fps = 60;
+            const intervalTime = 1000 / fps;
+
+            let totalScrollableWidth = container.scrollWidth - container.clientWidth;
+            let scrollStep = totalScrollableWidth / (duration / intervalTime);
             let scrollAmount = 0;
-            let scrollStep = 1;
 
             function autoScroll() {
-                if (container.scrollLeft >= container.scrollWidth - container.clientWidth) {
+                if (container.scrollLeft >= totalScrollableWidth) {
                     container.scrollLeft = 0;
                     scrollAmount = 0;
                 } else {
@@ -159,15 +140,15 @@
                 }
             }
 
-            let interval = setInterval(autoScroll, 20);
+            let interval = setInterval(autoScroll, intervalTime);
 
-            // Pause on hover
             container.addEventListener("mouseenter", () => clearInterval(interval));
             container.addEventListener("mouseleave", () => {
-                interval = setInterval(autoScroll, 20);
+                interval = setInterval(autoScroll, intervalTime);
             });
         });
     </script>
+
 
 
     <section class="dashboard-container">
@@ -177,7 +158,7 @@
             {# SEARCH FORM #}
             <form action="{% url 'dashboard:search_suggestions' %}" method="GET" class="max-w-md mx-auto"
                   id="search-form">
-                {#                {% csrf_token %}#}
+                {#{% csrf_token %}#}
                 <label for="default-search" class="mb-2 text-sm font-medium text-purple-900 sr-only">Search</label>
                 <div class="relative search-div">
                     <input type="search" id="default-search"
@@ -578,7 +559,7 @@
                 <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">STORIES OF SUCCESS</h2>
 
 
-                <div id="testimonialScroll" class="scroll-wrapper flex space-x-4 overflow-x-auto pb-4">
+                <div id="testimonialScroll" class="pb-4">
 
                     <!-- Success Story 1 -->
                     <div class="testimonial-card flex-none">
@@ -746,7 +727,7 @@
     </div>
 
 
-{#    CHATBOT JS#}
+    {#CHATBOT JS#}
     <script>
         function toggleChat() {
             const panel = document.getElementById("chatPanel");
@@ -759,7 +740,7 @@
             const message = input.value.trim();
 
             if (!message) return;
-            
+
             const userDiv = document.createElement("div");
             userDiv.innerHTML = `<strong>You:</strong> ${message}`;
             chat.appendChild(userDiv);
@@ -783,7 +764,7 @@
                             const img = document.createElement("img");
                             img.src = resp.image;
                             img.alt = "Bot image";
-                            img.className = "bot-image"; 
+                            img.className = "bot-image";
                             chat.appendChild(img);
                         }
 

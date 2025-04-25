@@ -20,4 +20,6 @@ urlpatterns = [
          name='search_suggestions_institutions'),
     path('toggle_favourite/', views.toggle_favourite, name='toggle_favourite'),
 
+    path('remove_favourite/', views.remove_favourite, name='remove_favourite'),
+
 ]

@@ -108,6 +108,7 @@
                 e.stopPropagation();
 
                 const button = $(this);
+                const icon = button.find('i');
                 const courseId = button.data('course-id') || null;
                 const institutionId = button.data('institution-id') || null;
 
@@ -122,9 +123,9 @@
                     },
                     success: function (response) {
                         if (response.status === 'added') {
-                            button.addClass('text-yellow-400').removeClass('text-purple-700');
+                            icon.removeClass('fa-regular').addClass('fa-solid');
                         } else if (response.status === 'removed') {
-                            button.removeClass('text-yellow-400').addClass('text-purple-700');
+                            icon.removeClass('fa-solid').addClass('fa-regular');
                         }
                     },
                     error: function (xhr) {
@@ -136,6 +137,7 @@
                     }
                 });
             });
+
 
         });
     </script>
@@ -194,7 +196,7 @@
                                 class="bookmark-btn text-purple-700 hover:text-yellow-400"
                                 data-institution-id="{{ institution.id }}"
                                 title="Bookmark this institution">
-                            <i class="fa-solid fa-bookmark fa-lg" style="color: #5521b5;"></i>
+                            <i class="{% if institution.is_favourited %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg" style="color: #5521b5;"></i>
                         </button>
 
                     </div>

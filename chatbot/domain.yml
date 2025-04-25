@@ -16,6 +16,7 @@ intents:
   - ask_saved_courses
   - ask_system_features
   - ask_feedback
+  - recommend_degree
 
 responses:
   utter_greet:
@@ -60,6 +61,9 @@ responses:
 
   utter_ask_feedback:
     - text: "We’d love your feedback. What can we improve to serve you better?"
+
+  utter_recommend_degree:
+    - text: "Sure! I can help with that. Tell me what subjects you enjoy or your career interests, and I’ll recommend some ideal degree paths."
 
 session_config:
   session_expiration_time: 60

@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from institutions.models import WnDegree
 from recommender.models import WnFavourite
@@ -132,3 +132,26 @@ def toggle_favourite(request):
         return JsonResponse({'status': 'error', 'message': 'Missing IDs'}, status=400)
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
+
+# @csrf_exempt
+def remove_favourite(request):
+    if request.method == "POST":
+
+        user_id = request.session.get("user_id")
+        if not user_id:
+            return redirect('institutions:favourites')
+
+        wn_user = WnUser.objects.filter(pk=user_id).first()
+        if not wn_user:
+            return redirect('institutions:favourites')
+
+        course_id = request.POST.get("course_id")
+        institution_id = request.POST.get("institution_id")
+
+        if course_id:
+            WnFavourite.objects.filter(user=wn_user, course_id=course_id).delete()
+        elif institution_id:
+            WnFavourite.objects.filter(user=wn_user, institution_id=institution_id).delete()
+
+    return redirect('institutions:favourites')

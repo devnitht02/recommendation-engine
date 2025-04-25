@@ -2,72 +2,92 @@
 {% load static %}
 
 {% block content %}
-<section class="py-24 bg-gray-50 min-h-screen">
-  <div class="max-w-6xl mx-auto px-6">
-    <h2 class="text-4xl font-bold text-center text-gray-800 mb-16">My Favourites</h2>
+    <section class="py-24 bg-gray-50 min-h-screen">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-16">My Favourites</h2>
 
-    {% if favourite %}
-      <!-- SAVED COURSES -->
-      <div class="mb-20 py-5">
-        <h3 class="text-2xl font-semibold text-indigo-800 mb-8 border-b border-indigo-200 pb-2 w-fit mx-auto px-4">
-          Saved Courses
-        </h3>
+            {% if favourite %}
+                <!-- SAVED COURSES -->
+                <div class="mb-20 py-5">
+                    <h3 class="text-2xl font-semibold text-indigo-800 mb-8 border-b border-indigo-200 pb-2 w-fit mx-auto px-4">
+                        Saved Courses
+                    </h3>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {% for item in favourite %}
-            {% if item.course %}
-              <div class="bg-white shadow-md rounded-xl p-6 hover:shadow-xl transition">
-                <h3 class="text-xl font-semibold text-indigo-700 mb-2">{{ item.course.course_name }}</h3>
-                <p class="text-sm text-gray-600 mb-4">{{ item.course.course_description|truncatewords:20 }}</p>
-                <p class="text-sm text-gray-500"><strong>Stream:</strong> {{ item.course.stream.stream_name }}</p>
-                <p class="text-sm text-gray-500"><strong>Degree:</strong> {{ item.course.degree.degree_description }}</p>
-                <a href="{% url 'institutions:view_course' item.course.id %}" target="_blank"
-                   class="inline-block mt-4 text-sm font-medium text-purple-600 hover:underline">
-                  View Course
-                </a>
-              </div>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {% for item in favourite %}
+                            {% if item.course %}
+                                <div class="bg-white shadow-md rounded-xl p-6 hover:shadow-xl transition">
+                                    <h3 class="text-xl font-semibold text-indigo-700 mb-2">{{ item.course.course_name }}</h3>
+                                    <p class="text-sm text-gray-600 mb-4">{{ item.course.course_description|truncatewords:20 }}</p>
+                                    <p class="text-sm text-gray-500">
+                                        <strong>Stream:</strong> {{ item.course.stream.stream_name }}</p>
+                                    <p class="text-sm text-gray-500">
+                                        <strong>Degree:</strong> {{ item.course.degree.degree_description }}</p>
+                                    <a href="{% url 'institutions:view_course' item.course.id %}" target="_blank"
+                                       class="inline-block mt-4 text-sm font-medium text-purple-600 hover:underline">
+                                        View Course
+                                    </a>
 
-      <!-- DIVIDER LINE -->
-      <div class="relative my-20">
-        <div class="border-t-2 border-gray-300 w-full"></div>
-        <span class="absolute left-1/2 -top-4 transform -translate-x-1/2 bg-gray-50 px-4 text-gray-400 text-sm tracking-wide uppercase">
+                                    <form method="POST" action="{% url 'institutions:remove_favourite' %}" class="mt-2">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="course_id" value="{{ item.course.id }}">
+                                        <button type="submit"
+                                                class="text-red-600 text-sm font-medium hover:underline">
+                                            Remove from Favourites
+                                        </button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- DIVIDER LINE -->
+                <div class="relative my-20">
+                    <div class="border-t-2 border-gray-300 w-full"></div>
+                    <span class="absolute left-1/2 -top-4 transform -translate-x-1/2 bg-gray-50 px-4 text-gray-400 text-sm tracking-wide uppercase">
         </span>
-      </div>
+                </div>
 
-      <!-- SAVED INSTITUTIONS -->
-      <div class="py-5">
-        <h3 class="text-2xl font-semibold text-indigo-800 mb-8 border-b border-indigo-200 pb-2 w-fit mx-auto px-4">
-          Saved Institutions
-        </h3>
+                <!-- SAVED INSTITUTIONS -->
+                <div class="py-5">
+                    <h3 class="text-2xl font-semibold text-indigo-800 mb-8 border-b border-indigo-200 pb-2 w-fit mx-auto px-4">
+                        Saved Institutions
+                    </h3>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {% for item in favourite %}
-            {% if item.institution %}
-              <div class="bg-white shadow-md rounded-xl p-6 hover:shadow-xl transition">
-                <h3 class="text-xl font-semibold text-indigo-700 mb-2">{{ item.institution.institution_name }}</h3>
-                <p class="text-sm text-gray-600 mb-4">
-                  {{ item.institution.institution_type.type|default:"General Institution" }}
-                </p>
-                <p class="text-sm text-gray-500"><strong>Location:</strong>
-                  {{ item.institution.state.name }}, {{ item.institution.district.name }}</p>
-                <a href="{{ item.institution.website }}" target="_blank"
-                   class="inline-block mt-4 text-sm font-medium text-purple-600 hover:underline">
-                  Visit Website
-                </a>
-              </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {% for item in favourite %}
+                            {% if item.institution %}
+                                <div class="bg-white shadow-md rounded-xl p-6 hover:shadow-xl transition">
+                                    <h3 class="text-xl font-semibold text-indigo-700 mb-2">{{ item.institution.institution_name }}</h3>
+                                    <p class="text-sm text-gray-600 mb-4">
+                                        {{ item.institution.institution_type.type|default:"General Institution" }}
+                                    </p>
+                                    <p class="text-sm text-gray-500"><strong>Location:</strong>
+                                        {{ item.institution.state.name }}, {{ item.institution.district.name }}</p>
+                                    <a href="{{ item.institution.website }}" target="_blank"
+                                       class="inline-block mt-4 text-sm font-medium text-purple-600 hover:underline">
+                                        Visit Website
+                                    </a>
+
+                                    <form method="POST" action="{% url 'institutions:remove_favourite' %}" class="mt-2">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="institution_id" value="{{ item.institution.id }}">
+                                        <button type="submit"
+                                                class="text-red-600 text-sm font-medium hover:underline">
+                                            Remove from Favourites
+                                        </button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="text-center text-gray-600 text-lg">
+                    You haven’t saved any courses or institutions yet.
+                </div>
             {% endif %}
-          {% endfor %}
         </div>
-      </div>
-    {% else %}
-      <div class="text-center text-gray-600 text-lg">
-        You haven’t saved any courses or institutions yet.
-      </div>
-    {% endif %}
-  </div>
-</section>
+    </section>
 {% endblock %}
