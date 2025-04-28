@@ -82,7 +82,6 @@ class WnCourse(models.Model):
     rank = models.IntegerField(null=True, blank=True, db_column='rank')
     degree_price = models.IntegerField(blank=True, null=True, db_column='degree_price')
     duration_years = models.IntegerField(blank=True, null=True, db_column='duration_years')
-    image_url = models.ImageField(upload_to='top_rated_courses/', null=True, blank=True)
     created_date = models.DateTimeField()
     modified_date = models.DateTimeField()
     active = models.CharField(max_length=1)
@@ -122,7 +121,6 @@ class WnStream(models.Model):
     stream_name = models.CharField(max_length=500, blank=True, null=True)
     created_date = models.DateTimeField()
     modified_date = models.DateTimeField()
-    image_url = models.ImageField(upload_to='course_images/', null=True, blank=True)
     active = models.CharField(max_length=1)
 
     class Meta:

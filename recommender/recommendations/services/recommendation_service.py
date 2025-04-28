@@ -153,6 +153,28 @@ class RecommendationService:
         for institution in institutions:
             print(f"{institution.institution_name}, {institution.state.name}, {institution.district.name}")
         return
+    
+    def recommend_institution(self, query, top_n: int = 10):
+        # 1. Get all embeddings and calculate similarities
+        df = WnTextEmbedding.get_embedding(content_type="institution")
+        query_embedding = EmbeddingService.get_model().encode([query])[0]
+
+        df["similarity"] = df["embedding"].apply(
+            lambda x: self._cosine_similarity(np.array(x), query_embedding)
+        )
+
+        return df.sort_values('similarity', ascending=False).head(top_n * 2)
+    
+    def recommend_course(self, query, top_n: int = 10):
+        # 1. Get all embeddings and calculate similarities
+        df = WnTextEmbedding.get_embedding(content_type="course")
+        query_embedding = EmbeddingService.get_model().encode([query])[0]
+
+        df["similarity"] = df["embedding"].apply(
+            lambda x: self._cosine_similarity(np.array(x), query_embedding)
+        )
+
+        return df.sort_values('similarity', ascending=False).head(top_n * 2)
 
     def course_search(self, query: str, top_n: int = 10):
         # 1. Get all embeddings and calculate similarities
