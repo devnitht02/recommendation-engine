@@ -32,3 +32,21 @@ stories:
   steps:
     - intent: recommend_degree
     - action: utter_recommend_degree
+
+- story: KB course description
+  steps:
+    - intent: query_knowledge_base
+      entities:
+        - object_type: "course"
+        - attribute: "description"
+        - mention: "Software Engineering"
+    - action: action_query_knowledge_base
+
+- story: KB institution rank
+  steps:
+    - intent: query_knowledge_base
+      entities:
+        - object_type: "institution"
+        - attribute: "rank"
+        - mention: "Amrita Vishwa Vidyapeetham"
+    - action: action_query_knowledge_base

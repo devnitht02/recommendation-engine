@@ -3,6 +3,8 @@ from django.urls import path
 from institutions.views import view_course, view_institution
 from . import views
 from .views import dashboard, contact_page, about
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', dashboard, name="dashboard"),
@@ -18,4 +20,5 @@ urlpatterns = [
     path('contact.html', contact_page, name='contact_page'),
 
     path('about.html', about, name='about_page'),
-]
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

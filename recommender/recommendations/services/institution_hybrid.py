@@ -6,19 +6,20 @@ from recommendations.services.institution_collaborative import InstitutionCollab
 from sklearn.preprocessing import MinMaxScaler
 from django.db.models import F, Case, When, Value, IntegerField, Prefetch
 
+
 class InstitutionHybrid:
 
-    def get_user_data(self,user_id):
+    def get_user_data(self, user_id):
 
         user = WnUser.objects.filter(pk=user_id).first()
         data = {
-            "user_name" : user.user_name,
+            "user_name": user.user_name,
 
         }
-        if user.state:
+        if hasattr(user, "state"):
             data["state_name"] = user.state.name
 
-        if user.district:
+        if hasattr(user, "district"):
             data["state_name"] = user.district.name
 
         stream_choice = WnStreamChoice.objects.filter(user_id=user_id).first()
@@ -33,7 +34,6 @@ class InstitutionHybrid:
             data["state_choice"].append(choice.state.name)
             data["district_choice"].append(choice.district.name)
 
-
         # queryset = WnUser.objects.filter(pk=user_id).values(
         #     "hsc_percentage",
         #     "user_gender", # LEFT JOIN
@@ -42,23 +42,24 @@ class InstitutionHybrid:
         #     district_choice=F('wnlocationchoice__district__name'),   # LEFT JOIN
         # )
         return data
-        
-    def recommend(self,user_id,top_n):
+
+    def recommend(self, user_id, top_n):
         data = self.get_user_data(user_id)
 
         states = set(data["state_choice"])
         districts = set(data["district_choice"])
 
-        query = data["stream_choice"] + " ," + ", ".join(f"{district}" for district in districts) + " ," + ", ".join(f"{state}" for state in states)
+        query = data.get("stream_choice", "") + " ," + ", ".join(
+            f"{district}" for district in districts) + " ," + ", ".join(f"{state}" for state in states)
 
         ins = RecommendationService()
-        results = ins.recommend_institution(query,top_n)
+        results = ins.recommend_institution(query, top_n)
 
-        results.rename(columns={"object_id":"institution_id","similarity":"cb_score"},inplace=True)
-        cb_df = results[['institution_id','cb_score']]
+        results.rename(columns={"object_id": "institution_id", "similarity": "cb_score"}, inplace=True)
+        cb_df = results[['institution_id', 'cb_score']]
 
         collab = InstitutionCollaborative()
-        cf_df = collab.recommend(user_id,top_n)
+        cf_df = collab.recommend(user_id, top_n)
         if cf_df.empty:
             return cb_df
 
@@ -78,9 +79,9 @@ class InstitutionHybrid:
         # Sort and get Top-N
         top_hybrid = hybrid_df.sort_values("hybrid_score", ascending=False).head(top_n)
         return top_hybrid
-    
-    def get_hybrid_institutions(self,user_id,top_n=10):
-        recommended_df = self.recommend(user_id,top_n)
+
+    def get_hybrid_institutions(self, user_id, top_n=10):
+        recommended_df = self.recommend(user_id, top_n)
         institution_ids = recommended_df['institution_id'].tolist()
         # Create a Case/When expression to maintain the order
         ordering_cases = Case(
@@ -91,5 +92,5 @@ class InstitutionHybrid:
         # Query the institutions and order them using MySQL
         institutions = WnInstitution.objects.select_related("state", "district").filter(
             pk__in=institution_ids).order_by(ordering_cases)
-        
+
         return institutions

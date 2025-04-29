@@ -10,3 +10,8 @@ rules:
   steps:
     - intent: bot_challenge
     - action: utter_iamabot
+
+- rule: KB lookup
+  steps:
+    - intent: query_knowledge_base
+    - action: action_query_knowledge_base

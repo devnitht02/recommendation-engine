@@ -173,7 +173,48 @@
             </div>
         </form>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 items-stretch" style="margin-top: 10rem">
+        <h4 class="p-6">Recommended for you</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 items-stretch" style="margin-top: 3rem">
+            {% for course in recommend_course %}
+                <div class="relative p-6 bg-white border border-purple-500 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
+
+                    <a href="{% url 'institutions:view_course' course.id %}" target="_blank" class="flex-1">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
+                            {{ course.course_description }}
+                        </h5>
+                        <p class="font-normal text-gray-700">
+                            Degree:
+                            <span class="text-blue-500">
+                        {{ course.degree.degree_description|default:"No Degree Available" }}
+                    </span>
+                        </p>
+                        <p class="font-normal text-gray-700">
+                            Stream:
+                            <span class="text-blue-500">
+                        {{ course.stream.stream_name|default:"No Stream Available" }}
+                    </span>
+                        </p>
+                    </a>
+
+                    <!-- Bookmark Button Bottom Right -->
+                    <div class="" style="position: absolute; left:26rem; top: 6rem;">
+                        <button type="button"
+                                class="bookmark-btn text-purple-700 hover:text-yellow-400"
+                                data-course-id="{{ course.id }}"
+                                title="Bookmark this course">
+                            <i class="{% if course.is_favourited %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg"
+                               style="color: #5521b5;"></i>
+                        </button>
+
+
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-center text-gray-700 col-span-3">No courses available.</p>
+            {% endfor %}
+        </div>
+        <h4 class="p-6 mt-12">All courses</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 items-stretch">
             {% for course in course_data %}
                 <div class="relative p-6 bg-white border border-purple-500 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
 

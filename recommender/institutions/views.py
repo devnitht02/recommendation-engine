@@ -5,20 +5,28 @@ from institutions.models import WnDegree
 from recommender.models import WnFavourite
 from users.models import WnUser
 from .models import WnInstitution, WnCourse
-
+from recommendations.services.institution_hybrid import InstitutionHybrid
+from recommendations.services.course_hybrid import CourseHybrid
 
 def institutions(request):
     institution_data = WnInstitution.objects.select_related("state", "district")
     wn_user = None
     if request.user.is_authenticated:
         wn_user = WnUser.objects.filter(email=request.user.email).first()
+    
+    user_id = request.session["user_id"]
     search_suggestion_institutions = request.GET.get('query', '')
-    return render(request, 'institutions.html', {'institution_data': institution_data,
-                                                 'search_suggestions_institutions': search_suggestion_institutions,
-                                                 'wn_user': wn_user})
+    context = {
+                'institution_data': institution_data,
+                'search_suggestions_institutions': search_suggestion_institutions,
+                'wn_user': wn_user,
+                'recommend_institution': InstitutionHybrid().get_hybrid_institutions(user_id,9)
+            }
+    return render(request, 'institutions.html', context)
 
 
 def courses(request):
+    user_id = request.session["user_id"]
     course_data = WnCourse.objects.select_related("degree", "stream").all()
     degree_data = WnDegree.objects.all()
 
@@ -30,6 +38,7 @@ def courses(request):
         'course_data': course_data,
         'degree_data': degree_data,
         'wn_user': wn_user,
+        'recommend_course' : CourseHybrid().get_hybrid_courses(user_id,9)
     })
 
 

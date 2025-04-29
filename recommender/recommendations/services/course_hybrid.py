@@ -6,18 +6,19 @@ from recommendations.services.course_collaborative import CourseCollaborative
 from sklearn.preprocessing import MinMaxScaler
 from django.db.models import F, Case, When, Value, IntegerField
 
+
 class CourseHybrid:
 
-    def get_user_data(self,user_id):
+    def get_user_data(self, user_id):
         user = WnUser.objects.filter(pk=user_id).first()
         data = {
-            "user_name" : user.user_name,
+            "user_name": user.user_name,
 
         }
-        if user.state:
+        if hasattr(user, "state"):
             data["state_name"] = user.state.name
 
-        if user.district:
+        if hasattr(user, "district"):
             data["state_name"] = user.district.name
 
         stream_choice = WnStreamChoice.objects.filter(user_id=user_id).first()
@@ -33,20 +34,20 @@ class CourseHybrid:
             data["district_choice"].append(choice.district.name)
 
         return data
-        
-    def recommend(self,user_id,top_n):
+
+    def recommend(self, user_id, top_n):
         data = self.get_user_data(user_id)
 
-        query = data["stream_choice"]
+        query = data.get("stream_choice", "")
 
         ins = RecommendationService()
-        results = ins.recommend_course(query,top_n)
+        results = ins.recommend_course(query, top_n)
 
-        results.rename(columns={"object_id":"course_id","similarity":"cb_score"},inplace=True)
-        cb_df = results[['course_id','cb_score']]
+        results.rename(columns={"object_id": "course_id", "similarity": "cb_score"}, inplace=True)
+        cb_df = results[['course_id', 'cb_score']]
 
-        collab =CourseCollaborative()
-        cf_df = collab.recommend(user_id,top_n)
+        collab = CourseCollaborative()
+        cf_df = collab.recommend(user_id, top_n)
         if cf_df.empty:
             return cb_df
 
@@ -66,9 +67,9 @@ class CourseHybrid:
         # Sort and get Top-N
         top_hybrid = hybrid_df.sort_values("hybrid_score", ascending=False).head(top_n)
         return top_hybrid
-    
-    def get_hybrid_courses(self,user_id,top_n=10):
-        recommended_df = self.recommend(user_id,top_n)
+
+    def get_hybrid_courses(self, user_id, top_n=10):
+        recommended_df = self.recommend(user_id, top_n)
         course_ids = recommended_df['course_id'].tolist()
         # Create a Case/When expression to maintain the order
         ordering_cases = Case(
@@ -79,5 +80,5 @@ class CourseHybrid:
         # Query the courses and order them using MySQL
         courses = WnCourse.objects.filter(
             pk__in=course_ids).order_by(ordering_cases)
-        
+
         return courses
