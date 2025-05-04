@@ -1,38 +1,78 @@
 version: "3.1"
 
 nlu:
+# greetings
 - intent: greet
   examples: |
     - hey
     - hello
     - hi
+    - good morning
+    - good evening
 
 - intent: goodbye
   examples: |
     - bye
     - goodbye
+    - see you
+    - catch you later
 
 - intent: bot_challenge
   examples: |
     - are you a bot?
     - am I talking to a human?
 
+# recommend_degree (10+)
 - intent: recommend_degree
   examples: |
-    - I need help picking a degree
-    - Can you suggest a degree for me?
-    - What should I study?
-    - Recommend a degree for [commerce](subject_interest)
-    - I want to be a [civil engineer](career_goal)
-    - I prefer [Maharashtra](preferred_state)
+    - Recommend a degree in Computer Science
+    - What should I study if I love painting?
+    - Suggest a program for data science
+    - I enjoy building robots—what degree fits?
+    - Help me pick a degree for business analytics
+    - I’m into biotech—any suggestions?
+    - Which course suits someone who likes coding?
+    - Suggest some engineering degrees
+    - I prefer liberal arts—recommend me
+    - What degree matches my interest in finance?
 
+# KB lookup (10+)
 - intent: query_knowledge_base
   examples: |
-    - What [courses](object_type) do you have?
-    - Show me all [institutions](object_type).
-    - Tell me the [description](attribute) of the [Software Engineering](mention).
-    - What’s the [rank](attribute) of [Amrita Vishwa Vidyapeetham](mention)?
-    - Give me details about [Data Analytics](mention).
-    - How long is the [Data Analytics](mention) program?
-    - List some [institutions](object_type) in Colombo.
-    - What’s the [website](attribute) of [University of Colombo](mention)?
+    - Show me [courses](object_type) in the Arts stream
+    - List all [institutions](object_type)
+    - I want the [description](attribute) of [Data Analytics](mention)
+    - What’s the [rank](attribute) of [University of Colombo](mention)?
+    - Give details about [Mechanical Engineering](mention)
+    - Which [course](object_type) runs for 4 years?
+    - How much is the [price](attribute) of [Civil Engineering](mention)?
+    - List [institutions](object_type) with rank below 10
+    - Show me [courses](object_type) in Mumbai
+    - What’s the [website](attribute) of [Amrita Vishwa Vidyapeetham](mention)?
+
+# fallback
+- intent: nlu_fallback
+  examples: |
+    - Uhh…?
+    - Sorry?
+    - I don’t get that.
+    - Can you say that again?
+
+# synonyms
+- synonym: course
+  examples: |
+    - courses
+    - program
+    - degree
+
+- synonym: institution
+  examples: |
+    - institutions
+    - college
+    - university
+
+- intent: ask_course_info
+  examples: |
+    - Tell me more about the AI course
+    - What is the duration of the B.Sc Computer Science?
+    - Can you explain the curriculum for Data Science?

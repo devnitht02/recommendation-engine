@@ -191,12 +191,12 @@
                     </a>
 
                     <!-- Bookmark Button Bottom Right -->
-                    <div class="" style="position: absolute; left:26rem; top: 6rem;">
+                    <div class="text-end" style="text-align: end;">
                         <button type="button"
                                 class="bookmark-btn text-purple-700 hover:text-yellow-400"
                                 data-institution-id="{{ institution.id }}"
                                 title="Bookmark this institution">
-                            <i class="{% if institution.is_favourited %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg" style="color: #5521b5;"></i>
+                            <i class="{% if institution.pk in favourite_institution %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg" style="color: #5521b5;"></i>
                         </button>
                     </div>
                 </div>
@@ -219,12 +219,12 @@
                     </a>
 
                     <!-- Bookmark Button Bottom Right -->
-                    <div class="" style="position: absolute; left:26rem; top: 6rem;">
+                    <div class="text-end" style="text-align: end;">
                         <button type="button"
                                 class="bookmark-btn text-purple-700 hover:text-yellow-400"
                                 data-institution-id="{{ institution.id }}"
                                 title="Bookmark this institution">
-                            <i class="{% if institution.is_favourited %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg" style="color: #5521b5;"></i>
+                            <i class="{% if institution.pk in favourite_institution %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg" style="color: #5521b5;"></i>
                         </button>
 
                     </div>

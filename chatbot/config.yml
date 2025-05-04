@@ -1,3 +1,5 @@
+# config.yml
+
 recipe: default.v1
 assistant_id: 20250422-141823-hushed-guitar
 language: en
@@ -11,20 +13,34 @@ pipeline:
     analyzer: char_wb
     min_ngram: 1
     max_ngram: 4
+  - name: SpacyFeaturizer
   - name: DIETClassifier
-    epochs: 100
+    epochs: 200
     constrain_similarities: true
   - name: EntitySynonymMapper
   - name: ResponseSelector
     epochs: 100
     constrain_similarities: true
   - name: FallbackClassifier
-    threshold: 0.3
+    threshold: 0.4
     ambiguity_threshold: 0.1
 
 policies:
+  # 1) Exact match from stories
   - name: MemoizationPolicy
+
+  # 2) Rule-based fallback for low-confidence predictions
   - name: RulePolicy
+    core_fallback_threshold: 0.3
+    core_fallback_action_name: "action_default_fallback"
+    enable_fallback_prediction: true
+
+  # 3) NLU fallback classifier (for very low NLU confidence)
+  - name: FallbackClassifier
+    threshold: 0.4
+    ambiguity_threshold: 0.1
+
+  # 4) Transformer-based policy for general conversation
   - name: TEDPolicy
     max_history: 5
     epochs: 100

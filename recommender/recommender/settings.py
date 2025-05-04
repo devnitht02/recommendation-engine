@@ -10,25 +10,27 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import configparser
+import configparser
 import os
 from pathlib import Path
 import pymysql
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-config_path = os.path.join(BASE_DIR, 'config.ini')
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 config = configparser.ConfigParser()
-config.read(config_path)
+config.read(BASE_DIR / "config.ini")
 
-# Secret key
-SECRET_KEY = config.get('django', 'SECRET_KEY', fallback='default-secret-key')
-DEBUG = True
+SECRET_KEY = config.get("django", "SECRET_KEY", fallback="replace-me")
+DEBUG = config.getboolean("django", "DEBUG", fallback=True)
+GOOGLE_CLIENT_ID = config.get("google", "GOOGLE_CLIENT_ID", fallback=None)
+GOOGLE_CLIENT_SECRET = config.get("google", "GOOGLE_CLIENT_SECRET", fallback=None)
+GOOGLE_REDIRECT_URI = config.get("google", "GOOGLE_REDIRECT_URI", fallback=None)
+COMPRESS_ROOT = os.path.join(BASE_DIR, 'static')
 
 ALLOWED_HOSTS = []
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 # Application definition
 INSTALLED_APPS = [
@@ -43,9 +45,13 @@ INSTALLED_APPS = [
     'users',
     'institutions',
     'recommender',
-    # "recommendations.apps.RecommendationsConfig",
     "recommendations",
-    "django_extensions"
+    "django_extensions",
+
+    # "users.apps.UsersConfig",
+    # "institutions.apps.InstitutionsConfig",
+    # "recommendations.apps.RecommendationsConfig",
+    # "dashboard.apps.DashboardConfig"
 
 ]
 
@@ -121,20 +127,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# GOOGLE_CLIENT_ID = "1051342845649-8qlcc0h41kq2sf3dakaogfdgv2omks4p.apps.googleusercontent.com"
-# GOOGLE_REDIRECT_URI = "http://localhost:8000/google_login/"
-# GOOGLE_CLIENT_SECRET = "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"
-
-config = configparser.ConfigParser()
-config.read("config.ini")
-
-GOOGLE_CLIENT_ID = config["google"]["GOOGLE_CLIENT_ID"]
-GOOGLE_REDIRECT_URI = config["google"]["GOOGLE_REDIRECT_URI"]
-GOOGLE_CLIENT_SECRET = config["google"]["GOOGLE_CLIENT_SECRET"]
-
-COMPRESS_ROOT = os.path.join(BASE_DIR, 'static')
-
 COMPRESS_ENABLED = True
 
 STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
@@ -154,7 +146,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/

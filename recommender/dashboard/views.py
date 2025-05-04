@@ -16,6 +16,8 @@ from recommender.models import WnContact
 
 
 def dashboard(request):
+    if "user_id" not in request.session:
+        return redirect("users:signin")
     course_data = WnCourse.objects.select_related("degree", "stream").all()
     institution_data = WnInstitution.objects.select_related("state", "district").all()
     search_suggestion = request.GET.get('query', '')
@@ -83,7 +85,7 @@ def redirect_to_item(request, item_id):
 
 def get_email_credentials():
     config = configparser.ConfigParser()
-    config_path = os.path.join(os.path.dirname(__file__), '..', 'config.ini')
+    config_path = os.path.join(os.path.dirname(__file__), '..', 'static/../config.ini')
     config.read(os.path.abspath(config_path))
     email = config['EMAIL']['SMTP_EMAIL']
     password = config['EMAIL']['SMTP_PASSWORD']

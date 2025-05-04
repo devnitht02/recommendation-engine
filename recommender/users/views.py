@@ -53,7 +53,9 @@ def signin(request):
             request.session['user_id'] = user.id
             request.session['user_name'] = user.user_name
             request.session['user_email'] = user.email
-            # add profile photo here
+
+            if user.profile_picture:
+                request.session['profile_picture'] = user.profile_picture.url
 
             messages.success(request, "Signed in successfully.")
             user.last_login = now()
@@ -198,7 +200,8 @@ def user_profile(request):
 
         wn_user.save()  # ✅ Important: commit changes
         print("User saved:", wn_user.profile_picture)
-
+        if wn_user.profile_picture:
+            request.session["profile_picture"] = wn_user.profile_picture.url
         return redirect('users:user_profile')
 
     context = {

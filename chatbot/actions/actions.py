@@ -1,9 +1,15 @@
 # actions.py
-import os
 import django
+import sys
+import os
 
 # 1. Bootstrap Django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "recommendation_engine.settings")
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../../../')))
+sys.path.append("C:/Users/devni/Documents/Steps-Internship-Recommendation/recommender")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "recommender.settings")
+
+import django
+
 django.setup()
 
 from rasa_sdk import Action

@@ -15,11 +15,16 @@ def institutions(request):
         wn_user = WnUser.objects.filter(email=request.user.email).first()
     
     user_id = request.session["user_id"]
+
+    favourite_data =  WnFavourite.objects.filter(user_id = user_id)
+    favourite_institution = [data.institution.pk for data in favourite_data if hasattr(data,"institution") and data.institution]
+
     search_suggestion_institutions = request.GET.get('query', '')
     context = {
                 'institution_data': institution_data,
                 'search_suggestions_institutions': search_suggestion_institutions,
                 'wn_user': wn_user,
+                'favourite_institution' : favourite_institution,
                 'recommend_institution': InstitutionHybrid().get_hybrid_institutions(user_id,9)
             }
     return render(request, 'institutions.html', context)
@@ -34,10 +39,14 @@ def courses(request):
     if request.user.is_authenticated:
         wn_user = WnUser.objects.filter(email=request.user.email).first()
 
+    favourite_data =  WnFavourite.objects.filter(user_id = user_id)
+    favourite_course = [data.course.pk for data in favourite_data if hasattr(data,"course") and data.course]
+
     return render(request, 'courses.html', {
         'course_data': course_data,
         'degree_data': degree_data,
         'wn_user': wn_user,
+        'favourite_course': favourite_course,
         'recommend_course' : CourseHybrid().get_hybrid_courses(user_id,9)
     })
 

@@ -28,7 +28,7 @@ stories:
     - intent: deny
     - action: utter_goodbye
 
-- story: recommend degree story
+- story: recommend degree
   steps:
     - intent: recommend_degree
     - action: utter_recommend_degree
