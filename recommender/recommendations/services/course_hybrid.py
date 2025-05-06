@@ -1,6 +1,7 @@
 import pandas as pd
 from users.models import WnUser
-from institutions.models import WnCourse, WnStreamChoice, WnLocationChoice
+from recommender.models import WnFavourite
+from institutions.models import WnCourse, WnStreamChoice, WnLocationChoice, WnCourseChoice
 from recommendations.services.recommendation_service import RecommendationService
 from recommendations.services.course_collaborative import CourseCollaborative
 from sklearn.preprocessing import MinMaxScaler
@@ -13,7 +14,7 @@ class CourseHybrid:
         user = WnUser.objects.filter(pk=user_id).first()
         data = {
             "user_name": user.user_name,
-
+            "stream" : user.stream
         }
         if hasattr(user, "state"):
             data["state_name"] = user.state.name
@@ -33,6 +34,16 @@ class CourseHybrid:
             data["state_choice"].append(choice.state.name)
             data["district_choice"].append(choice.district.name)
 
+        data["favourite_courses"] = []
+        favourite_courses = WnFavourite.objects.select_related("course","course__stream","course__degree").filter(user_id = user_id,course__isnull = False)
+        for course in favourite_courses:
+            data["favourite_courses"].append(f"{course.course.course_name} {course.course.stream.stream_name} {course.course.degree.degree_name} degree_description")
+
+        data["course_choice"] = []
+        favourite_courses = WnCourseChoice.objects.select_related("course","course__stream","course__degree").filter(user_id = user_id,course__isnull = False)
+        for course in favourite_courses:
+            data["course_choice"].append(f"{course.course.course_name} {course.course.stream.stream_name} {course.course.degree.degree_name} degree_description")
+
         return data
 
     def recommend(self, user_id, top_n):
@@ -40,6 +51,16 @@ class CourseHybrid:
 
         query = data.get("stream_choice", "")
 
+        if data["stream"]:
+            query += f' {data["stream"]} '
+
+        if data["favourite_courses"]:
+            query += " ".join(f"{course}" for course in data["favourite_courses"])
+
+        if data["course_choice"]:
+            query += " ".join(f"{course}" for course in data["course_choice"])
+
+        print(query)
         ins = RecommendationService()
         results = ins.recommend_course(query, top_n)
 

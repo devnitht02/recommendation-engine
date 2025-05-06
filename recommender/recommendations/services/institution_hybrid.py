@@ -1,6 +1,7 @@
 import pandas as pd
 from users.models import WnUser
-from institutions.models import WnInstitution, WnStreamChoice, WnLocationChoice
+from institutions.models import WnInstitution, WnStreamChoice, WnLocationChoice, WnInstitutionChoice
+from recommender.models import WnFavourite
 from recommendations.services.recommendation_service import RecommendationService
 from recommendations.services.institution_collaborative import InstitutionCollaborative
 from sklearn.preprocessing import MinMaxScaler
@@ -14,7 +15,7 @@ class InstitutionHybrid:
         user = WnUser.objects.filter(pk=user_id).first()
         data = {
             "user_name": user.user_name,
-
+            "stream" : user.stream
         }
         if hasattr(user, "state"):
             data["state_name"] = user.state.name
@@ -26,6 +27,11 @@ class InstitutionHybrid:
         if stream_choice:
             data["stream_choice"] = stream_choice.stream.stream_name
 
+        data["institution_choice"] = []
+        institution_choice = WnInstitutionChoice.objects.select_related("institution","institution__state","institution__district").filter(user_id = user_id)
+        for institution in institution_choice:
+            data["institution_choice"].append(f"{institution.institution.institution_name} {institution.institution.state.name} {institution.institution.district.name}")
+
         location_choice = WnLocationChoice.objects.filter(user_id=user)
         data["state_choice"] = []
         data["district_choice"] = []
@@ -34,6 +40,11 @@ class InstitutionHybrid:
             data["state_choice"].append(choice.state.name)
             data["district_choice"].append(choice.district.name)
 
+        data["favourite_institutions"] = []
+        favourite_institutions = WnFavourite.objects.select_related("institution","institution__state","institution__district").filter(user_id = user_id,institution__isnull = False)
+        for institution in favourite_institutions:
+            data["favourite_institutions"].append(f"{institution.institution.institution_name} {institution.institution.state.name} {institution.institution.district.name}")
+            
         # queryset = WnUser.objects.filter(pk=user_id).values(
         #     "hsc_percentage",
         #     "user_gender", # LEFT JOIN
@@ -49,8 +60,21 @@ class InstitutionHybrid:
         states = set(data["state_choice"])
         districts = set(data["district_choice"])
 
-        query = data.get("stream_choice", "") + " ," + ", ".join(
-            f"{district}" for district in districts) + " ," + ", ".join(f"{state}" for state in states)
+        query = data.get("stream_choice", "") + " ".join(
+            f"{district}" for district in districts) + " ".join(f"{state}" for state in states)
+        
+        if data["stream"]:
+            query += f' {data["stream"]} '
+
+        if data["favourite_institutions"]:
+            query += " ".join(f"{institution}" for institution in data["favourite_institutions"])
+
+        if data["institution_choice"]:
+            query += " ".join(f"{institution}" for institution in data["institution_choice"])
+
+        print(data["favourite_institutions"])
+        print(data["institution_choice"])
+        print(query)
 
         ins = RecommendationService()
         results = ins.recommend_institution(query, top_n)
