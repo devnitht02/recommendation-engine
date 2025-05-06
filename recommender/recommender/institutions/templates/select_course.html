@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css_cdn %}
+    <link rel="stylesheet" href="{% static 'src/view_course.css' %}">
+{% endblock css_cdn %}
+
+{% block content %}
+    <div class="bg-white pt-36 pb-20 px-4 flex justify-center">
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit"
+                    class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded-md transition duration-200">
+                Submit
+            </button>
+        </form>
+    </div>
+    {% include 'footer.html' %}
+{% endblock content %}

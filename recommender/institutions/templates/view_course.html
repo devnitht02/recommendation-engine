@@ -1,60 +1,79 @@
 {% extends "base.html" %}
 {% load static %}
+
 {% block css_cdn %}
-        <link rel="stylesheet" href="{% static 'src/view_course.css' %}">
+    <link rel="stylesheet" href="{% static 'src/view_course.css' %}">
 {% endblock css_cdn %}
 
-
 {% block content %}
+<!-- Page Wrapper with background + spacing -->
+<div class="bg-white pt-36 pb-20 px-4 flex justify-center">
+    <!-- Fixed-width centered card -->
+    <div class="w-full max-w-xl bg-white border border-purple-300 shadow-lg rounded-2xl p-8">
+        <!-- Title -->
+        <h1 class="text-3xl font-extrabold text-center text-gray-900 mb-8">{{ course.course_name }}</h1>
 
-   <div class="max-w-4xl mx-auto p-6 bg-white border border-gray-200 shadow-lg rounded-lg mt-10 container-div">
-       <center><h1 class="text-4xl font-extrabold text-gray-900 mb-6 main-heading">{{ course.course_name }}</h1></center>
-
-        <div class="space-y-4 courses-div">
+        <!-- Info Block -->
+        <div class="space-y-6 text-lg text-gray-800">
+            <!-- Description -->
             <div>
-                <p class="text-gray-700 text-xl mb-2 font-medium"><i class="fa-solid fa-book-open fa-lg" style="color: #824dd8;"></i>&nbsp;
-                    Course Description: </p>
-                <p class="text-gray-800 text-lg"> {{ course.course_description }}</p>
+                <p class="text-xl font-semibold text-gray-700 flex items-center mb-2">
+                    <i class="fa-solid fa-book-open fa-lg text-purple-600 mr-2"></i>
+                    Course Description:
+                </p>
+                <p class="pl-7">{{ course.course_description }}</p>
             </div>
 
+            <!-- Degree -->
             <div>
-                <p class="text-gray-700 text-xl mb-2 font-medium"><i class="fa-solid fa-user-graduate fa-lg"
-                           style="color: #824dd8;"></i>&nbsp; Degree:
-                    {% if course.degree %}
-                        {{ course.degree.degree_description }}
-                    {% else %}
-                        <span class="text-gray-500">Not Available</span>
-                    {% endif %}
+                <p class="text-xl font-semibold text-gray-700 flex items-center">
+                    <i class="fa-solid fa-user-graduate fa-lg text-purple-600 mr-2"></i>
+                    Degree:
+                    <span class="ml-2 font-normal text-gray-800">
+                        {{ course.degree.degree_description|default:"Not Available" }}
+                    </span>
                 </p>
             </div>
 
+            <!-- Stream -->
             <div>
-                <p class="text-gray-700 text-xl mb-2 font-medium"><i class="fa-solid fa-graduation-cap fa-lg" style="color: #824dd8;"></i>&nbsp;Stream:
-                    {% if course.stream %}
-                        {{ course.stream.stream_name }}
-                    {% else %}
-                        <span class="text-gray-500">Not Available</span>
-                    {% endif %}
+                <p class="text-xl font-semibold text-gray-700 flex items-center">
+                    <i class="fa-solid fa-graduation-cap fa-lg text-purple-600 mr-2"></i>
+                    Stream:
+                    <span class="ml-2 font-normal text-gray-800">
+                        {{ course.stream.stream_name|default:"Not Available" }}
+                    </span>
                 </p>
             </div>
 
+            <!-- Duration -->
             <div>
-                <p class="text-gray-700 text-xl mb-2 font-medium"><i class="fa-solid fa-clock fa-lg" style="color: #824dd8;"></i>&nbsp; Duration: {{ course.duration_years }} Years</p>
+                <p class="text-xl font-semibold text-gray-700 flex items-center">
+                    <i class="fa-solid fa-clock fa-lg text-purple-600 mr-2"></i>
+                    Duration:
+                    <span class="ml-2 font-normal">{{ course.duration_years }} Years</span>
+                </p>
             </div>
-         <div>
-                <p class="text-gray-700 text-xl mb-2 font-medium"><i class="fa-solid fa-credit-card fa-lg" style="color: #824dd8;"></i>&nbsp;
-                    Price: INR(₹) {{ course.degree_price }}</p>
 
+            <!-- Price -->
+            <div>
+                <p class="text-xl font-semibold text-gray-700 flex items-center">
+                    <i class="fa-solid fa-credit-card fa-lg text-purple-600 mr-2"></i>
+                    Price:
+                    <span class="ml-2 font-normal">INR(₹) {{ course.degree_price }}</span>
+                </p>
             </div>
         </div>
 
-        <div class="mt-6 flex justify-start reverse-btn">
-            <a href="{% url 'institutions:courses' %}" class="bg-purple-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-700 transition duration-300 ease-in-out">
-                Back to Courses
+        <!-- Back Button -->
+        <div class="mt-10 text-center">
+            <a href="{% url 'institutions:courses' %}"
+               class="bg-purple-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-700 transition duration-300">
+                ← Back to Courses
             </a>
         </div>
     </div>
-
+</div>
 
 {% include 'footer.html' %}
 {% endblock content %}

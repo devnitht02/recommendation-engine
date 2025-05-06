@@ -1,32 +1,36 @@
+from django import forms
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils.timezone import now
 
-from institutions.models import WnDegree
+from institutions.models import WnDegree, WnInstitutionChoice, CourseChoiceForm, WnCourseChoice
 from recommender.models import WnFavourite
 from users.models import WnUser
 from .models import WnInstitution, WnCourse
 from recommendations.services.institution_hybrid import InstitutionHybrid
 from recommendations.services.course_hybrid import CourseHybrid
 
+
 def institutions(request):
     institution_data = WnInstitution.objects.select_related("state", "district")
     wn_user = None
     if request.user.is_authenticated:
         wn_user = WnUser.objects.filter(email=request.user.email).first()
-    
+
     user_id = request.session["user_id"]
 
-    favourite_data =  WnFavourite.objects.filter(user_id = user_id)
-    favourite_institution = [data.institution.pk for data in favourite_data if hasattr(data,"institution") and data.institution]
+    favourite_data = WnFavourite.objects.filter(user_id=user_id)
+    favourite_institution = [data.institution.pk for data in favourite_data if
+                             hasattr(data, "institution") and data.institution]
 
     search_suggestion_institutions = request.GET.get('query', '')
     context = {
-                'institution_data': institution_data,
-                'search_suggestions_institutions': search_suggestion_institutions,
-                'wn_user': wn_user,
-                'favourite_institution' : favourite_institution,
-                'recommend_institution': InstitutionHybrid().get_hybrid_institutions(user_id,9)
-            }
+        'institution_data': institution_data,
+        'search_suggestions_institutions': search_suggestion_institutions,
+        'wn_user': wn_user,
+        'favourite_institution': favourite_institution,
+        'recommend_institution': InstitutionHybrid().get_hybrid_institutions(user_id, 9)
+    }
     return render(request, 'institutions.html', context)
 
 
@@ -39,15 +43,15 @@ def courses(request):
     if request.user.is_authenticated:
         wn_user = WnUser.objects.filter(email=request.user.email).first()
 
-    favourite_data =  WnFavourite.objects.filter(user_id = user_id)
-    favourite_course = [data.course.pk for data in favourite_data if hasattr(data,"course") and data.course]
+    favourite_data = WnFavourite.objects.filter(user_id=user_id)
+    favourite_course = [data.course.pk for data in favourite_data if hasattr(data, "course") and data.course]
 
     return render(request, 'courses.html', {
         'course_data': course_data,
         'degree_data': degree_data,
         'wn_user': wn_user,
         'favourite_course': favourite_course,
-        'recommend_course' : CourseHybrid().get_hybrid_courses(user_id,9)
+        'recommend_course': CourseHybrid().get_hybrid_courses(user_id, 9)
     })
 
 
@@ -173,3 +177,56 @@ def remove_favourite(request):
             WnFavourite.objects.filter(user=wn_user, institution_id=institution_id).delete()
 
     return redirect('institutions:favourites')
+
+
+class InstitutionChoiceForm(forms.Form):
+    institution = forms.ModelChoiceField(
+        queryset=WnInstitution.objects.all(),
+        label='Select Institution',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+
+def select_institution(request):
+    if request.method == 'POST':
+        form = InstitutionChoiceForm(request.POST)
+        if form.is_valid():
+            institution = form.cleaned_data['institution']
+            user_id = request.session.get("user_id")
+            user = WnUser.objects.get(pk=user_id)
+
+            WnInstitutionChoice.objects.create(
+                user=user,
+                institution=institution,
+                created_date=now(),
+                modified_date=now(),
+                active='Y'
+            )
+            return redirect('dashboard:dashboard')
+    else:
+        form = InstitutionChoiceForm()
+
+    return render(request, 'select_institution.html', {'form': form})
+
+
+def select_course(request):
+    if request.method == 'POST':
+        form = CourseChoiceForm(request.POST)
+        if form.is_valid():
+            course = form.cleaned_data['course']
+            user_id = request.session.get("user_id")
+            user = WnUser.objects.get(pk=user_id)
+
+            WnCourseChoice.objects.create(
+                user=user,
+                course=course,
+                created_date=now(),
+                modified_date=now(),
+                active='Y'
+            )
+
+            return redirect('dashboard:dashboard')
+    else:
+        form = CourseChoiceForm()
+
+    return render(request, 'select_course.html', {'form': form})

@@ -22,4 +22,8 @@ urlpatterns = [
 
     path('remove_favourite/', views.remove_favourite, name='remove_favourite'),
 
+    path('select-institution/', views.select_institution, name='select_institution'),
+
+    path('select-course/', views.select_course, name='select_course'),
+
 ]
