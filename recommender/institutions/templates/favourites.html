@@ -4,36 +4,39 @@
 {% block content %}
     <section class="py-24 bg-gray-50 min-h-screen">
         <div class="max-w-6xl mx-auto px-6">
-            <h2 class="text-4xl font-bold text-center text-gray-800 mb-16">My Favourites</h2>
 
             {% if favourite %}
-                <!-- SAVED COURSES -->
-                <div class="mb-20 py-5">
-                    <h3 class="text-2xl font-semibold text-indigo-800 mb-8 border-b border-indigo-200 pb-2 w-fit mx-auto px-4">
-                        Saved Courses
-                    </h3>
+                <!-- Saved Courses Section -->
+                <div class="mx-4 my-10 p-6 bg-white rounded-2xl shadow-lg border border-purple-300">
+                    <div class="flex items-center justify-center mb-6">
+                        <div class="flex-grow border-t border-purple-300"></div>
+                        <h3 class="text-center text-2xl font-semibold mb-6 bg-white text-white py-1 shadow"
+                            style="color: black; width: 30rem">SAVED COURSES</h3>
+                        <div class="flex-grow border-t border-purple-300"></div>
+                    </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {% for item in favourite %}
                             {% if item.course %}
-                                <div class="bg-white shadow-md rounded-xl p-6 hover:shadow-xl transition">
-                                    <h3 class="text-xl font-semibold text-indigo-700 mb-2">{{ item.course.course_name }}</h3>
-                                    <p class="text-sm text-gray-600 mb-4">{{ item.course.course_description|truncatewords:20 }}</p>
-                                    <p class="text-sm text-gray-500">
-                                        <strong>Stream:</strong> {{ item.course.stream.stream_name }}</p>
-                                    <p class="text-sm text-gray-500">
-                                        <strong>Degree:</strong> {{ item.course.degree.degree_description }}</p>
+                                <div class="bg-white shadow-sm rounded-xl border border-purple-100 p-6 hover:shadow-md transition hover:bg-purple-50 flex flex-col justify-between h-full">
                                     <a href="{% url 'institutions:view_course' item.course.id %}" target="_blank"
-                                       class="inline-block mt-4 text-sm font-medium text-purple-600 hover:underline">
-                                        View Course
+                                       class="block">
+                                        <h3 class="text-xl font-semibold text-purple-800 mb-2">{{ item.course.course_name }}</h3>
+                                        <p class="text-sm text-gray-600 mb-4">
+                                            {{ item.course.course_description|truncatewords:20 }}
+                                        </p>
+                                        <p class="text-sm text-gray-500">
+                                            <strong>Stream:</strong> {{ item.course.stream.stream_name }}</p>
+                                        <p class="text-sm text-gray-500">
+                                            <strong>Degree:</strong> {{ item.course.degree.degree_description }}</p>
                                     </a>
-
-                                    <form method="POST" action="{% url 'institutions:remove_favourite' %}" class="mt-2">
+                                    <form method="POST" action="{% url 'institutions:remove_favourite' %}"
+                                          class="mt-auto pt-4">
                                         {% csrf_token %}
                                         <input type="hidden" name="course_id" value="{{ item.course.id }}">
-                                        <button type="submit"
-                                                class="text-red-600 text-sm font-medium hover:underline">
-                                            Remove from Favourites
+                                        <button type="submit" style="background-color: #FF8383"
+                                                class="w-full bg-[#d84040] text-white text-sm font-medium py-2 rounded-lg shadow-sm hover:bg-red-600 hover:shadow-md transition duration-300 ease-in-out">
+                                            Remove
                                         </button>
                                     </form>
                                 </div>
@@ -42,40 +45,41 @@
                     </div>
                 </div>
 
-                <!-- DIVIDER LINE -->
-                <div class="relative my-20">
-                    <div class="border-t-2 border-gray-300 w-full"></div>
-                    <span class="absolute left-1/2 -top-4 transform -translate-x-1/2 bg-gray-50 px-4 text-gray-400 text-sm tracking-wide uppercase">
-        </span>
+                <!-- Divider -->
+                <div class="relative my-16">
+                    <div class="border-t-2 border-gray-200 w-full"></div>
                 </div>
 
-                <!-- SAVED INSTITUTIONS -->
-                <div class="py-5">
-                    <h3 class="text-2xl font-semibold text-indigo-800 mb-8 border-b border-indigo-200 pb-2 w-fit mx-auto px-4">
-                        Saved Institutions
-                    </h3>
+                <!-- Saved Institutions Section -->
+                <div class="mx-4 my-10 p-6 bg-white rounded-2xl shadow-lg border border-purple-300">
+                    <div class="flex items-center justify-center mb-6">
+                        <div class="flex-grow border-t border-purple-300"></div>
+                        <h3 class="text-center text-2xl font-semibold mb-6 bg-white text-white py-1 shadow"
+                            style="color: black; width: 30rem">SAVED INSTITUTIONS</h3>
+                        <div class="flex-grow border-t border-purple-300"></div>
+                    </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {% for item in favourite %}
                             {% if item.institution %}
-                                <div class="bg-white shadow-md rounded-xl p-6 hover:shadow-xl transition">
-                                    <h3 class="text-xl font-semibold text-indigo-700 mb-2">{{ item.institution.institution_name }}</h3>
-                                    <p class="text-sm text-gray-600 mb-4">
-                                        {{ item.institution.institution_type.type|default:"General Institution" }}
-                                    </p>
-                                    <p class="text-sm text-gray-500"><strong>Location:</strong>
-                                        {{ item.institution.state.name }}, {{ item.institution.district.name }}</p>
-                                    <a href="{{ item.institution.website }}" target="_blank"
-                                       class="inline-block mt-4 text-sm font-medium text-purple-600 hover:underline">
-                                        Visit Website
+                                <div class="bg-white shadow-sm rounded-xl border border-purple-100 p-6 hover:shadow-md transition hover:bg-purple-50 flex flex-col justify-between h-full">
+                                    <a href="{% url 'institutions:view_institution' item.institution.id %}"
+                                       target="_blank" class="block">
+                                        <h3 class="text-xl font-semibold text-purple-800 mb-2">{{ item.institution.institution_name }}</h3>
+                                        <p class="text-sm text-gray-600 mb-3">
+                                            {{ item.institution.institution_type.type|default:"General Institution" }}
+                                        </p>
+                                        <p class="text-sm text-gray-500">
+                                            <strong>Location:</strong> {{ item.institution.state.name }}, {{ item.institution.district.name }}
+                                        </p>
                                     </a>
-
-                                    <form method="POST" action="{% url 'institutions:remove_favourite' %}" class="mt-2">
+                                    <form method="POST" action="{% url 'institutions:remove_favourite' %}"
+                                          class="mt-auto pt-4">
                                         {% csrf_token %}
                                         <input type="hidden" name="institution_id" value="{{ item.institution.id }}">
-                                        <button type="submit"
-                                                class="text-red-600 text-sm font-medium hover:underline">
-                                            Remove from Favourites
+                                        <button type="submit" style="background-color: #FF8383"
+                                                class="w-full bg-[#d84040] text-white text-sm font-medium py-2 rounded-lg shadow-sm hover:bg-red-600 hover:shadow-md transition duration-300 ease-in-out">
+                                            Remove
                                         </button>
                                     </form>
                                 </div>
@@ -83,8 +87,10 @@
                         {% endfor %}
                     </div>
                 </div>
+
             {% else %}
-                <div class="text-center text-gray-600 text-lg">
+                <!-- Empty State -->
+                <div class="text-center text-gray-600 text-lg mt-20">
                     You haven’t saved any courses or institutions yet.
                 </div>
             {% endif %}

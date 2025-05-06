@@ -26,6 +26,8 @@ GOOGLE_CLIENT_ID = config.get("google", "GOOGLE_CLIENT_ID", fallback=None)
 GOOGLE_CLIENT_SECRET = config.get("google", "GOOGLE_CLIENT_SECRET", fallback=None)
 GOOGLE_REDIRECT_URI = config.get("google", "GOOGLE_REDIRECT_URI", fallback=None)
 COMPRESS_ROOT = os.path.join(BASE_DIR, 'static')
+SMTP_EMAIL = config.get('EMAIL', 'SMTP_EMAIL')
+SMTP_PASSWORD = config.get('EMAIL', 'SMTP_PASSWORD')
 
 ALLOWED_HOSTS = []
 
@@ -48,10 +50,6 @@ INSTALLED_APPS = [
     "recommendations",
     "django_extensions",
 
-    # "users.apps.UsersConfig",
-    # "institutions.apps.InstitutionsConfig",
-    # "recommendations.apps.RecommendationsConfig",
-    # "dashboard.apps.DashboardConfig"
 
 ]
 

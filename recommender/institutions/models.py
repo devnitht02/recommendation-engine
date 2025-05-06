@@ -1,5 +1,9 @@
+from django import forms
 from django.db import models
+
 from users.models import WnDistrict, WnState, WnUser
+
+
 # from courses.models import WnCourse
 
 
@@ -19,6 +23,9 @@ class WnInstitution(models.Model):
     class Meta:
         managed = False
         db_table = 'wn_institution'
+
+    def __str__(self):
+        return self.institution_name
 
 
 class WnInstitutionType(models.Model):
@@ -43,6 +50,12 @@ class WnInstitutionChoice(models.Model):
         managed = False
         db_table = 'wn_institution_choice'
         unique_together = (('user', 'institution'),)
+
+
+class InstitutionChoiceForm(forms.ModelForm):
+    class Meta:
+        model = WnInstitutionChoice
+        fields = ['institution']
 
 
 class WnInstitutionCourse(models.Model):
@@ -88,10 +101,12 @@ class WnCourse(models.Model):
     modified_date = models.DateTimeField()
     active = models.CharField(max_length=1)
 
-
     class Meta:
         managed = False
         db_table = 'wn_course'
+
+    def __str__(self):
+        return self.course_name
 
 
 class WnCourseChoice(models.Model):
@@ -105,6 +120,14 @@ class WnCourseChoice(models.Model):
         managed = False
         db_table = 'wn_course_choice'
         unique_together = (('user', 'course'),)
+
+
+class CourseChoiceForm(forms.Form):
+    course = forms.ModelChoiceField(
+        queryset=WnCourse.objects.all(),
+        label='Select Course',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
 
 
 class WnDegree(models.Model):

@@ -12,7 +12,7 @@
     {% endblock js_cdn %}
 
 
-    <div class="min-h-screen flex items-center justify-center bg-gray-100" id="auth">
+    <div class="min-h-screen flex items-center justify-center w-full bg-white" id="auth">
         <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
 
             <form method="POST" action="/signup/" class="max-w-sm mx-auto bg-white p-6 shadow-md rounded-lg border">
@@ -54,7 +54,10 @@
                 </div>
                 <button type="submit" class="custom-button" style="background-color: #5521b5">Signup</button>
 
+
             </form>
+
+
             <!-- Tailwind Modal -->
             <div id="feedback-modal"
                  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">

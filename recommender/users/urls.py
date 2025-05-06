@@ -21,4 +21,8 @@ urlpatterns = [
 
                   path('upload_profile_picture/', views.upload_profile_picture, name='upload_profile_picture'),
 
+                  path('reset_password_form/', views.forgot_password, name='forgot_password'),
+
+                  path('new_password/', views.reset_password, name='reset_password'),
+
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

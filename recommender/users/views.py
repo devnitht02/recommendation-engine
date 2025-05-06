@@ -1,15 +1,22 @@
 import json
+import smtplib
+import uuid
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 import requests
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import make_password
+from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.timezone import now
-from django.views.decorators.csrf import csrf_exempt
 
 from institutions.models import WnState, WnDistrict
 from recommender import settings
@@ -18,6 +25,7 @@ from users.models import WnUser
 
 def signup(request):
     if request.method == "POST":
+        list(messages.get_messages(request))
         name = request.POST.get("name")
         email = request.POST.get("email")
         password = request.POST.get("password")
@@ -44,6 +52,7 @@ def signup(request):
 
 def signin(request):
     if request.method == 'POST':
+        list(messages.get_messages(request))
         email = request.POST.get("email")
         password = request.POST.get("password")
         # for GOOGLE SIGN IN add the user id username email in the session
@@ -68,11 +77,6 @@ def signin(request):
     return render(request, 'signin.html')
 
 
-GOOGLE_CLIENT_ID = "1051342845649-8qlcc0h41kq2sf3dakaogfdgv2omks4p.apps.googleusercontent.com"
-GOOGLE_REDIRECT_URI = "http://localhost:8000/google_login/"
-GOOGLE_CLIENT_SECRET = "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"
-
-
 def google_login(request):
     if request.method == 'POST':
         # Get the Google token from the frontend
@@ -82,7 +86,7 @@ def google_login(request):
         # Verify token with Google
         payload = {
             'id_token': credential,
-            'client_id': GOOGLE_CLIENT_ID
+            'client_id': settings.GOOGLE_CLIENT_ID
         }
         url = 'https://oauth2.googleapis.com/tokeninfo'
         response = requests.get(url, params=payload)
@@ -193,12 +197,11 @@ def user_profile(request):
         wn_user.state_id = request.POST.get('state')
         wn_user.district_id = request.POST.get('district')
 
-        # ✅ Handle the profile picture upload
         if request.FILES.get('profile_picture'):
             print("Saving profile picture...")
             wn_user.profile_picture = request.FILES['profile_picture']
 
-        wn_user.save()  # ✅ Important: commit changes
+        wn_user.save()
         print("User saved:", wn_user.profile_picture)
         if wn_user.profile_picture:
             request.session["profile_picture"] = wn_user.profile_picture.url
@@ -291,3 +294,78 @@ def get_district(request, state_id):
         return JsonResponse(district, safe=False, status=200)
     except WnUser.DoesNotExist:
         return JsonResponse({"status": "error", "message": "User profile not found"}, status=404)
+
+
+reset_tokens = {}
+
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        user = WnUser.objects.filter(email=email).first()
+
+        if not user:
+            messages.error(request, "No user with that email.")
+            return redirect('users:forgot_password')
+
+        token = uuid.uuid4().hex
+        reset_tokens[email] = token
+
+        reset_url = request.build_absolute_uri(
+            reverse('users:reset_password') + f"?email={email}&key={token}"
+        )
+
+        context = {'reset_url': reset_url, 'user': user}
+        html_content = render_to_string("reset_password_email.html", context)
+
+        msg = MIMEMultipart()
+        msg['From'] = settings.SMTP_EMAIL
+        msg['To'] = email
+        msg['Subject'] = "Reset Your Password"
+        msg.attach(MIMEText(html_content, 'html'))
+
+        try:
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login(settings.SMTP_EMAIL, settings.SMTP_PASSWORD)
+            server.sendmail(settings.SMTP_EMAIL, email, msg.as_string())
+            server.quit()
+            messages.success(request, "Check your email for the reset link.")
+        except Exception as e:
+            messages.error(request, f"Email failed: {e}")
+
+        return redirect('users:signin')
+
+    return render(request, 'reset_password_form.html')
+
+
+def reset_password(request):
+    email = request.GET.get('email')
+    key = request.GET.get('key')
+
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        key = request.POST.get('key')
+        password = request.POST.get('password')
+        confirm = request.POST.get('confirm_password')
+
+        if key != reset_tokens.get(email):
+            return render(request, "new_password.html", {
+                "error": "Invalid or expired token"
+            })
+
+        if password != confirm:
+            return render(request, "new_password.html", {
+                "error": "Passwords do not match",
+                "email": email,
+                "key": key
+            })
+
+        user = WnUser.objects.filter(email=email).first()
+        if user:
+            user.password = make_password(password)
+            user.save()
+            messages.success(request, "Password reset successfully!")
+            return redirect('users:signin')
+
+    return render(request, "new_password.html", {'email': email, 'key': key})

@@ -1,16 +1,20 @@
 import configparser
 import os
 import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.template.loader import render_to_string
+
 from institutions.models import WnCourse, WnStream
 from institutions.models import WnInstitution
-from recommendations.services.recommendation_service import RecommendationService
-from recommendations.services.institution_hybrid import InstitutionHybrid
 from recommendations.services.course_hybrid import CourseHybrid
+from recommendations.services.institution_hybrid import InstitutionHybrid
+from recommendations.services.recommendation_service import RecommendationService
 from recommender import settings
 from recommender.models import WnContact
 
@@ -96,7 +100,6 @@ def contact_page(request):
     if request.method == "POST":
         name = request.POST.get("name")
         email = request.POST.get("email")
-        subject = request.POST.get("subject")
         message_body = request.POST.get("message")
 
         if WnContact.objects.filter(email=email).exists():
@@ -105,26 +108,24 @@ def contact_page(request):
             messages.error(request, "You've already sent a message with this email.")
             return redirect("dashboard:contact_page")
 
-        contact_info = WnContact(name=name, email=email, subject=subject, message=message_body)
-        contact_info.save()
+        WnContact.objects.create(name=name, email=email, message=message_body)
 
         smtp_email, smtp_password = get_email_credentials()
+        context = {"name": name, "message": message_body}
+        html_message = render_to_string("contact_email_form.html", context)
 
         try:
-            connection = smtplib.SMTP('smtp.gmail.com', 587)
-            connection.starttls()
-            connection.login(user=smtp_email, password=smtp_password)
-            email_message = (
-                f"Subject: PathFinder \n\n"
-                f"Hey {name}! Thanks for contacting us!. "
-                f"Remember, progress comes from perseverance. We'll reach out to you soon—keep up the great work!"
-            )
-            connection.sendmail(
-                from_addr=smtp_email,
-                to_addrs=email,
-                msg=email_message.encode('utf-8')
-            )
-            connection.quit()
+            msg = MIMEMultipart()
+            msg['From'] = smtp_email
+            msg['To'] = email
+            msg['Subject'] = "Thank you for contacting PathFinder"
+            msg.attach(MIMEText(html_message, 'html'))
+
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login(smtp_email, smtp_password)
+            server.sendmail(smtp_email, email, msg.as_string())
+            server.quit()
         except Exception as e:
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({"status": "error", "reason": "email_fail", "details": str(e)})

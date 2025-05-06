@@ -265,7 +265,7 @@
         <!-- TOP RATED COURSES SECTION -->
         <section class="pt-24" id="top-rated-courses">
             <div class="max-w-screen-xl px-4 mx-auto">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">TOP RATED COURSES</h2>
+                <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">TOP RATED DEGREES</h2>
 
                 <!-- Correct Scroll Wrapper -->
                 <div class=" scroll-horizontal-wrapper auto-scroll" style="padding: 1rem" 
@@ -347,7 +347,7 @@
         <!-- TOP RECOMMENDED COURSES SECTION -->
         <section class="pt-24" id="top-rated-courses">
             <div class="max-w-screen-xl px-4 mx-auto">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">TOP RECOMMENDED COURSES</h2>
+                <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">TOP RECOMMENDED DEGREES</h2>
 
                 <div class=" scroll-horizontal-wrapper auto-scroll" style="padding: 1rem" 
                      onmouseenter="this.classList.add('scroll-pause')"
@@ -357,7 +357,7 @@
                             <div class="course-card">
                                 <img
                                         class="course-image"
-                                        src="https://images.pexels.com/photos/256559/pexels-photo-256559.jpeg"
+                                        src="{% static "assets/images/degrees.jpeg" %}"
                                         alt="{{ course.course_name }}"
                                         onerror="this.onerror=null;this.src='https://via.placeholder.com/400x200?text=No+Image';"
                                 />
@@ -397,7 +397,7 @@
                             <div class="course-card">
                                 <img
                                         class="course-image"
-                                        src="https://images.pexels.com/photos/256559/pexels-photo-256559.jpeg"
+                                        src="{% static "/assets/images/institutions.jpeg" %}"
                                         alt="{{ institution.institution_name }}"
                                         onerror="this.onerror=null;this.src='https://via.placeholder.com/400x200?text=No+Image';"
                                 />

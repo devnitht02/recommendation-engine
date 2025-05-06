@@ -147,7 +147,7 @@
         {# SEARCH FORM #}
         <form action="{% url "institutions:search_suggestions_institutions" %}" method="GET" class="max-w-md mx-auto"
               id="search-form"
-              style="margin-top: 10rem">
+              style="margin-top: 4rem; margin-bottom: 10rem">
             {% csrf_token %}
             <label for="default-search" class="mb-2 text-sm font-medium text-purple-900 sr-only">Search</label>
             <div class="relative search-div">
@@ -174,66 +174,72 @@
             </div>
         </form>
 
-        <h4 class="p-6">Recommended for you</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 items-stretch">
-            {% for institution in recommend_institution %}
-                <div class="relative p-6 bg-white border border-purple-500 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
-                    <a href="{% url 'institutions:view_institution' institution.id %}" target="_blank" class="flex-1">
-                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
-                            {{ institution.institution_name }}
-                        </h5>
-                        <p class="font-normal text-gray-700">
-                            State: <span class="text-blue-500">{{ institution.state.name }}</span>
-                        </p>
-                        <p class="font-normal text-gray-700">
-                            District: <span class="text-blue-500">{{ institution.district.name }}</span>
-                        </p>
-                    </a>
 
-                    <!-- Bookmark Button Bottom Right -->
-                    <div class="text-end" style="text-align: end;">
-                        <button type="button"
-                                class="bookmark-btn text-purple-700 hover:text-yellow-400"
-                                data-institution-id="{{ institution.id }}"
-                                title="Bookmark this institution">
-                            <i class="{% if institution.pk in favourite_institution %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg" style="color: #5521b5;"></i>
-                        </button>
+        <!-- Recommended Institutions Section Card -->
+        <div class="mx-6 my-10 p-6 bg-white rounded-2xl shadow-lg border border-purple-300">
+            <h4 class="text-center text-3xl font-semibold mb-6 bg-white text-white py-2 shadow" style="color: black; width: 30rem; margin-left: 31rem;border-radius: 5px">RECOMMENDED FOR YOU</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {% for institution in recommend_institution %}
+                    <div class="relative p-6 bg-white border border-purple-500 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
+                        <a href="{% url 'institutions:view_institution' institution.id %}"
+                           class="flex-1">
+                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
+                                {{ institution.institution_name }}
+                            </h5>
+                            <p class="font-normal text-gray-700">
+                                State: <span class="text-blue-500">{{ institution.state.name }}</span>
+                            </p>
+                            <p class="font-normal text-gray-700">
+                                District: <span class="text-blue-500">{{ institution.district.name }}</span>
+                            </p>
+                        </a>
+                        <div class="text-end">
+                            <button type="button"
+                                    class="bookmark-btn text-purple-700 hover:text-yellow-400"
+                                    data-institution-id="{{ institution.id }}"
+                                    title="Bookmark this institution">
+                                <i class="{% if institution.pk in favourite_institution %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg"
+                                   style="color: #5521b5;"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% empty %}
+                    <p class="text-center text-gray-700 col-span-3">No institutions available.</p>
+                {% endfor %}
+            </div>
         </div>
-        <h4 class="p-6 mt-12">All institutions</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 items-stretch">
-            {% for institution in institution_data %}
-                <div class="relative p-6 bg-white border border-purple-500 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
-                    <a href="{% url 'institutions:view_institution' institution.id %}" target="_blank" class="flex-1">
-                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
-                            {{ institution.institution_name }}
-                        </h5>
-                        <p class="font-normal text-gray-700">
-                            State: <span class="text-blue-500">{{ institution.state.name }}</span>
-                        </p>
-                        <p class="font-normal text-gray-700">
-                            District: <span class="text-blue-500">{{ institution.district.name }}</span>
-                        </p>
-                    </a>
-
-                    <!-- Bookmark Button Bottom Right -->
-                    <div class="text-end" style="text-align: end;">
-                        <button type="button"
-                                class="bookmark-btn text-purple-700 hover:text-yellow-400"
-                                data-institution-id="{{ institution.id }}"
-                                title="Bookmark this institution">
-                            <i class="{% if institution.pk in favourite_institution %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg" style="color: #5521b5;"></i>
-                        </button>
-
+        <!-- All Institutions Section Card -->
+        <div class="mx-6 my-10 p-6 bg-white rounded-2xl shadow-lg border border-purple-300">
+            <h4 class="text-center text-3xl font-semibold mb-6 bg-white text-white py-2 shadow" style="color: black; width: 30rem; margin-left: 31rem;border-radius: 5px">ALL INSTITUTIONS</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {% for institution in institution_data %}
+                    <div class="relative p-6 bg-white border border-purple-500 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
+                        <a href="{% url 'institutions:view_institution' institution.id %}"
+                           class="flex-1">
+                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
+                                {{ institution.institution_name }}
+                            </h5>
+                            <p class="font-normal text-gray-700">
+                                State: <span class="text-blue-500">{{ institution.state.name }}</span>
+                            </p>
+                            <p class="font-normal text-gray-700">
+                                District: <span class="text-blue-500">{{ institution.district.name }}</span>
+                            </p>
+                        </a>
+                        <div class="text-end">
+                            <button type="button"
+                                    class="bookmark-btn text-purple-700 hover:text-yellow-400"
+                                    data-institution-id="{{ institution.id }}"
+                                    title="Bookmark this institution">
+                                <i class="{% if institution.pk in favourite_institution %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg"
+                                   style="color: #5521b5;"></i>
+                            </button>
+                        </div>
                     </div>
-
-
-                </div>
-            {% empty %}
-                <p class="text-center text-gray-700 col-span-3">No institutions available.</p>
-            {% endfor %}
+                {% empty %}
+                    <p class="text-center text-gray-700 col-span-3">No institutions available.</p>
+                {% endfor %}
+            </div>
         </div>
 
 

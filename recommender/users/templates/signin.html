@@ -38,7 +38,7 @@
         }
     </script>
 
-    <div class="min-h-screen flex items-center justify-center bg-gray-100" id="auth">
+    <div class="min-h-screen flex items-center justify-center w-full bg-white" id="auth">
         <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
 
             <form method="POST" action="/signin/" class="max-w-sm mx-auto bg-white p-6 shadow-md rounded-lg border"
@@ -74,6 +74,12 @@
                      data-auto_prompt="false">
                 </div>
                 <div class="g_id_signin" data-type="standard"></div>
+
+                <div class="mt-4 text-left">
+                    <a href="{% url 'users:forgot_password' %}" class="text-sm text-blue-600 hover:underline">
+                        Forgot your password?
+                    </a>
+                </div>
 
 
             </form>

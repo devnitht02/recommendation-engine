@@ -17,8 +17,8 @@ urlpatterns = [
 
     path('institution/<int:institution_id>/', view_institution, name='institution_view'),
 
-    path('contact.html', contact_page, name='contact_page'),
+    path('contact', contact_page, name='contact_page'),
 
-    path('about.html', about, name='about_page'),
+    path('about', about, name='about_page'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

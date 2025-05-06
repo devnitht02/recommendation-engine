@@ -1,6 +1,10 @@
+html, body {
+  background-color: white !important;
+}
+
+
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    background-color: #f4f7fb;
     margin: 0;
     padding: 0;
     position: relative;
