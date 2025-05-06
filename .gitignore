@@ -10,7 +10,6 @@ __pycache__/
 
 # Virtual environment
 django_env/
-rasa_env/
 env/
 *.egg-info/
 *.egg
