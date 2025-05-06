@@ -21,9 +21,13 @@ urlpatterns = [
     path('toggle_favourite/', views.toggle_favourite, name='toggle_favourite'),
 
     path('remove_favourite/', views.remove_favourite, name='remove_favourite'),
+    path('select-course/', views.course_selection_form, name='select_course_form'),
+    path('get-districts/<int:state_id>/', views.get_districts, name='get_districts'),
+    path('get-institutions/<int:state_id>/<int:district_id>/', views.get_institutions, name='get_institutions'),
+    path('get-courses/<int:institution_id>/', views.get_courses, name='get_courses'),
 
-    path('select-institution/', views.select_institution, name='select_institution'),
 
-    path('select-course/', views.select_course, name='select_course'),
+
+
 
 ]

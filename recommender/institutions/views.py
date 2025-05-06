@@ -1,14 +1,13 @@
-from django import forms
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.timezone import now
 
-from institutions.models import WnDegree, WnInstitutionChoice, CourseChoiceForm, WnCourseChoice
-from recommender.models import WnFavourite
-from users.models import WnUser
-from .models import WnInstitution, WnCourse
-from recommendations.services.institution_hybrid import InstitutionHybrid
+from institutions.models import WnDegree, WnSelectedCourse
 from recommendations.services.course_hybrid import CourseHybrid
+from recommendations.services.institution_hybrid import InstitutionHybrid
+from recommender.models import WnFavourite
+from users.models import WnUser, WnDistrict, WnState
+from .models import WnInstitution, WnCourse
 
 
 def institutions(request):
@@ -179,54 +178,41 @@ def remove_favourite(request):
     return redirect('institutions:favourites')
 
 
-class InstitutionChoiceForm(forms.Form):
-    institution = forms.ModelChoiceField(
-        queryset=WnInstitution.objects.all(),
-        label='Select Institution',
-        widget=forms.Select(attrs={'class': 'form-control'})
-    )
+def course_selection_form(request):
+    states = WnState.objects.all()
 
-
-def select_institution(request):
     if request.method == 'POST':
-        form = InstitutionChoiceForm(request.POST)
-        if form.is_valid():
-            institution = form.cleaned_data['institution']
-            user_id = request.session.get("user_id")
-            user = WnUser.objects.get(pk=user_id)
+        user_id = request.session.get('user_id')
+        state_id = request.POST.get('state')
+        district_id = request.POST.get('district')
+        institution_id = request.POST.get('institution')
+        course_id = request.POST.get('course')
 
-            WnInstitutionChoice.objects.create(
-                user=user,
-                institution=institution,
+        if user_id and institution_id and course_id:
+            WnSelectedCourse.objects.create(
+                user_id=user_id,
+                course_id=course_id,
+                institution_id=institution_id,
                 created_date=now(),
                 modified_date=now(),
                 active='Y'
             )
             return redirect('dashboard:dashboard')
-    else:
-        form = InstitutionChoiceForm()
 
-    return render(request, 'select_institution.html', {'form': form})
+    return render(request, 'select_course_form.html', {'states': states})
 
 
-def select_course(request):
-    if request.method == 'POST':
-        form = CourseChoiceForm(request.POST)
-        if form.is_valid():
-            course = form.cleaned_data['course']
-            user_id = request.session.get("user_id")
-            user = WnUser.objects.get(pk=user_id)
+def get_districts(request, state_id):
+    districts = WnDistrict.objects.filter(state_id=state_id).values('id', 'name')
+    return JsonResponse(list(districts), safe=False)
 
-            WnCourseChoice.objects.create(
-                user=user,
-                course=course,
-                created_date=now(),
-                modified_date=now(),
-                active='Y'
-            )
 
-            return redirect('dashboard:dashboard')
-    else:
-        form = CourseChoiceForm()
+def get_institutions(request, state_id, district_id):
+    institutions = WnInstitution.objects.filter(state_id=state_id, district_id=district_id).values('id',
+                                                                                                   'institution_name')
+    return JsonResponse(list(institutions), safe=False)
 
-    return render(request, 'select_course.html', {'form': form})
+
+def get_courses(request, institution_id):
+    courses = WnCourse.objects.filter(wninstitutioncourse__institution_id=institution_id).values('id', 'course_name')
+    return JsonResponse(list(courses), safe=False)

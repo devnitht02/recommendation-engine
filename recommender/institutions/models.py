@@ -52,12 +52,6 @@ class WnInstitutionChoice(models.Model):
         unique_together = (('user', 'institution'),)
 
 
-class InstitutionChoiceForm(forms.ModelForm):
-    class Meta:
-        model = WnInstitutionChoice
-        fields = ['institution']
-
-
 class WnInstitutionCourse(models.Model):
     institution = models.OneToOneField(WnInstitution, models.DO_NOTHING,
                                        primary_key=True)
@@ -120,14 +114,6 @@ class WnCourseChoice(models.Model):
         managed = False
         db_table = 'wn_course_choice'
         unique_together = (('user', 'course'),)
-
-
-class CourseChoiceForm(forms.Form):
-    course = forms.ModelChoiceField(
-        queryset=WnCourse.objects.all(),
-        label='Select Course',
-        widget=forms.Select(attrs={'class': 'form-control'})
-    )
 
 
 class WnDegree(models.Model):

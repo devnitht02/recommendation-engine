@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-xl mx-auto mt-24 bg-white shadow-lg p-6 rounded-lg" style="margin-top: 8.5rem">
+    <form method="POST" id="courseForm">
+        {% csrf_token %}
+        <label class="block mb-2 text-sm font-medium text-gray-700">State</label>
+        <select name="state" id="state" class="w-full border rounded p-2 mb-4" required>
+            <option value="">Select State</option>
+            {% for state in states %}
+                <option value="{{ state.id }}">{{ state.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label class="block mb-2 text-sm font-medium text-gray-700">District</label>
+        <select name="district" id="district" class="w-full border rounded p-2 mb-4" required>
+            <option value="">Select District</option>
+        </select>
+
+        <label class="block mb-2 text-sm font-medium text-gray-700">Institution</label>
+        <select name="institution" id="institution" class="w-full border rounded p-2 mb-4" required>
+            <option value="">Select Institution</option>
+        </select>
+
+        <label class="block mb-2 text-sm font-medium text-gray-700">Course</label>
+        <select name="course" id="course" class="w-full border rounded p-2 mb-6" required>
+            <option value="">Select Course</option>
+        </select>
+
+        <button type="submit" class="bg-purple-700 hover:bg-purple-800 text-white font-medium py-2 px-4 rounded w-full">
+            Submit Selection
+        </button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('state').addEventListener('change', function () {
+        let stateId = this.value;
+        fetch(`/get-districts/${stateId}/`)
+            .then(response => response.json())
+            .then(data => {
+                let districtSelect = document.getElementById('district');
+                districtSelect.innerHTML = '<option value="">Select District</option>';
+                data.forEach(d => {
+                    districtSelect.innerHTML += `<option value="${d.id}">${d.name}</option>`;
+                });
+                document.getElementById('institution').innerHTML = '<option value="">Select Institution</option>';
+                document.getElementById('course').innerHTML = '<option value="">Select Course</option>';
+            });
+    });
+
+    document.getElementById('district').addEventListener('change', function () {
+        let stateId = document.getElementById('state').value;
+        let districtId = this.value;
+        fetch(`/get-institutions/${stateId}/${districtId}/`)
+            .then(response => response.json())
+            .then(data => {
+                let institutionSelect = document.getElementById('institution');
+                institutionSelect.innerHTML = '<option value="">Select Institution</option>';
+                data.forEach(i => {
+                    institutionSelect.innerHTML += `<option value="${i.id}">${i.institution_name}</option>`;
+                });
+                document.getElementById('course').innerHTML = '<option value="">Select Course</option>';
+            });
+    });
+
+    document.getElementById('institution').addEventListener('change', function () {
+        let institutionId = this.value;
+        fetch(`/get-courses/${institutionId}/`)
+            .then(response => response.json())
+            .then(data => {
+                let courseSelect = document.getElementById('course');
+                courseSelect.innerHTML = '<option value="">Select Course</option>';
+                data.forEach(c => {
+                    courseSelect.innerHTML += `<option value="${c.id}">${c.course_name}</option>`;
+                });
+            });
+    });
+</script>
+{% endblock %}
