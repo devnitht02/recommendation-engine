@@ -10,10 +10,11 @@ from django.db import models
 from users.models import WnUser
 from institutions.models import WnCourse, WnInstitution, WnStream
 
+
 class WnSelectedCourse(models.Model):
-    user = models.ForeignKey(WnUser, models.DO_NOTHING,related_name="user_course")
-    course = models.ForeignKey(WnCourse, models.DO_NOTHING,related_name="selected_course")
-    institution = models.ForeignKey(WnInstitution, models.DO_NOTHING,related_name="selected_institution")
+    user = models.ForeignKey(WnUser, models.DO_NOTHING, related_name="user_course")
+    course = models.ForeignKey(WnCourse, models.DO_NOTHING, related_name="selected_course")
+    institution = models.ForeignKey(WnInstitution, models.DO_NOTHING, related_name="selected_institution")
     created_date = models.DateTimeField()
     modified_date = models.DateTimeField()
     active = models.CharField(max_length=1)
@@ -23,9 +24,10 @@ class WnSelectedCourse(models.Model):
         db_table = 'wn_selected_course'
         unique_together = (('user', 'course', 'institution'),)
 
+
 class WnStreamChoice(models.Model):
-    user = models.ForeignKey(WnUser, models.DO_NOTHING, db_column='user',related_name="user_stream")
-    stream = models.ForeignKey(WnStream, models.DO_NOTHING, db_column='stream',related_name="user_choice")
+    user = models.ForeignKey(WnUser, models.DO_NOTHING, db_column='user', related_name="user_stream")
+    stream = models.ForeignKey(WnStream, models.DO_NOTHING, db_column='stream', related_name="user_choice")
     created_date = models.DateTimeField()
     modified_date = models.DateTimeField()
     active = models.CharField(max_length=1)
@@ -34,6 +36,7 @@ class WnStreamChoice(models.Model):
         managed = False
         db_table = 'wn_stream_choice'
         unique_together = (('user', 'stream'),)
+
 
 class WnContact(models.Model):
     name = models.CharField(max_length=255)
@@ -50,7 +53,7 @@ class WnContact(models.Model):
 
 
 class WnFavourite(models.Model):
-    user = models.ForeignKey(WnUser, models.DO_NOTHING, db_column='user',related_name="user_favourite")
+    user = models.ForeignKey(WnUser, models.DO_NOTHING, db_column='user', related_name="user_favourite")
     course = models.ForeignKey(WnCourse, models.DO_NOTHING, db_column='course', blank=True, null=True)
     institution = models.ForeignKey(WnInstitution, models.DO_NOTHING, db_column='institution', blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)

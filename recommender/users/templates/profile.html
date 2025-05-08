@@ -47,7 +47,8 @@
 
 
         <!-- Profile Update Form -->
-        <form method="POST" action="{% url 'users:user_profile' %}" enctype="multipart/form-data" class="space-y-4"
+        <form method="POST" action="{% url 'users:user_profile' %}" enctype="multipart/form-data"
+              class="space-y-4 bg-white"
               id="profileForm">
             {% csrf_token %}
             <!-- Profile Picture Upload Section -->
@@ -147,7 +148,7 @@
             </div>
 
             <button type="submit" id="updateProfileBtn"
-                    style="background-color: #5521b5"
+                    style="background-color: #5521b5; margin-top: 3rem"
                     class="w-full text-white bg-[#CB6040] hover:bg-[#B35235] focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                 Update Profile
             </button>
@@ -230,6 +231,19 @@
                 const preview = document.getElementById('profile-picture-preview');
                 preview.src = URL.createObjectURL(file);
             }
+        });
+    </script>
+
+    <script>
+        const btn = document.getElementById("updateProfileBtn");
+
+        btn.addEventListener("mouseenter", function () {
+            btn.style.backgroundColor = "#6B3FD9";  // lighter purple for hover
+            btn.style.transition = "background-color 0.3s ease";
+        });
+
+        btn.addEventListener("mouseleave", function () {
+            btn.style.backgroundColor = "#5521b5";  // original purple
         });
     </script>
 

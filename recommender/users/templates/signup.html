@@ -12,10 +12,10 @@
     {% endblock js_cdn %}
 
 
-    <div class="min-h-screen flex items-center justify-center w-full bg-white" id="auth">
+    <div class="min-h-screen flex items-center justify-center w-full bg-white" id="auth" style="background-color: white">
         <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
 
-            <form method="POST" action="/signup/" class="max-w-sm mx-auto bg-white p-6 shadow-md rounded-lg border">
+            <form method="POST" action="/signup/" class="max-w-sm mx-auto bg-white p-6 shadow-md rounded-lg border bg-white">
                 {% csrf_token %}
                 <div class="mb-5">
                     <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Username</label>
