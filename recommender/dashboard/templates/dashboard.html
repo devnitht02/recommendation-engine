@@ -19,135 +19,158 @@
 
 {% block content %}
 
-    <script>
-        $(document).ready(function () {
-            let typingTimer;
-            const typingDelay = 300;
+ <script>
+    $(document).ready(function () {
+        let typingTimer;
+        const typingDelay = 300;
 
-            $('#default-search').on('input', function () {
-                clearTimeout(typingTimer);
-                const query = $(this).val().trim();
-                console.log("Query being sent:", query);
-                const suggestionsList = $('#suggestions-list');
+        $('#default-search').on('input', function () {
+            clearTimeout(typingTimer);
+            const query = $(this).val().trim();
+            console.log("Query being sent:", query);
+            const suggestionsList = $('#suggestions-list');
 
-                if (query.length === 0) {
-                    suggestionsList.empty().hide();
-                    return;
-                }
+            if (query.length === 0) {
+                suggestionsList.empty().hide();
+                return;
+            }
 
-                typingTimer = setTimeout(() => {
-                    $.ajax({
-                        url: "{% url 'dashboard:search_suggestions' %}",
-                        type: "GET",
-                        data: {query: query},
-                        success: function (response) {
-                            const {search_data} = response;
-                            suggestionsList.empty();
+            typingTimer = setTimeout(() => {
+                $.ajax({
+                    url: "{% url 'dashboard:search_suggestions' %}",
+                    type: "GET",
+                    data: {query: query},
+                    success: function (response) {
+                        const {search_data} = response;
+                        suggestionsList.empty();
 
-                            if (search_data.length === 0) {
-                                suggestionsList.append('<li style="padding: 8px; color: #666;">No results found</li>');
-                            } else {
-                                search_data.forEach(data => {
-                                    if (data.type == "course") {
-                                        suggestionsList.append(`
+                        if (search_data.length === 0) {
+                            suggestionsList.append('<li style="padding: 8px; color: #666;">No results found</li>');
+                        } else {
+                            search_data.forEach(data => {
+                                if (data.type == "course") {
+                                    suggestionsList.append(`
                                         <li><a href="/view_course/${data.id}" style="display: block; padding: 8px; cursor: pointer;">${data.name} (Course)</a></li>
                                     `);
-                                    } else {
-                                        suggestionsList.append(`
+                                } else {
+                                    suggestionsList.append(`
                                         <li><a href="/view_institution/${data.id}" style="display: block; padding: 8px; cursor: pointer;">${data.name} (Institution)</a></li>
                                     `);
-                                    }
-                                });
-                                console.log(search_data);
-                            }
-                            suggestionsList.show();
-                        },
-                        error: function (xhr, status, error) {
-                            suggestionsList.empty().append('<li style="padding: 8px; color: #666;">Error fetching results. Please try again.</li>').show();
-                            console.error("Error:", error);
+                                }
+                            });
+                            console.log(search_data);
                         }
-                    });
-                }, typingDelay);
-            });
-
-            // Hide suggestions when clicking outside
-            $(document).click(function (e) {
-                if (!$(e.target).closest('.search-div').length) {
-                    $('#suggestions-list').hide();
-                }
-            });
-
-            // Handle form submit
-            function handleSubmit(event) {
-                event.preventDefault();
-
-                let query = document.getElementById("default-search").value.trim();
-                if (!query) return;
-
-                let isCourseSearch = /course|program|degree/i.test(query);
-                let isInstitutionSearch = /university|college|institution|academy/i.test(query);
-
-                if (!isCourseSearch && !isInstitutionSearch) {
-                    alert("Please clarify your search. It seems like you're looking for both courses and institutions.");
-                    return;
-                }
-
-                let url = isCourseSearch ? `/search_suggestions_courses/?query=${query}` : `/search_suggestions_institutions/?query=${query}`;
-
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (isCourseSearch && data.courses.length > 0) {
-                            let course = data.courses[0];
-                            if (course && course.course_id) {
-                                window.location.href = `/view_course/${course.course_id}`;
-                            } else {
-                                alert("No valid course ID found.");
-                            }
-                        } else if (isInstitutionSearch && data.institutions.length > 0) {
-                            let institution = data.institutions[0];
-                            if (institution && institution.institution_id) {
-                                window.location.href = `/view_institution/${institution.institution_id}`;
-                            } else {
-                                alert("No valid institution ID found.");
-                            }
-                        } else {
-                            alert(isCourseSearch ? "No courses found!" : "No institutions found!");
-                        }
-                    })
-                    .catch(error => console.error("Error:", error));
-            }
-
-            document.getElementById('search-form').addEventListener('submit', handleSubmit);
-
-            {#Success stories#}
-            const container = document.getElementById("testimonialScroll");
-            const duration = 30000;
-            const fps = 60;
-            const intervalTime = 1000 / fps;
-
-            let totalScrollableWidth = container.scrollWidth - container.clientWidth;
-            let scrollStep = totalScrollableWidth / (duration / intervalTime);
-            let scrollAmount = 0;
-
-            function autoScroll() {
-                if (container.scrollLeft >= totalScrollableWidth) {
-                    container.scrollLeft = 0;
-                    scrollAmount = 0;
-                } else {
-                    scrollAmount += scrollStep;
-                    container.scrollLeft = scrollAmount;
-                }
-            }
-
-            let interval = setInterval(autoScroll, intervalTime);
-
-            container.addEventListener("mouseenter", () => clearInterval(interval));
-            container.addEventListener("mouseleave", () => {
-                interval = setInterval(autoScroll, intervalTime);
-            });
+                        suggestionsList.show();
+                    },
+                    error: function (xhr, status, error) {
+                        suggestionsList.empty().append('<li style="padding: 8px; color: #666;">Error fetching results. Please try again.</li>').show();
+                        console.error("Error:", error);
+                    }
+                });
+            }, typingDelay);
         });
-    </script>
+
+        // Hide suggestions when clicking outside
+        $(document).click(function (e) {
+            if (!$(e.target).closest('.search-div').length) {
+                $('#suggestions-list').hide();
+            }
+        });
+
+        // Handle form submit
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            let query = document.getElementById("default-search").value.trim();
+            if (!query) return;
+
+            let isCourseSearch = /course|program|degree/i.test(query);
+            let isInstitutionSearch = /university|college|institution|academy/i.test(query);
+
+            if (!isCourseSearch && !isInstitutionSearch) {
+                alert("Please clarify your search. It seems like you're looking for both courses and institutions.");
+                return;
+            }
+
+            let url = isCourseSearch ? `/search_suggestions_courses/?query=${query}` : `/search_suggestions_institutions/?query=${query}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (isCourseSearch && data.courses.length > 0) {
+                        let course = data.courses[0];
+                        if (course && course.course_id) {
+                            window.location.href = `/view_course/${course.course_id}`;
+                        } else {
+                            alert("No valid course ID found.");
+                        }
+                    } else if (isInstitutionSearch && data.institutions.length > 0) {
+                        let institution = data.institutions[0];
+                        if (institution && institution.institution_id) {
+                            window.location.href = `/view_institution/${institution.institution_id}`;
+                        } else {
+                            alert("No valid institution ID found.");
+                        }
+                    } else {
+                        alert(isCourseSearch ? "No courses found!" : "No institutions found!");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+        }
+
+        document.getElementById('search-form').addEventListener('submit', handleSubmit);
+
+        // Hover effect for search-form button
+        const searchBtn = document.querySelector("#search-form button");
+
+        if (searchBtn) {
+            searchBtn.addEventListener("mouseover", function () {
+                searchBtn.style.backgroundColor = "#6B3FD9";  // lighter purple
+                searchBtn.style.transition = "background-color 0.3s ease";
+            });
+
+            searchBtn.addEventListener("mouseleave", function () {
+                searchBtn.style.backgroundColor = "#5521b5";  // original purple
+            });
+
+            searchBtn.addEventListener("mousedown", function () {
+                searchBtn.style.transform = "scale(0.98)";
+            });
+
+            searchBtn.addEventListener("mouseup", function () {
+                searchBtn.style.transform = "scale(1)";
+            });
+        }
+
+        // Success stories
+        const container = document.getElementById("testimonialScroll");
+        const duration = 30000;
+        const fps = 60;
+        const intervalTime = 1000 / fps;
+
+        let totalScrollableWidth = container.scrollWidth - container.clientWidth;
+        let scrollStep = totalScrollableWidth / (duration / intervalTime);
+        let scrollAmount = 0;
+
+        function autoScroll() {
+            if (container.scrollLeft >= totalScrollableWidth) {
+                container.scrollLeft = 0;
+                scrollAmount = 0;
+            } else {
+                scrollAmount += scrollStep;
+                container.scrollLeft = scrollAmount;
+            }
+        }
+
+        let interval = setInterval(autoScroll, intervalTime);
+
+        container.addEventListener("mouseenter", () => clearInterval(interval));
+        container.addEventListener("mouseleave", () => {
+            interval = setInterval(autoScroll, intervalTime);
+        });
+    });
+</script>
+
 
 
 

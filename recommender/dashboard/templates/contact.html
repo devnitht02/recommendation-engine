@@ -127,9 +127,7 @@
     transition: background-color 0.3s ease;
   }
 
-  .contact-btn:hover {
-    background-color: #6b21a8;
-  }
+
 </style>
 
 <div class="contact-gradient flex items-center justify-center">
@@ -154,10 +152,23 @@
         <textarea id="message" name="message" rows="4" class="contact-input" placeholder="Your message..." required></textarea>
       </div>
 
-      <button type="submit" class="contact-btn">Send Message</button>
+      <button type="submit" id="contactBtn" class="contact-btn">Send Message</button>
     </form>
   </div>
 
 </div>
+    
+      <script>
+        const btn = document.getElementById("contactBtn");
+
+        btn.addEventListener("mouseenter", function () {
+            btn.style.backgroundColor = "#6B3FD9";  // lighter purple for hover
+            btn.style.transition = "background-color 0.3s ease";
+        });
+
+        btn.addEventListener("mouseleave", function () {
+            btn.style.backgroundColor = "#5521b5";  // original purple
+        });
+    </script>
 {% include 'footer.html' %}
 {% endblock content %}

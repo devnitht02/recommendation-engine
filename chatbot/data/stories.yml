@@ -1,52 +1,33 @@
 version: "3.1"
 
 stories:
+- story: greet path
+  steps:
+  - intent: greet
+  - action: utter_greet
+
 - story: happy path
   steps:
-    - intent: greet
-    - action: utter_greet
-    - intent: mood_great
-    - action: utter_happy
+  - intent: mood_great
+  - action: utter_happy
 
-- story: sad path 1
+- story: sad path
   steps:
-    - intent: greet
-    - action: utter_greet
-    - intent: mood_unhappy
-    - action: utter_cheer_up
-    - action: utter_did_that_help
-    - intent: affirm
-    - action: utter_happy
+  - intent: mood_unhappy
+  - action: utter_cheer_up
+  - action: utter_did_that_help
 
-- story: sad path 2
+- story: goodbye path
   steps:
-    - intent: greet
-    - action: utter_greet
-    - intent: mood_unhappy
-    - action: utter_cheer_up
-    - action: utter_did_that_help
-    - intent: deny
-    - action: utter_goodbye
+  - intent: goodbye
+  - action: utter_goodbye
 
-- story: recommend degree
+- story: ask recommendation
   steps:
-    - intent: recommend_degree
-    - action: utter_recommend_degree
+  - intent: ask_recommendation
+  - action: utter_recommend_degree
 
-- story: KB course description
+- story: kb lookup
   steps:
-    - intent: query_knowledge_base
-      entities:
-        - object_type: "course"
-        - attribute: "description"
-        - mention: "Software Engineering"
-    - action: action_query_knowledge_base
-
-- story: KB institution rank
-  steps:
-    - intent: query_knowledge_base
-      entities:
-        - object_type: "institution"
-        - attribute: "rank"
-        - mention: "Amrita Vishwa Vidyapeetham"
-    - action: action_query_knowledge_base
+  - intent: query_knowledge_base
+  - action: action_query_knowledge_base

@@ -16,7 +16,7 @@ on user preferences, academic profiles, and behavioural data.
 Built using Django, MySQL, and Python-based ML frameworks, this full-stack web platform features content-based + collaborative filtering,
 adaptive learning, and chatbot integration to provide inclusive guidance.
 
-
+---
 
 ---
 

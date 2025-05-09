@@ -1,78 +1,110 @@
 version: "3.1"
 
 nlu:
-# greetings
 - intent: greet
   examples: |
     - hey
     - hello
-    - hi
+    - hi there
     - good morning
-    - good evening
+    - yo
 
 - intent: goodbye
   examples: |
     - bye
     - goodbye
     - see you
-    - catch you later
+    - take care
+
+- intent: affirm
+  examples: |
+    - yes
+    - yep
+    - sure
+    - works for me
+
+- intent: deny
+  examples: |
+    - no
+    - nope
+    - not really
+
+- intent: mood_great
+  examples: |
+    - I feel great
+    - I'm doing awesome
+    - I'm so happy
+
+- intent: mood_unhappy
+  examples: |
+    - I feel sad
+    - I'm not doing well
+    - I'm unhappy
+
+- intent: ask_recommendation
+  examples: |
+    - Can you recommend a degree?
+    - Suggest me a program
+    - What should I study?
+
+- intent: recommend_degree
+  examples: |
+    - I'm good at math and coding
+    - I like biology and chemistry
+
+- intent: query_knowledge_base
+  examples: |
+    - What is the admission deadline?
+    - Give me details about Computer Science at MIT
 
 - intent: bot_challenge
   examples: |
     - are you a bot?
-    - am I talking to a human?
+    - what are you?
 
-# recommend_degree (10+)
-- intent: recommend_degree
-  examples: |
-    - Recommend a degree in Computer Science
-    - What should I study if I love painting?
-    - Suggest a program for data science
-    - I enjoy building robots—what degree fits?
-    - Help me pick a degree for business analytics
-    - I’m into biotech—any suggestions?
-    - Which course suits someone who likes coding?
-    - Suggest some engineering degrees
-    - I prefer liberal arts—recommend me
-    - What degree matches my interest in finance?
-
-# KB lookup (10+)
-- intent: query_knowledge_base
-  examples: |
-    - Show me [courses](object_type) in the Arts stream
-    - List all [institutions](object_type)
-    - I want the [description](attribute) of [Data Analytics](mention)
-    - What’s the [rank](attribute) of [University of Colombo](mention)?
-    - Give details about [Mechanical Engineering](mention)
-    - Which [course](object_type) runs for 4 years?
-    - How much is the [price](attribute) of [Civil Engineering](mention)?
-    - List [institutions](object_type) with rank below 10
-    - Show me [courses](object_type) in Mumbai
-    - What’s the [website](attribute) of [Amrita Vishwa Vidyapeetham](mention)?
-
-# fallback
 - intent: nlu_fallback
   examples: |
-    - Uhh…?
-    - Sorry?
-    - I don’t get that.
-    - Can you say that again?
+    - asdfghjkl
+    - qwerty
 
-# synonyms
-- synonym: course
+- intent: ask_application_process
   examples: |
-    - courses
-    - program
-    - degree
-
-- synonym: institution
-  examples: |
-    - institutions
-    - college
-    - university
+    - How do I apply?
+    - Tell me the application process
+    - What are the steps to apply?
 
 - intent: ask_course_info
   examples: |
-    - Tell me more about the AI course
-    - What is the duration of the B.Sc Computer Science?
-    - Can you explain the curriculum for Data Science?
+    - Tell me about this course
+    - What will I learn in the course?
+    - Give me course details
+
+- intent: ask_feedback
+  examples: |
+    - I have feedback
+    - I want to give some feedback
+    - Here's what I think
+
+- intent: ask_institution_info
+  examples: |
+    - Tell me about the institution
+    - Give me info about the university
+    - What kind of university is this?
+
+- intent: ask_profile_update
+  examples: |
+    - I want to update my profile
+    - How do I change my details?
+    - Update my account info
+
+- intent: ask_saved_courses
+  examples: |
+    - What courses have I saved?
+    - Show me my saved programs
+    - List saved courses
+
+- intent: ask_system_features
+  examples: |
+    - What can you do?
+    - What features do you have?
+    - Tell me your functionalities
