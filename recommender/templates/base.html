@@ -67,7 +67,7 @@
                 {% if 'user_id' in request.session %}
                     <a href="{% url 'users:user_profile' %}"
                        class="text-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 hover:bg-gray-200 focus:outline-none">
-                        Hi! {{ request.session.user_name }}
+                        Hello, {{ request.session.user_name }}!
                     </a>
                     <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown"
                          data-dropdown-placement="bottom-start"

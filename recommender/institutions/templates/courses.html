@@ -184,6 +184,11 @@
             {% for course in recommend_course %}
                 <div class="relative p-6 bg-white border border-purple-500 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
                     <a href="{% url 'institutions:view_course' course.id %}" class="flex-1">
+                        {% if course.stream.image_url %}
+                            <img src="{% static "/assets/images/degrees.jpeg" %}"
+                                 alt="{{ course.stream.stream_name }}"
+                                 class="mb-4 rounded-lg w-full h-48 object-cover">
+                        {% endif %}
                         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
                             {{ course.course_name }}
                         </h5>
@@ -212,11 +217,17 @@
 
     <!-- All Courses Section Card -->
     <div class="mx-6 my-10 p-6 bg-white rounded-2xl shadow-lg border border-purple-300">
-        <h4 class="text-center text-3xl font-semibold mb-6 bg-white text-white py-2 shadow" style="color: black;width: 30rem; margin-left: 31rem; border-radius: 5px">ALL COURSES</h4>
+        <h4 class="text-center text-3xl font-semibold mb-6 bg-white text-white py-2 shadow"
+            style="color: black;width: 30rem; margin-left: 31rem; border-radius: 5px">ALL COURSES</h4>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             {% for course in course_data %}
                 <div class="relative p-6 bg-white border border-purple-500 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
                     <a href="{% url 'institutions:view_course' course.id %}" class="flex-1">
+                        {% if course.stream.image_url %}
+                            <img src="{% static "/assets/images/courses.png" %}"
+                                 alt="{{ course.stream.stream_name }}"
+                                 class="mb-4 rounded-lg w-full h-48 object-cover">
+                        {% endif %}
                         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
                             {{ course.course_name }}
                         </h5>

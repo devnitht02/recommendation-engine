@@ -1,13 +1,13 @@
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import redirect
 from django.utils.timezone import now
 
 from institutions.models import WnDegree, WnSelectedCourse
 from recommendations.services.course_hybrid import CourseHybrid
 from recommendations.services.institution_hybrid import InstitutionHybrid
-from recommender.models import WnFavourite
-from users.models import WnUser, WnDistrict, WnState
-from .models import WnInstitution, WnCourse
+from recommender import settings
+from users.models import WnDistrict, WnState
+from .models import WnInstitution
 
 
 def institutions(request):
@@ -50,28 +50,70 @@ def courses(request):
         'degree_data': degree_data,
         'wn_user': wn_user,
         'favourite_course': favourite_course,
+        'MEDIA_URL': settings.MEDIA_URL,
         'recommend_course': CourseHybrid().get_hybrid_courses(user_id, 9)
     })
 
 
+from django.shortcuts import render, get_object_or_404
+from recommender.models import WnFavourite
+from users.models import WnUser
+from .models import WnCourse
+
+
 def view_course(request, course_id):
     course = get_object_or_404(WnCourse, pk=course_id)
-    return render(request, 'view_course.html', {'course': course})
+
+    wn_user = None
+    favourite_course = []
+
+    if request.user.is_authenticated and 'user_id' in request.session:
+        user_id = request.session['user_id']
+        wn_user = WnUser.objects.filter(pk=user_id).first()
+
+        # Get all favourited course IDs for this user
+        favourite_course = list(
+            WnFavourite.objects.filter(user=wn_user)
+            .exclude(course=None)
+            .values_list('course_id', flat=True)
+        )
+
+    return render(request, 'view_course.html', {
+        'course': course,
+        'favourite_course': favourite_course,  # Used for template condition
+        'wn_user': wn_user
+    })
 
 
 def view_institution(request, institution_id):
     institution_data = get_object_or_404(WnInstitution, pk=institution_id)
 
-    # all courses related to the institution using the WnInstitutionCourse table
-    course_data = WnCourse.objects.filter(wninstitutioncourse__institution=institution_data)
-    course_data = course_data.select_related('degree', 'stream')
+    # Fetch courses offered
+    course_data = WnCourse.objects.filter(wninstitutioncourse__institution=institution_data).select_related('degree',
+                                                                                                            'stream')
 
     degree_data = WnDegree.objects.all()
 
+    wn_user = None
+    favourite_institution = []
+
+    if request.user.is_authenticated and 'user_id' in request.session:
+        user_id = request.session['user_id']
+        wn_user = WnUser.objects.filter(pk=user_id).first()
+
+        # Get all favourited institution IDs for this user
+        favourite_institution = list(
+            WnFavourite.objects.filter(user=wn_user)
+            .exclude(institution=None)
+            .values_list('institution_id', flat=True)
+        )
+
     return render(request, 'view_institution.html', {
+        'institution_data': institution_data,
         'course_data': course_data,
         'degree_data': degree_data,
-        'institution_data': institution_data
+        'favourite_institution': favourite_institution,
+        'wn_user': wn_user
     })
 
 

@@ -183,6 +183,9 @@
                     <div class="relative p-6 bg-white border border-purple-500 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
                         <a href="{% url 'institutions:view_institution' institution.id %}"
                            class="flex-1">
+                            <img src="{% static "/assets/images/institutions.jpeg" %}"
+                                 alt="{{ course.stream.stream_name }}"
+                                 class="mb-4 rounded-lg w-full h-48 object-cover">
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
                                 {{ institution.institution_name }}
                             </h5>
@@ -216,6 +219,9 @@
                     <div class="relative p-6 bg-white border border-purple-500 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
                         <a href="{% url 'institutions:view_institution' institution.id %}"
                            class="flex-1">
+                            <img src="{% static "/assets/images/institutions.jpeg" %}"
+                                 alt="{{ course.stream.stream_name }}"
+                                 class="mb-4 rounded-lg w-full h-48 object-cover">
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
                                 {{ institution.institution_name }}
                             </h5>
