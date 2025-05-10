@@ -35,16 +35,12 @@ def signup(request):
             messages.error(request, "Email already registered.")
             return redirect('users:signin')
 
-        # Save new user
+        # Save new user (do NOT log in)
         user = WnUser(user_name=name, email=email, password=make_password(password))
         user.save()
 
-        # Login user automatically after signup
-        request.session['user_id'] = user.id
-        request.session['user_name'] = user.user_name
-        request.session['user_email'] = user.email
-
-        messages.success(request, "Signup successful! Please log-in")
+        # Message only, no session or login
+        messages.success(request, "Signup successful! Please log in.")
         return redirect('users:signin')
 
     return render(request, "signup.html")

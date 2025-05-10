@@ -66,9 +66,11 @@
             <div class="flex items-center lg:order-2" style="margin: 10px">
                 {% if 'user_id' in request.session %}
                     <a href="{% url 'users:user_profile' %}"
-                       class="text-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 hover:bg-gray-200 focus:outline-none">
-                        Hello, {{ request.session.user_name }}!
+                       class="text-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 hover:bg-gray-200 focus:outline-none"
+                       id="dynamic-greeting"
+                       data-username="{{ request.session.user_name }}">
                     </a>
+
                     <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown"
                          data-dropdown-placement="bottom-start"
                          class="w-10 h-10 rounded-full cursor-pointer account-img" style="margin-right: 1rem"
@@ -177,7 +179,6 @@
 </header>
 
 
-
 <main class="bg-white">
     {% block content %}
 
@@ -187,6 +188,28 @@
 
 
 </body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const hours = new Date().getHours();
+        let greeting = "Hello";
+
+        if (hours >= 5 && hours < 12) {
+            greeting = "Good Morning";
+        } else if (hours >= 12 && hours < 18) {
+            greeting = "Good Afternoon";
+        } else if (hours >= 18 && hours < 22) {
+            greeting = "Good Evening";
+        } else {
+            greeting = "Hello";
+        }
+
+        const greetingEl = document.getElementById("dynamic-greeting");
+        const userName = greetingEl.getAttribute("data-username");
+        greetingEl.textContent = `${greeting} ${userName}`;
+    });
+</script>
+
 
 </html>
 
