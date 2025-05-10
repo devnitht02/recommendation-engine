@@ -180,7 +180,11 @@ def user_profile(request):
     district = WnDistrict.objects.all()
 
     if request.method == 'POST':
-        wn_user.user_name = request.POST.get('user_name')
+        new_user_name = request.POST.get('user_name')
+        if new_user_name:  # only update if not empty
+            wn_user.user_name = new_user_name
+            request.session['user_name'] = new_user_name  # keep header greeting in sync
+
         wn_user.email = request.POST.get('email')
         wn_user.user_gender = request.POST.get('user_gender')
         wn_user.school_passed_out_year = request.POST.get('school_passed_out_year')
@@ -201,6 +205,7 @@ def user_profile(request):
         print("User saved:", wn_user.profile_picture)
         if wn_user.profile_picture:
             request.session["profile_picture"] = wn_user.profile_picture.url
+
         return redirect('users:user_profile')
 
     context = {
