@@ -1,13 +1,17 @@
 from django.http import JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.timezone import now
 
-from institutions.models import WnDegree, WnSelectedCourse
+from institutions.models import WnDegree, WnInstitutionChoice, WnCourseChoice, WnSelectedCourse
+from recommender.models import WnFavourite
+from users.models import WnUser
+from .models import WnInstitution, WnCourse
+from recommendations.services.institution_hybrid import InstitutionHybrid
 from recommendations.services.course_hybrid import CourseHybrid
 from recommendations.services.institution_hybrid import InstitutionHybrid
-from recommender import settings
-from users.models import WnDistrict, WnState
-from .models import WnInstitution
+from recommender.models import WnFavourite
+from users.models import WnUser, WnDistrict, WnState
+from .models import WnInstitution, WnCourse
 
 
 def institutions(request):
@@ -28,7 +32,9 @@ def institutions(request):
         'search_suggestions_institutions': search_suggestion_institutions,
         'wn_user': wn_user,
         'favourite_institution': favourite_institution,
-        'recommend_institution': InstitutionHybrid().get_hybrid_institutions(user_id, 9)
+        'recommend_institution': InstitutionHybrid().get_hybrid_institutions(user_id, 9),
+        'liked_institution': WnInstitutionChoice.objects.filter(user_id=user_id, active="1").values_list(
+            "institution_id", flat=True)
     }
     return render(request, 'institutions.html', context)
 
@@ -50,70 +56,29 @@ def courses(request):
         'degree_data': degree_data,
         'wn_user': wn_user,
         'favourite_course': favourite_course,
-        'MEDIA_URL': settings.MEDIA_URL,
-        'recommend_course': CourseHybrid().get_hybrid_courses(user_id, 9)
+        'recommend_course': CourseHybrid().get_hybrid_courses(user_id, 9),
+        'liked_course': WnCourseChoice.objects.filter(user_id=user_id, active="1").values_list("course_id", flat=True)
     })
-
-
-from django.shortcuts import render, get_object_or_404
-from recommender.models import WnFavourite
-from users.models import WnUser
-from .models import WnCourse
 
 
 def view_course(request, course_id):
     course = get_object_or_404(WnCourse, pk=course_id)
-
-    wn_user = None
-    favourite_course = []
-
-    if request.user.is_authenticated and 'user_id' in request.session:
-        user_id = request.session['user_id']
-        wn_user = WnUser.objects.filter(pk=user_id).first()
-
-        # Get all favourited course IDs for this user
-        favourite_course = list(
-            WnFavourite.objects.filter(user=wn_user)
-            .exclude(course=None)
-            .values_list('course_id', flat=True)
-        )
-
-    return render(request, 'view_course.html', {
-        'course': course,
-        'favourite_course': favourite_course,  # Used for template condition
-        'wn_user': wn_user
-    })
+    return render(request, 'view_course.html', {'course': course})
 
 
 def view_institution(request, institution_id):
     institution_data = get_object_or_404(WnInstitution, pk=institution_id)
 
-    # Fetch courses offered
-    course_data = WnCourse.objects.filter(wninstitutioncourse__institution=institution_data).select_related('degree',
-                                                                                                            'stream')
+    # all courses related to the institution using the WnInstitutionCourse table
+    course_data = WnCourse.objects.filter(wninstitutioncourse__institution=institution_data)
+    course_data = course_data.select_related('degree', 'stream')
 
     degree_data = WnDegree.objects.all()
 
-    wn_user = None
-    favourite_institution = []
-
-    if request.user.is_authenticated and 'user_id' in request.session:
-        user_id = request.session['user_id']
-        wn_user = WnUser.objects.filter(pk=user_id).first()
-
-        # Get all favourited institution IDs for this user
-        favourite_institution = list(
-            WnFavourite.objects.filter(user=wn_user)
-            .exclude(institution=None)
-            .values_list('institution_id', flat=True)
-        )
-
     return render(request, 'view_institution.html', {
-        'institution_data': institution_data,
         'course_data': course_data,
         'degree_data': degree_data,
-        'favourite_institution': favourite_institution,
-        'wn_user': wn_user
+        'institution_data': institution_data
     })
 
 
@@ -195,6 +160,56 @@ def toggle_favourite(request):
         return JsonResponse({'status': 'error', 'message': 'Missing IDs'}, status=400)
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
+
+def like_institution(request):
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        institution_id = request.POST.get('institution_id')
+
+        # Get the Django user from session
+        if not 'user_id' in request.session:
+            return JsonResponse({'status': 'error', 'message': 'Login required'}, status=403)
+
+        user_id = request.session['user_id']
+
+        try:
+            choice_data = WnInstitutionChoice.objects.filter(user=user_id, institution_id=institution_id)
+            if not choice_data.exists():
+                ins = WnInstitutionChoice(user_id=user_id, institution_id=institution_id)
+                ins.save()
+            else:
+                flag = '0' if choice_data[0].active == '1' else '1'
+                choice_data.update(active=flag)
+            return JsonResponse({'status': 'added', 'type': 'course'})
+        except:
+            return JsonResponse({'status': 'error', 'message': 'server error'}, status=500)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
+
+def like_course(request):
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        course_id = request.POST.get('course_id')
+
+        # Get the Django user from session
+        if not 'user_id' in request.session:
+            return JsonResponse({'status': 'error', 'message': 'Login required'}, status=403)
+
+        user_id = request.session['user_id']
+
+        try:
+            choice_data = WnCourseChoice.objects.filter(user=user_id, course_id=course_id)
+            if not choice_data.exists():
+                ins = WnCourseChoice(user_id=user_id, course_id=course_id)
+                ins.save()
+            else:
+                flag = '0' if choice_data[0].active == '1' else '1'
+                choice_data.update(active=flag)
+            return JsonResponse({'status': 'added', 'type': 'course'})
+        except:
+            return JsonResponse({'status': 'error', 'message': 'server error'}, status=500)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
 
 # @csrf_exempt

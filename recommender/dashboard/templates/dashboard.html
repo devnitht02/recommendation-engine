@@ -4,6 +4,37 @@
 {% block css_cdn %}
     <link rel="stylesheet" href="{% static 'src/dashboard.css' %}">
     <link rel="stylesheet" href="{% static 'src/chatbot.css' %}">
+    <style>
+        div#chatBody ol{
+            list-style-type: decimal;
+        }
+        div#chatBody li {
+            padding: 0.5rem;
+            border-radius: 10px;
+            margin-left: 2rem;
+        }
+        div#chatBody div {
+            margin-block: 1rem;
+        }
+        div#chatBody a {
+            color: #5521b5;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #5521b5;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin: 5px;
+        }
+
+        @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+}
+    </style>
 
 {% endblock css_cdn %}
 
@@ -768,8 +799,13 @@
 
     <div class="chat-panel" id="chatPanel">
         <div class="chat-header">PathFinder Assistant</div>
-        <div class="chat-body" id="chatBody">
-            <div><strong>Bot:</strong> Hey! How can I help you today?</div>
+        <div class="chat-body" id="chat-container">
+            <div id="chatBody">
+                <div><strong>Bot:</strong> Hey! How can I help you today?</div>
+            </div>
+            <div id="botTyping" style="display: none;">
+                <div class="loader"></div>
+            </div>
         </div>
         <div class="chat-footer">
             <input type="text" id="userInput" placeholder="Type here..."
@@ -786,9 +822,20 @@
             panel.style.display = (panel.style.display === "none" || panel.style.display === "") ? "flex" : "none";
         }
 
+        const chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/{{request.session.user_id}}/");
+        const chat = document.getElementById("chatBody");
+        const chatBody = document.getElementById("chat-container");
+        chatSocket.onmessage = function(e) {
+            document.getElementById("botTyping").style.display = "none";
+            const data = JSON.parse(e.data);
+            const botDiv = document.createElement("div");
+            botDiv.innerHTML = `<strong>Bot:</strong> ${data.message}`;
+            chat.appendChild(botDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        };
+
         function sendMessage() {
             const input = document.getElementById("userInput");
-            const chat = document.getElementById("chatBody");
             const message = input.value.trim();
 
             if (!message) return;
@@ -797,36 +844,53 @@
             userDiv.innerHTML = `<strong>You:</strong> ${message}`;
             chat.appendChild(userDiv);
             input.value = "";
-
-            fetch("http://localhost:5005/webhooks/rest/webhook", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({sender: "user", message: message})
-            })
-                .then(res => res.json())
-                .then(data => {
-                    data.forEach(resp => {
-                        if (resp.text) {
-                            const botDiv = document.createElement("div");
-                            botDiv.innerHTML = `<strong>Bot:</strong> ${resp.text}`;
-                            chat.appendChild(botDiv);
-                        }
-
-                        if (resp.image) {
-                            const img = document.createElement("img");
-                            img.src = resp.image;
-                            img.alt = "Bot image";
-                            img.className = "bot-image";
-                            chat.appendChild(img);
-                        }
-
-                        chat.scrollTop = chat.scrollHeight;
-                    });
-                })
-                .catch(err => {
-                    console.error("Failed to send message:", err);
-                });
+             // Show typing loader
+            document.getElementById("botTyping").style.display = "block";
+            chatSocket.send(JSON.stringify({ 'message': message }));
+            chatBody.scrollTop = chatBody.scrollHeight;
         }
+
+        // function sendMessage() {
+        //     const input = document.getElementById("userInput");
+        //     const chat = document.getElementById("chatBody");
+        //     const message = input.value.trim();
+
+        //     if (!message) return;
+
+        //     const userDiv = document.createElement("div");
+        //     userDiv.innerHTML = `<strong>You:</strong> ${message}`;
+        //     chat.appendChild(userDiv);
+        //     input.value = "";
+
+        //     fetch("http://localhost:5005/webhooks/rest/webhook", {
+        //         method: "POST",
+        //         headers: {"Content-Type": "application/json"},
+        //         body: JSON.stringify({sender: "user", message: message})
+        //     })
+        //         .then(res => res.json())
+        //         .then(data => {
+        //             data.forEach(resp => {
+        //                 if (resp.text) {
+        //                     const botDiv = document.createElement("div");
+        //                     botDiv.innerHTML = `<strong>Bot:</strong> ${resp.text}`;
+        //                     chat.appendChild(botDiv);
+        //                 }
+
+        //                 if (resp.image) {
+        //                     const img = document.createElement("img");
+        //                     img.src = resp.image;
+        //                     img.alt = "Bot image";
+        //                     img.className = "bot-image";
+        //                     chat.appendChild(img);
+        //                 }
+
+        //                 chat.scrollTop = chat.scrollHeight;
+        //             });
+        //         })
+        //         .catch(err => {
+        //             console.error("Failed to send message:", err);
+        //         });
+        // }
     </script>
 
 

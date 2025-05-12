@@ -26,6 +26,8 @@ GOOGLE_CLIENT_ID = config.get("google", "GOOGLE_CLIENT_ID", fallback=None)
 GOOGLE_CLIENT_SECRET = config.get("google", "GOOGLE_CLIENT_SECRET", fallback=None)
 GOOGLE_REDIRECT_URI = config.get("google", "GOOGLE_REDIRECT_URI", fallback=None)
 COMPRESS_ROOT = os.path.join(BASE_DIR, 'static')
+SMTP_EMAIL = config.get('EMAIL', 'SMTP_EMAIL')
+SMTP_PASSWORD = config.get('EMAIL', 'SMTP_PASSWORD')
 
 ALLOWED_HOSTS = []
 
@@ -34,6 +36,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Application definition
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -47,13 +50,19 @@ INSTALLED_APPS = [
     'recommender',
     "recommendations",
     "django_extensions",
+    'rest_framework',
+    'chat_bot'
 
-    # "users.apps.UsersConfig",
-    # "institutions.apps.InstitutionsConfig",
-    # "recommendations.apps.RecommendationsConfig",
-    # "dashboard.apps.DashboardConfig"
 
 ]
+
+ASGI_APPLICATION = 'recommender.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

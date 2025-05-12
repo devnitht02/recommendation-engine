@@ -30,4 +30,7 @@ urlpatterns = [
 
 
 
+    path('like-institution/', views.like_institution, name='like_institution'),
+
+    path('like-course/', views.like_course, name='like_course'),
 ]

@@ -42,9 +42,9 @@ class WnInstitutionType(models.Model):
 class WnInstitutionChoice(models.Model):
     user = models.ForeignKey(WnUser, models.DO_NOTHING)
     institution = models.ForeignKey(WnInstitution, models.DO_NOTHING)
-    created_date = models.DateTimeField()
+    created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField()
-    active = models.CharField(max_length=1)
+    active = models.CharField(max_length=1,default='1')
 
     class Meta:
         managed = False
@@ -106,9 +106,9 @@ class WnCourse(models.Model):
 class WnCourseChoice(models.Model):
     user = models.ForeignKey(WnUser, models.DO_NOTHING, db_column='user')
     course = models.ForeignKey(WnCourse, models.DO_NOTHING, db_column='course')
-    created_date = models.DateTimeField()
+    created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField()
-    active = models.CharField(max_length=1)
+    active = models.CharField(max_length=1,default="1")
 
     class Meta:
         managed = False
