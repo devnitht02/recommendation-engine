@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chatbot</title>
+</head>
+<body>
+  <h2>Chatbot</h2>
+  <div id="chatbox"></div>
+  <input type="text" id="messageInput" autocomplete="off" />
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
+    const chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/");
+
+    chatSocket.onmessage = function(e) {
+      const data = JSON.parse(e.data);
+      document.getElementById("chatbox").innerHTML += `<p><b>Bot:</b> ${data.message}</p>`;
+    };
+
+    function sendMessage() {
+      const messageInputDom = document.getElementById("messageInput");
+      const message = messageInputDom.value;
+      chatSocket.send(JSON.stringify({ 'message': message }));
+      document.getElementById("chatbox").innerHTML += `<p><b>You:</b> ${message}</p>`;
+      messageInputDom.value = '';
+    }
+  </script>
+</body>
+</html>
