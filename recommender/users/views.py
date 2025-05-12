@@ -1,4 +1,5 @@
 import json
+import re
 import smtplib
 import uuid
 from email.mime.multipart import MIMEMultipart
@@ -10,7 +11,6 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
-from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -23,6 +23,10 @@ from recommender import settings
 from users.models import WnUser
 
 
+def is_valid_password(password):
+    return bool(re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$', password))
+
+
 def signup(request):
     if request.method == "POST":
         list(messages.get_messages(request))
@@ -30,19 +34,19 @@ def signup(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
 
-        # Check if user already exists
+        if not is_valid_password(password):
+            messages.error(request, "Password must be at least 8 characters, with uppercase, lowercase, and a digit.")
+            return redirect('users:signup')
+
         if WnUser.objects.filter(email=email).exists():
             messages.error(request, "Email already registered.")
             return redirect('users:signin')
 
-        # Save new user (do NOT log in)
         user = WnUser(user_name=name, email=email, password=make_password(password))
         user.save()
 
-        # Message only, no session or login
         messages.success(request, "Signup successful! Please log in.")
         return redirect('users:signin')
-
     return render(request, "signup.html")
 
 
@@ -51,24 +55,35 @@ def signin(request):
         list(messages.get_messages(request))
         email = request.POST.get("email")
         password = request.POST.get("password")
-        # for GOOGLE SIGN IN add the user id username email in the session
+
         user = WnUser.objects.filter(email=email).first()
 
-        if user and check_password(password, user.password):
-            request.session['user_id'] = user.id
-            request.session['user_name'] = user.user_name
-            request.session['user_email'] = user.email
-
-            if user.profile_picture:
-                request.session['profile_picture'] = user.profile_picture.url
-
-            messages.success(request, "Signed in successfully.")
-            user.last_login = now()
-            user.save()
-            return redirect('dashboard:dashboard')
-        else:
-            messages.error(request, "Incorrect email or password.")
+        if not user and not is_valid_password(password):
+            messages.error(request, "Both email and password are invalid.")
             return redirect('users:signin')
+
+        if not user:
+            messages.error(request, "No account found with that email.")
+            return redirect('users:signin')
+
+        if not is_valid_password(password):
+            messages.error(request, "Password format is invalid. It must include uppercase, lowercase, and a digit.")
+            return redirect('users:signin')
+
+        if not check_password(password, user.password):
+            messages.error(request, "Incorrect password.")
+            return redirect('users:signin')
+
+        # Valid login
+        request.session['user_id'] = user.id
+        request.session['user_name'] = user.user_name
+        request.session['user_email'] = user.email
+        if user.profile_picture:
+            request.session['profile_picture'] = user.profile_picture.url
+        messages.success(request, "Signed in successfully.")
+        user.last_login = now()
+        user.save()
+        return redirect('dashboard:dashboard')
 
     return render(request, 'signin.html')
 

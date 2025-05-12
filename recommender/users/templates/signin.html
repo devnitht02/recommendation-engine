@@ -13,32 +13,9 @@
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-    <script>
-        function handleCredentialResponse(response) {
-            const data = response.credential;
-            const userData = {
-                token: data
-            };
 
-            fetch('google_auth_callback', {
-                method: 'POST',
-                body: JSON.stringify(userData),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.href = '/dashboard:dashboard';
-                    } else {
-                        alert("Authentication failed.");
-                    }
-                });
-        }
-    </script>
-
-    <div class="min-h-screen flex items-center justify-center w-full bg-white" id="auth" style="background-color: white">
+    <div class="min-h-screen flex items-center justify-center w-full bg-white" id="auth"
+         style="background-color: white">
         <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
 
             <form method="POST" action="/signin/" class="max-w-sm mx-auto bg-white p-6 shadow-md rounded-lg border"
@@ -80,8 +57,6 @@
                         Forgot your password?
                     </a>
                 </div>
-
-
             </form>
 
             <!-- Tailwind Modal -->
@@ -101,21 +76,47 @@
                 </div>
             </div>
 
-            <script>
-                $(document).ready(function () {
-                    {% if messages %}
-                        $('#feedback-modal').removeClass('hidden');
-                    {% endif %}
-
-                    $('#close-modal').click(function () {
-                        $('#feedback-modal').addClass('hidden');
-                    });
-                });
-            </script>
-
-
         </div>
     </div>
+
+    <script>
+
+        $(document).ready(function () {
+            {% if messages %}
+                $('#feedback-modal').removeClass('hidden');
+            {% endif %}
+
+            $('#close-modal').click(function () {
+                $('#feedback-modal').addClass('hidden');
+            });
+        });
+
+        function handleCredentialResponse(response) {
+            const data = response.credential;
+            const userData = {
+                token: data
+            };
+
+            fetch('google_auth_callback', {
+                method: 'POST',
+                body: JSON.stringify(userData),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/dashboard:dashboard';
+                    } else {
+                        alert("Authentication failed.");
+                    }
+                });
+        }
+
+
+    </script>
+
 
 
 {% endblock %}
