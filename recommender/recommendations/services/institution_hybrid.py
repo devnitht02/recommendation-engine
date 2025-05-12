@@ -28,7 +28,7 @@ class InstitutionHybrid:
             data["stream_choice"] = stream_choice.stream.stream_name
 
         data["institution_choice"] = []
-        institution_choice = WnInstitutionChoice.objects.select_related("institution","institution__state","institution__district").filter(user_id = user_id)
+        institution_choice = WnInstitutionChoice.objects.select_related("institution","institution__state","institution__district").filter(user_id = user_id,active='1')
         for institution in institution_choice:
             data["institution_choice"].append(f"{institution.institution.institution_name} {institution.institution.state.name} {institution.institution.district.name}")
 
@@ -44,7 +44,7 @@ class InstitutionHybrid:
         favourite_institutions = WnFavourite.objects.select_related("institution","institution__state","institution__district").filter(user_id = user_id,institution__isnull = False)
         for institution in favourite_institutions:
             data["favourite_institutions"].append(f"{institution.institution.institution_name} {institution.institution.state.name} {institution.institution.district.name}")
-            
+
         # queryset = WnUser.objects.filter(pk=user_id).values(
         #     "hsc_percentage",
         #     "user_gender", # LEFT JOIN
@@ -71,10 +71,6 @@ class InstitutionHybrid:
 
         if data["institution_choice"]:
             query += " ".join(f"{institution}" for institution in data["institution_choice"])
-
-        print(data["favourite_institutions"])
-        print(data["institution_choice"])
-        print(query)
 
         ins = RecommendationService()
         results = ins.recommend_institution(query, top_n)

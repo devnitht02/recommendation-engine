@@ -40,7 +40,7 @@ class CourseHybrid:
             data["favourite_courses"].append(f"{course.course.course_name} {course.course.stream.stream_name} {course.course.degree.degree_name} degree_description")
 
         data["course_choice"] = []
-        favourite_courses = WnCourseChoice.objects.select_related("course","course__stream","course__degree").filter(user_id = user_id,course__isnull = False)
+        favourite_courses = WnCourseChoice.objects.select_related("course","course__stream","course__degree").filter(user_id = user_id,active="1")
         for course in favourite_courses:
             data["course_choice"].append(f"{course.course.course_name} {course.course.stream.stream_name} {course.course.degree.degree_name} degree_description")
 
