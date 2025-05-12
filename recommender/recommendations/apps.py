@@ -3,7 +3,7 @@ from django.apps import AppConfig
 from django.core.cache import cache
 from django.conf import settings
 from .services.embedding_service import EmbeddingService
-from .services.search_utils import search_engine
+# from .services.search_utils import search_engine
 
 logger = logging.getLogger(__name__)
 
@@ -28,4 +28,4 @@ class RecommendationsConfig(AppConfig):
         except Exception as e:
             logger.warning(f"Couldn't pre-load embedding model: {str(e)}")
 
-        search_engine.initialize()
+        # search_engine.initialize()

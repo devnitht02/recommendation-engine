@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.timezone import now
 
-from institutions.models import WnDegree, WnInstitutionChoice, WnCourseChoice, WnSelectedCourse
+from institutions.models import WnDegree, WnInstitutionChoice, WnCourseChoice,WnSelectedCourse
 from recommender.models import WnFavourite
 from users.models import WnUser
 from .models import WnInstitution, WnCourse
@@ -28,14 +28,13 @@ def institutions(request):
 
     search_suggestion_institutions = request.GET.get('query', '')
     context = {
-        'institution_data': institution_data,
-        'search_suggestions_institutions': search_suggestion_institutions,
-        'wn_user': wn_user,
-        'favourite_institution': favourite_institution,
-        'recommend_institution': InstitutionHybrid().get_hybrid_institutions(user_id, 9),
-        'liked_institution': WnInstitutionChoice.objects.filter(user_id=user_id, active="1").values_list(
-            "institution_id", flat=True)
-    }
+                'institution_data': institution_data,
+                'search_suggestions_institutions': search_suggestion_institutions,
+                'wn_user': wn_user,
+                'favourite_institution' : favourite_institution,
+                'recommend_institution': InstitutionHybrid().get_hybrid_institutions(user_id,9),
+                'liked_institution' : WnInstitutionChoice.objects.filter(user_id=user_id,active="1").values_list("institution_id",flat=True)
+            }
     return render(request, 'institutions.html', context)
 
 
@@ -56,8 +55,8 @@ def courses(request):
         'degree_data': degree_data,
         'wn_user': wn_user,
         'favourite_course': favourite_course,
-        'recommend_course': CourseHybrid().get_hybrid_courses(user_id, 9),
-        'liked_course': WnCourseChoice.objects.filter(user_id=user_id, active="1").values_list("course_id", flat=True)
+        'recommend_course' : CourseHybrid().get_hybrid_courses(user_id,9),
+        'liked_course' : WnCourseChoice.objects.filter(user_id=user_id,active="1").values_list("course_id",flat=True)
     })
 
 
@@ -161,7 +160,6 @@ def toggle_favourite(request):
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
-
 def like_institution(request):
     if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         institution_id = request.POST.get('institution_id')
@@ -175,7 +173,7 @@ def like_institution(request):
         try:
             choice_data = WnInstitutionChoice.objects.filter(user=user_id, institution_id=institution_id)
             if not choice_data.exists():
-                ins = WnInstitutionChoice(user_id=user_id, institution_id=institution_id)
+                ins = WnInstitutionChoice(user_id = user_id, institution_id = institution_id)
                 ins.save()
             else:
                 flag = '0' if choice_data[0].active == '1' else '1'
@@ -185,8 +183,7 @@ def like_institution(request):
             return JsonResponse({'status': 'error', 'message': 'server error'}, status=500)
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
-
-
+    
 def like_course(request):
     if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         course_id = request.POST.get('course_id')
@@ -200,7 +197,7 @@ def like_course(request):
         try:
             choice_data = WnCourseChoice.objects.filter(user=user_id, course_id=course_id)
             if not choice_data.exists():
-                ins = WnCourseChoice(user_id=user_id, course_id=course_id)
+                ins = WnCourseChoice(user_id = user_id, course_id = course_id)
                 ins.save()
             else:
                 flag = '0' if choice_data[0].active == '1' else '1'

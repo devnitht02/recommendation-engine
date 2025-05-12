@@ -30,8 +30,8 @@ def dashboard(request):
     user_id = request.session["user_id"]
     streams = WnStream.objects.filter(active='1')
 
-    institution_hybrid = InstitutionHybrid().get_hybrid_institutions(1)
-    course_hybrid = CourseHybrid().get_hybrid_courses(1)
+    institution_hybrid = InstitutionHybrid().get_hybrid_institutions(user_id)
+    course_hybrid = CourseHybrid().get_hybrid_courses(user_id)
     context = {
         'course_data': course_data,
         'search_suggestion': search_suggestion,

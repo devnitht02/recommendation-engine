@@ -5,7 +5,7 @@ from sentence_transformers import SentenceTransformer
 from nltk.stem import PorterStemmer
 from nltk.corpus import stopwords
 import nltk
-nltk.download('stopwords')
+# nltk.download('stopwords')
 
 class SearchEngine:
     def __init__(self):
