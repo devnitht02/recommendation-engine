@@ -4,8 +4,10 @@ import smtplib
 import uuid
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from django.utils import timezone
 
 import requests
+import datetime
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
@@ -90,40 +92,29 @@ def signin(request):
 
 def google_login(request):
     if request.method == 'POST':
-        # Get the Google token from the frontend
         data = json.loads(request.body)
         credential = data.get('credential')
 
         # Verify token with Google
-        payload = {
-            'id_token': credential,
-            'client_id': settings.GOOGLE_CLIENT_ID
-        }
         url = 'https://oauth2.googleapis.com/tokeninfo'
-        response = requests.get(url, params=payload)
+        response = requests.get(url, params={'id_token': credential})
 
         if response.status_code == 200:
             user_info = response.json()
             email = user_info.get('email')
             name = user_info.get('name')
-            google_id = user_info.get('sub')  # Google unique user ID
+            google_id = user_info.get('sub')
 
-            # Check if the user already exists in the database
-            # User = get_user_model()
-            # user, created = User.objects.get_or_create(username=email, defaults={'first_name': name})
-            #
-            # # If user is new, populate additional fields like last login
-            # if created:
-            #     user.last_login = datetime.datetime.now()
-            #     user.save()
-            #
-            # # Log the user in
-            # login(request, user)
-            #
+            from django.contrib.auth import get_user_model
+            User = get_user_model()
+            user, created = User.objects.get_or_create(username=email, defaults={'first_name': name})
 
-            # Return success response
+            if created:
+                user.last_login = timezone.now()
+                user.save()
+
+            login(request, user)
             return JsonResponse({'status': 'success', 'user': {'username': user.username}})
-
         else:
             return JsonResponse({'status': 'error', 'message': 'Invalid token'})
 

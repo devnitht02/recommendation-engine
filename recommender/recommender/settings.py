@@ -13,7 +13,9 @@ import configparser
 import configparser
 import os
 from pathlib import Path
+
 import pymysql
+from django.conf import settings
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -29,7 +31,7 @@ COMPRESS_ROOT = os.path.join(BASE_DIR, 'static')
 SMTP_EMAIL = config.get('EMAIL', 'SMTP_EMAIL')
 SMTP_PASSWORD = config.get('EMAIL', 'SMTP_PASSWORD')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -52,7 +54,6 @@ INSTALLED_APPS = [
     "django_extensions",
     'rest_framework',
     'chat_bot'
-
 
 ]
 
@@ -93,6 +94,13 @@ TEMPLATES = [
         },
     },
 ]
+TEMPLATES[0]['OPTIONS']['context_processors'].append('recommender.settings.google_id_context')
+
+
+def google_id_context(request):
+    from django.conf import settings
+    return {'GOOGLE_CLIENT_ID': settings.GOOGLE_CLIENT_ID}
+
 
 WSGI_APPLICATION = 'recommender.wsgi.application'
 
@@ -169,3 +177,5 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
