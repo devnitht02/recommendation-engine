@@ -18,7 +18,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.timezone import now
 
-from institutions.models import WnState, WnDistrict
+from institutions.models import WnState, WnDistrict, WnStream
 from recommender import settings
 from users.models import WnUser
 
@@ -193,12 +193,13 @@ def user_profile(request):
     wn_user = WnUser.objects.filter(pk=int(request.session['user_id'])).first()
     state = WnState.objects.all()
     district = WnDistrict.objects.all()
+    streams = WnStream.objects.all()
 
     if request.method == 'POST':
         new_user_name = request.POST.get('user_name')
         if new_user_name:  # only update if not empty
             wn_user.user_name = new_user_name
-            request.session['user_name'] = new_user_name  # keep header greeting in sync
+            request.session['user_name'] = new_user_name
 
         wn_user.email = request.POST.get('email')
         wn_user.user_gender = request.POST.get('user_gender')
@@ -227,6 +228,7 @@ def user_profile(request):
         "profile": wn_user,
         "states": state,
         "districts": district,
+        "streams": streams,
     }
     return render(request, 'profile.html', context)
 

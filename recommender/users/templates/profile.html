@@ -103,9 +103,16 @@
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">Stream</label>
-                <input type="text" name="stream" value="{{ profile.stream|default_if_none:'' }}"
-                       class="w-full p-2 border border-gray-300 rounded-md">
+                <select name="stream" class="w-full p-2 border border-gray-300 rounded-md">
+                    <option value="">Select a stream</option>
+                    {% for stream in streams %}
+                        <option value="{{ stream.stream_name }}" {% if profile.stream == stream.stream_name %}selected{% endif %}>
+                            {{ stream.stream_name }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
+
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">Total HSC Percentage</label>
@@ -201,9 +208,9 @@
                     type: "POST",
                     data: formData,
                     success: function (response) {
-                        // Handle success response (e.g., display success message)
+
                         alert("Profile updated successfully!");
-                        // Update the displayed values without reloading the page
+
                         $("#name").val(response.name);
                         $("#email").val(response.email);
                         $("#country").val(response.country);
@@ -222,9 +229,6 @@
                 });
             });
         });
-    </script>
-
-    <script>
         document.getElementById('profile_picture').addEventListener('change', function (e) {
             const [file] = e.target.files;
             if (file) {
@@ -232,20 +236,18 @@
                 preview.src = URL.createObjectURL(file);
             }
         });
-    </script>
-
-    <script>
         const btn = document.getElementById("updateProfileBtn");
 
         btn.addEventListener("mouseenter", function () {
-            btn.style.backgroundColor = "#6B3FD9";  // lighter purple for hover
+            btn.style.backgroundColor = "#6B3FD9";
             btn.style.transition = "background-color 0.3s ease";
         });
 
         btn.addEventListener("mouseleave", function () {
-            btn.style.backgroundColor = "#5521b5";  // original purple
+            btn.style.backgroundColor = "#5521b5";
         });
     </script>
+
 
     {% include 'footer.html' %}
 
