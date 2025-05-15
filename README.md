@@ -6,17 +6,13 @@
 
 ## 🔍 Overview
 
-**Pathfinder** is a hybrid academic recommendation engine designed to help students make informed educational decisions. It provides dynamic, personalized suggestions for degrees and institutions based on:
+**Pathfinder** is a hybrid academic recommendation engine tailored to assist students in making informed educational decisions. 
+It helps bridge the academic guidance gap by offering dynamic, personalized suggestions for degrees and institutions based 
+on user preferences, academic profiles, behavioural data and feedback.
 
-* User preferences
-* Academic profiles
-* Behavioral data
+Built using Django, MySQL, and Python-based ML frameworks, this full-stack web platform features content-based + collaborative filtering,
+adaptive learning, and chatbot integration to provide inclusive guidance.
 
-Built using **Django**, **MySQL**, and **Python-based ML frameworks**, this full-stack web platform includes:
-
-* Content-based + Collaborative filtering
-* Adaptive learning
-* A custom LLM-powered chatbot
 
 ---
 
