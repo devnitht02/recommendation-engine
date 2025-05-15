@@ -23,16 +23,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
           rel="stylesheet">
 
-
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <!-- CSS Files -->
     {% load static %}
-    <link href="{% static 'src/output.css' %}" rel="stylesheet">
+    <!-- <link href="{% static 'src/output.css' %}" rel="stylesheet"> -->
 
     {% block css_cdn %} {% endblock css_cdn %}
 
     {% compress css %}
-        <link href="{% static 'src/input.css' %}" rel="stylesheet">
-        <link href="{% static 'src/base.css' %}" rel="stylesheet">
+        <!-- <link href="{% static 'src/input.css' %}" rel="stylesheet"> -->
+        <!-- <link href="{% static 'src/base.css' %}" rel="stylesheet"> -->
     {% endcompress %}
 
     {% block js_cdn %} {% endblock js_cdn %}
@@ -55,7 +55,7 @@
 </head>
 
 <body class="bg-white">
-<header class="fixed w-full">
+<header class="fixed w-full z-50">
     <nav class="bg-white border-gray-200 py-2.5">
         <div class="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
             <a href="#" class="flex items-center">
@@ -179,7 +179,7 @@
 </header>
 
 
-<main class="bg-white">
+<main class="bg-white flex-grow">
     {% block content %}
 
 
