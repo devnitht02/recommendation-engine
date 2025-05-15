@@ -122,8 +122,10 @@ def google_login(request):
 
 
 def google_auth_callback(request):
+    print(request.body)
+    data = json.loads(request.body)
     """Handle Google's OAuth response."""
-    code = request.GET.get('code')  # Get the 'code' from the query string
+    code = data.get('token')
     if not code:
         return JsonResponse({'error': 'No authorization code provided'}, status=400)
 
