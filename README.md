@@ -43,7 +43,7 @@ adaptive learning, and chatbot integration to provide inclusive guidance.
 
 ```bash
 # Clone the repository
-$ git clone https://github.com/username/pathfinder.git && cd pathfinder
+$ git clone https://github.com/devnitht02/recommendation-engine.git && cd recommendation-engine
 
 # Create a virtual environment
 $ python -m venv venv
