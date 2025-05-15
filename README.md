@@ -106,12 +106,6 @@ $ pip install mysqlclient
 $ python manage.py migrate
 ```
 
-#### 2.5 Load Initial Data (Optional)
-
-```bash
-$ python manage.py loaddata initial_data.json
-```
-
 ---
 
 ### 🔁 Step 3: Set Up the Qdrant Vector Database
