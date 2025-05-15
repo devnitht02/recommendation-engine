@@ -2,8 +2,8 @@
 {% load static %}
 
 {% block content %}
-    <section class="py-24 bg-gray-50 min-h-screen">
-        <div class="max-w-6xl mx-auto px-6">
+    <section class="py-24 bg-gray-50 min-h-screen bg-gradient-to-tr from-indigo-50 to-purple-100">
+        <div class="max-w-6xl mx-auto px-6 bg-gradient-to-tr">
 
             {% if favourite %}
                 <!-- Saved Courses Section -->
@@ -18,7 +18,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {% for item in favourite %}
                             {% if item.course %}
-                                <div class="bg-white shadow-sm rounded-xl border border-purple-100 p-6 hover:shadow-md transition hover:bg-purple-50 flex flex-col justify-between h-full">
+                                <div class="bg-white hover:bg-indigo-100 transition duration-300 shadow-sm rounded-xl border border-purple-100 p-6 hover:shadow-md flex flex-col justify-between h-full">
                                     <a href="{% url 'institutions:view_course' item.course.id %}" target="_blank"
                                        class="block">
                                         <h3 class="text-xl font-semibold text-purple-800 mb-2">{{ item.course.course_name }}</h3>
@@ -63,7 +63,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {% for item in favourite %}
                             {% if item.institution %}
-                                <div class="bg-white shadow-sm rounded-xl border border-purple-100 p-6 hover:shadow-md transition hover:bg-purple-50 flex flex-col justify-between h-full">
+                                <div class="bg-white hover:bg-indigo-100 transition duration-300 shadow-sm rounded-xl border border-purple-100 p-6 hover:shadow-md flex flex-col justify-between h-full">
                                     <a href="{% url 'institutions:view_institution' item.institution.id %}"
                                        target="_blank" class="block">
                                         <h3 class="text-xl font-semibold text-purple-800 mb-2">{{ item.institution.institution_name }}</h3>

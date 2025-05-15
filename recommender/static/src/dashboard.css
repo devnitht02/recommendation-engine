@@ -42,7 +42,7 @@ section.top-banner {
     border: solid mediumpurple;
     border-radius: 16px;
     background-color: white;
-    z-index: 1000;
+    /* z-index: 1000; */
 }
 
 .suggestion-list {

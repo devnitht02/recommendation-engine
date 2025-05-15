@@ -13,72 +13,71 @@
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
+    <div class="container mx-auto px-4 pt-10">
+        <div class="min-h-screen flex items-center justify-center w-full bg-white" id="auth"
+             style="background-color: white">
+            <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
 
-    <div class="min-h-screen flex items-center justify-center w-full bg-white" id="auth"
-         style="background-color: white">
-        <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
-
-            <form method="POST" action="/signin/" class="max-w-sm mx-auto bg-white p-6 shadow-md rounded-lg border"
-                  style="background-color: white;">
-                {% csrf_token %}
-                <div class="mb-5">
-                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Your email</label>
-                    <input type="email" name="email" id="email"
-                           class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg
-                  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required/>
-                </div>
-                <div class="mb-5">
-                    <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Your password</label>
-                    <input type="password" name="password" id="password"
-                           class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg
-                  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                           required/>
-                </div>
-                <div class="flex items-start mb-5">
-                    <div class="flex items-center h-5">
-                        <input id="remember" type="checkbox" value=""
-                               class="w-4 h-4 border border-gray-300 rounded-sm bg-white focus:ring-3 focus:ring-blue-300"
+                <form method="POST" action="/signin/" class="max-w-sm mx-auto bg-white p-6 shadow-md rounded-lg border"
+                      style="background-color: white;">
+                    {% csrf_token %}
+                    <div class="mb-5">
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Your email</label>
+                        <input type="email" name="email" id="email"
+                               class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg
+                    focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required/>
+                    </div>
+                    <div class="mb-5">
+                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Your password</label>
+                        <input type="password" name="password" id="password"
+                               class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg
+                    focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                required/>
                     </div>
-                    <label for="remember" class="ms-2 text-sm font-medium text-gray-900">Remember me</label>
-                </div>
-                <button type="submit" class="custom-button" style="background-color: #5521b5">Signin</button>&nbsp;
+                    <div class="flex items-start mb-5">
+                        <div class="flex items-center h-5">
+                            <input id="remember" type="checkbox" value=""
+                                   class="w-4 h-4 border border-gray-300 rounded-sm bg-white focus:ring-3 focus:ring-blue-300"
+                                   required/>
+                        </div>
+                        <label for="remember" class="ms-2 text-sm font-medium text-gray-900">Remember me</label>
+                    </div>
+                    <button type="submit" class="custom-button" style="background-color: #5521b5">Signin</button>&nbsp;
 
-                <!-- Google Sign-In Button -->
-                <div id="g_id_onload"
-                     data-client_id={{ GOOGLE_CLIENT_ID }}
-                     data-callback="handleCredentialResponse"
-                     data-auto_prompt="false">
-                </div>
-                <div class="g_id_signin" data-type="standard"></div>
+                    <!-- Google Sign-In Button -->
+                    <div id="g_id_onload"
+                         data-client_id="{{ GOOGLE_CLIENT_ID }}"
+                         data-callback="handleCredentialResponse"
+                         data-auto_prompt="false">
+                    </div>
+                    <div class="g_id_signin" data-type="standard"></div>
+                    <div class="mt-4 text-left">
+                        <a href="{% url 'users:forgot_password' %}" class="text-sm text-blue-600 hover:underline">
+                            Forgot your password?
+                        </a>
+                    </div>
+                </form>
 
-                <div class="mt-4 text-left">
-                    <a href="{% url 'users:forgot_password' %}" class="text-sm text-blue-600 hover:underline">
-                        Forgot your password?
-                    </a>
-                </div>
-            </form>
-
-            <!-- Tailwind Modal -->
-            <div id="feedback-modal"
-                 class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-                <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
-                    <h2 class="text-xl font-bold text-gray-800 mb-2">Message</h2>
-                    {% for message in messages %}
-                        <p class="{% if message.tags == 'success' %}text-green-600{% else %}text-red-600{% endif %} mb-4">{{ message }}</p>
-                    {% endfor %}
-                    <div class="flex justify-end">
-                        <button id="close-modal"
-                                class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
-                            Close
-                        </button>
+                <!-- Tailwind Modal -->
+                <div id="feedback-modal"
+                     class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+                    <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-2">Message</h2>
+                        {% for message in messages %}
+                            <p class="{% if message.tags == 'success' %}text-green-600{% else %}text-red-600{% endif %} mb-4">{{ message }}</p>
+                        {% endfor %}
+                        <div class="flex justify-end">
+                            <button id="close-modal"
+                                    class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                                Close
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
-
     <script>
 
         $(document).ready(function () {
@@ -93,15 +92,17 @@
 
         function handleCredentialResponse(response) {
             const data = response.credential;
+            console.log(data)
             const userData = {
                 token: data
             };
 
-            fetch('google_auth_callback', {
+            fetch('{% url "users:google_callback" %}', {
                 method: 'POST',
                 body: JSON.stringify(userData),
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken' : "{{csrf_token}}"
                 }
             })
                 .then(response => response.json())
