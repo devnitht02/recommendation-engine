@@ -10,165 +10,116 @@
 
 {% block content %}
 
-<script>
-    $(document).ready(function () {
-        $('#send-message').click(function (e) {
-            e.preventDefault();
 
-            const name = $('input[name="name"]').val().trim();
-            const email = $('input[name="email"]').val().trim();
-            const subject = $('input[name="subject"]').val().trim();
-            const message = $('textarea[name="message"]').val().trim();
+    <div class="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center pt-28 pb-16">
+        <div class="w-full max-w-lg bg-white rounded-2xl shadow-lg p-8">
+            <h1 class="text-center text-3xl font-semibold text-black bg-white py-2 shadow w-full max-w-xl mx-auto mb-6">
+                CONTACT US
+            </h1>
 
-            if (!name || !email || !subject || !message) {
-                showPopup("Validation Error", "All fields are required.", "validation");
-                return;
-            }
+            <form action="{% url 'dashboard:contact_page' %}" method="POST" class="space-y-6">
+                {% csrf_token %}
 
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailPattern.test(email)) {
-                showPopup("Invalid Email", "Please enter a valid email address.", "validation");
-                return;
-            }
+                <div>
+                    <label for="name" class="block text-sm font-semibold text-gray-700 mb-1">Name</label>
+                    <input type="text" id="name" name="name" placeholder="John Doe"
+                           class="w-full border-b-2 border-gray-300 bg-transparent px-2 py-2 text-sm focus:outline-none focus:border-purple-600"
+                           required>
+                </div>
 
-            const form = $('form')[0];
-            const formData = new FormData(form);
+                <div>
+                    <label for="email" class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com"
+                           class="w-full border-b-2 border-gray-300 bg-transparent px-2 py-2 text-sm focus:outline-none focus:border-purple-600"
+                           required>
+                </div>
 
-            $.ajax({
-                url: $(form).attr('action'),
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {'X-Requested-With': 'XMLHttpRequest'},
-                success: function (response) {
-                    if (response.status === "success") {
-                        showPopup("Message Sent Successfully", "Thanks for reaching out to us!", "success");
-                        localStorage.setItem("submittedEmail", email);
-                        form.reset();
-                    } else if (response.status === "error" && response.reason === "duplicate") {
-                        showPopup("Already Sent", "You've already submitted a message with this email.", "validation");
-                    } else if (response.status === "error" && response.reason === "email_fail") {
-                        showPopup("Email Failed", "There was an issue sending the email. Please try again later.", "error");
-                    } else {
-                        showPopup("Error", "An unexpected issue occurred.", "error");
-                    }
-                },
-                error: function () {
-                    showPopup("Server Error", "Try again later.", "error");
+                <div>
+                    <label for="message" class="block text-sm font-semibold text-gray-700 mb-1">Message</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Your message..."
+                              class="w-full border-b-2 border-gray-300 bg-transparent px-2 py-2 text-sm focus:outline-none focus:border-purple-600 resize-none"
+                              required></textarea>
+                </div>
+
+                <button type="submit" id="send-message"
+                        class="w-full bg-purple-700 hover:bg-purple-800 text-white font-medium py-2.5 rounded-lg shadow transition duration-300 ease-in-out">
+                    Send Message
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#send-message').click(function (e) {
+                e.preventDefault();
+
+                const name = $('input[name="name"]').val().trim();
+                const email = $('input[name="email"]').val().trim();
+                const message = $('textarea[name="message"]').val().trim();
+
+                if (!name || !email || !message) {
+                    showPopup("Validation Error", "All fields are required.", "validation");
+                    return;
                 }
-            });
-        });
 
-        function showPopup(title, message, status) {
-            $('#popup-title').text(title);
-            $('#popup-message').text(message);
-            $('#info-popup').removeClass('hidden');
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(email)) {
+                    showPopup("Invalid Email", "Please enter a valid email address.", "validation");
+                    return;
+                }
 
-            const popupBtn = $('#popup-button');
+                const form = $('form')[0];
+                const formData = new FormData(form);
 
-            if (status === "success") {
-                popupBtn.attr('href', "{% url 'dashboard:dashboard' %}");
-                popupBtn.text("Back to Home");
-            } else {
-                popupBtn.attr('href', "#");
-                popupBtn.text("Close");
-                popupBtn.off("click").on("click", function (e) {
-                    e.preventDefault();
-                    $('#info-popup').addClass('hidden');
+                $.ajax({
+                    url: $(form).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {'X-Requested-With': 'XMLHttpRequest'},
+                    success: function (response) {
+                        if (response.status === "success") {
+                            showPopup("Message Sent Successfully", "Thanks for reaching out to us!", "success");
+                            localStorage.setItem("submittedEmail", email);
+                            form.reset();
+                        } else if (response.status === "error" && response.reason === "duplicate") {
+                            showPopup("Already Sent", "You've already submitted a message with this email.", "validation");
+                        } else if (response.status === "error" && response.reason === "email_fail") {
+                            showPopup("Email Failed", "There was an issue sending the email. Please try again later.", "error");
+                        } else {
+                            showPopup("Error", "An unexpected issue occurred.", "error");
+                        }
+                    },
+                    error: function () {
+                        showPopup("Server Error", "Try again later.", "error");
+                    }
                 });
+            });
+
+            function showPopup(title, message, status) {
+                $('#popup-title').text(title);
+                $('#popup-message').text(message);
+                $('#info-popup').removeClass('hidden');
+
+                const popupBtn = $('#popup-button');
+
+                if (status === "success") {
+                    popupBtn.attr('href', "{% url 'dashboard:dashboard' %}");
+                    popupBtn.text("Back to Home");
+                } else {
+                    popupBtn.attr('href', "#");
+                    popupBtn.text("Close");
+                    popupBtn.off("click").on("click", function (e) {
+                        e.preventDefault();
+                        $('#info-popup').addClass('hidden');
+                    });
+                }
             }
-        }
-    });
-</script>
-
-<style>
-  .contact-gradient {
-
-    min-height: 100vh;
-    padding-top: 7rem; /* Push below navbar */
-    padding-bottom: 5rem;
-  }
-
-  .contact-card {
-    border-radius: 1rem;
-    background-color: white;
-    padding: 2.5rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 500px;
-    margin: auto;
-  }
-
-  .contact-input {
-    border: none;
-    border-bottom: 2px solid #ccc;
-    border-radius: 0;
-    background: transparent;
-    padding: 0.5rem 0;
-    font-size: 1rem;
-    width: 100%;
-    transition: border-color 0.3s;
-  }
-
-  .contact-input:focus {
-    outline: none;
-    border-color: #7e22ce;
-  }
-
-  .contact-btn {
-    background-color: #5521b5;
-    color: white;
-    padding: 0.6rem 1.5rem;
-    font-weight: 500;
-    width: 100%;
-    border: none;
-    border-radius: 0.5rem;
-    transition: background-color 0.3s ease;
-  }
-
-
-</style>
-
-<div class="contact-gradient flex items-center justify-center">
-
-  <div class="contact-card">
-
-    <form action="{% url 'dashboard:contact_page' %}" method="POST" class="space-y-6">
-      {% csrf_token %}
-
-      <div>
-        <label for="name" class="block text-sm font-semibold text-gray-700 mb-1">Name</label>
-        <input type="text" id="name" name="name" class="contact-input" placeholder="John Doe" required>
-      </div>
-
-      <div>
-        <label for="email" class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
-        <input type="email" id="email" name="email" class="contact-input" placeholder="you@example.com" required>
-      </div>
-
-      <div>
-        <label for="message" class="block text-sm font-semibold text-gray-700 mb-1">Message</label>
-        <textarea id="message" name="message" rows="4" class="contact-input" placeholder="Your message..." required></textarea>
-      </div>
-
-      <button type="submit" id="contactBtn" class="contact-btn">Send Message</button>
-    </form>
-  </div>
-
-</div>
-    
-      <script>
-        const btn = document.getElementById("contactBtn");
-
-        btn.addEventListener("mouseenter", function () {
-            btn.style.backgroundColor = "#6B3FD9";  // lighter purple for hover
-            btn.style.transition = "background-color 0.3s ease";
-        });
-
-        btn.addEventListener("mouseleave", function () {
-            btn.style.backgroundColor = "#5521b5";  // original purple
         });
     </script>
-{% include 'footer.html' %}
+
+
+    {#    {% include 'footer.html' %}#}
 {% endblock content %}
