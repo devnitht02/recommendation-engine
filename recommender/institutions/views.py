@@ -233,27 +233,37 @@ def remove_favourite(request):
 
 
 def course_selection_form(request):
-    states = WnState.objects.all()
 
     if request.method == 'POST':
         user_id = request.session.get('user_id')
-        state_id = request.POST.get('state')
-        district_id = request.POST.get('district')
+        if not user_id:
+            return JsonResponse({"message":"Please log in to continue."},status=403)
+        
         institution_id = request.POST.get('institution')
         course_id = request.POST.get('course')
 
-        if user_id and institution_id and course_id:
-            WnSelectedCourse.objects.create(
-                user_id=user_id,
-                course_id=course_id,
-                institution_id=institution_id,
-                created_date=now(),
-                modified_date=now(),
-                active='Y'
-            )
-            return redirect('dashboard:dashboard')
+        invalid_fields = []
+        if not institution_id:
+            invalid_fields.append('institution')
 
-    return render(request, 'select_course_form.html', {'states': states})
+        if not course_id:
+            invalid_fields.append('course')
+
+        if invalid_fields:
+            return JsonResponse({"message": f"{', '.join(invalid_fields)} fields are required" },status=400)
+        
+
+        if(WnSelectedCourse.objects.filter(user_id=user_id).exists()):
+            return JsonResponse({"message":"A selection has already been made. You can only choose one institution and program"},status=409)
+        
+        WnSelectedCourse.objects.create(
+            user_id=user_id,
+            course_id=course_id,
+            institution_id=institution_id,
+        )
+        return JsonResponse({"message" : "success"})
+
+    # return render(request, 'select_course_form.html', {'states': states})
 
 
 def get_districts(request, state_id):
