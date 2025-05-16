@@ -2,68 +2,143 @@
 {% load static %}
 
 {% block css_cdn %}
-    <link rel="stylesheet" href="{% static 'src/view_course.css' %}">
+<link rel="stylesheet" href="{% static 'src/view_course.css' %}">
 {% endblock css_cdn %}
 
 {% block content %}
-    <div class="pt-36 pb-20 px-4 flex justify-center min-h-screen bg-gradient-to-tr from-indigo-50 to-purple-100">
-        <div class="w-full max-w-xl bg-white border border-purple-300 shadow-lg rounded-2xl p-8">
+<div class="bg-white pt-36 pb-20 px-4 flex justify-center">
+    <div class="w-full max-w-xl bg-white border border-purple-300 shadow-lg rounded-2xl p-8">
+        <div class="flex flex-row">
             <!-- Institution Name -->
             <h1 class="text-3xl font-extrabold text-center text-gray-900 mb-6">
                 {{ institution_data.institution_name }}
             </h1>
-
-            <!-- Institution Details -->
-            <div class="space-y-5 text-lg text-gray-800 mb-8">
-                <!-- Website -->
-                <p class="flex items-center text-xl font-semibold text-gray-700">
-                    <i class="fa-solid fa-globe fa-lg text-purple-600 mr-3"></i>
-                    Website:
-                    <a href="{{ institution_data.website }}" target="_blank"
-                       class="ml-2 text-blue-600 hover:underline">
-                        {{ institution_data.website }}
-                    </a>
-                </p>
-
-                <!-- State -->
-                <p class="flex items-center text-xl font-semibold text-gray-700">
-                    <i class="fa-solid fa-building-columns fa-lg text-purple-600 mr-3"></i>
-                    State: <span class="ml-2 font-normal">{{ institution_data.state.name }}</span>
-                </p>
-
-                <!-- District -->
-                <p class="flex items-center text-xl font-semibold text-gray-700">
-                    <i class="fa-solid fa-map-location-dot fa-lg text-purple-600 mr-3"></i>
-                    District: <span class="ml-2 font-normal">{{ institution_data.district.name }}</span>
-                </p>
-            </div>
-
-            <!-- Sponsored Courses -->
-            <div class="mt-2">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Sponsored Degree Programs</h2>
-                <ul class="space-y-3">
-                    {% for course in course_data %}
-                        <li class="flex items-center text-gray-800 text-lg">
-                            <i class="fa-solid fa-user-graduate fa-lg text-purple-600 mr-3"></i>
-                            <a href="{% url 'institutions:view_course' course.id %}"
-                               class="hover:underline leading-snug">
-                                {{ course.degree.degree_name }} in {{ course.course_name }}
-                                ({{ course.stream.stream_name }})
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <!-- Back Button -->
-            <div class="mt-10 text-center">
-                <a href="{% url 'institutions:institutions' %}"
-                   class="bg-purple-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-700 transition duration-300">
-                    ← Back to Institutions
-                </a>
+            <div class="text-center">
+                <button type="button" class="like-btn text-red-600 hover:text-pink-500 me-5"
+                    data-institution-id="{{ institution_data.id }}" title="Like this institution">
+                    <i
+                        class="{% if institution_data.pk in liked_institution %}fa-solid{% else %}fa-regular{% endif %} fa-heart fa-xl"></i>
+                </button>
+                <button type="button" class="bookmark-btn text-purple-700 hover:text-yellow-400 mt-4"
+                    data-institution-id="{{ institution_data.id }}" title="Bookmark this institution">
+                    <i class="{% if institution_data.pk in favourite_institution %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-xl"
+                        style="color: #5521b5;"></i>
+                </button>
             </div>
         </div>
+
+        <!-- Institution Details -->
+        <div class="space-y-5 text-lg text-gray-800 mb-8">
+            <!-- Website -->
+            <p class="flex items-center text-xl font-semibold text-gray-700">
+                <i class="fa-solid fa-globe fa-lg text-purple-600 mr-3"></i>
+                Website:
+                <a href="{{ institution_data.website }}" target="_blank" class="ml-2 text-blue-600 hover:underline">
+                    {{ institution_data.website }}
+                </a>
+            </p>
+
+            <!-- State -->
+            <p class="flex items-center text-xl font-semibold text-gray-700">
+                <i class="fa-solid fa-building-columns fa-lg text-purple-600 mr-3"></i>
+                State: <span class="ml-2 font-normal">{{ institution_data.state.name }}</span>
+            </p>
+
+            <!-- District -->
+            <p class="flex items-center text-xl font-semibold text-gray-700">
+                <i class="fa-solid fa-map-location-dot fa-lg text-purple-600 mr-3"></i>
+                District: <span class="ml-2 font-normal">{{ institution_data.district.name }}</span>
+            </p>
+        </div>
+
+        <!-- Sponsored Courses -->
+        <div class="mt-2">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Sponsored Degree Programs</h2>
+            <ul class="space-y-3">
+                {% for course in course_data %}
+                <li class="flex items-center text-gray-800 text-lg">
+                    <i class="fa-solid fa-user-graduate fa-lg text-purple-600 mr-3"></i>
+                    <a href="{% url 'institutions:view_course' course.id %}" class="hover:underline leading-snug">
+                        {{ course.degree.degree_name }} in {{ course.course_name }} ({{ course.stream.stream_name }})
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Back Button -->
+        <div class="mt-10 text-center">
+            <a href="{% url 'institutions:institutions' %}"
+                class="bg-purple-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-700 transition duration-300">
+                ← Back to Institutions
+            </a>
+        </div>
     </div>
+</div>
+<script>
+    $(document).on('click', '.bookmark-btn', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
 
+        const button = $(this);
+        const icon = button.find('i');
+        const courseId = button.data('course-id') || null;
+        const institutionId = button.data('institution-id') || null;
 
+        $.ajax({
+            url: "{% url 'institutions:toggle_favourite' %}",
+            type: "POST",
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            data: {
+                course_id: courseId,
+                institution_id: institutionId,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (response) {
+                if (response.status === 'added') {
+                    icon.removeClass('fa-regular').addClass('fa-solid');
+                } else if (response.status === 'removed') {
+                    icon.removeClass('fa-solid').addClass('fa-regular');
+                }
+            },
+            error: function (xhr) {
+                if (xhr.status === 403) {
+                    alert("You must log in to bookmark items.");
+                } else {
+                    alert("Error while bookmarking. Please try again.");
+                }
+            }
+        });
+    });
+
+    // For user like
+    $('.like-btn').click(function () {
+        let button = $(this);
+        let icon = button.find('i');
+        let institutionId = button.data('institution-id');
+
+        // Toggle icon class
+        icon.toggleClass('fa-regular fa-solid');
+
+        // Send AJAX request
+        $.ajax({
+            url: '/like-institution/',
+            type: 'POST',
+            data: {
+                institution_id: institutionId,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (response) {
+                console.log('Liked successfully');
+            },
+            error: function (xhr, status, error) {
+                console.error('Error liking institution:', error);
+
+                // Optionally revert icon if error occurs
+                icon.toggleClass('fa-regular fa-solid');
+            }
+        });
+    });
+</script>
+{% include 'footer.html' %}
 {% endblock content %}

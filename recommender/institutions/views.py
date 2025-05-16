@@ -61,23 +61,41 @@ def courses(request):
 
 
 def view_course(request, course_id):
+    if "user_id" not in request.session:
+        return redirect("users:signin")
+    
     course = get_object_or_404(WnCourse, pk=course_id)
-    return render(request, 'view_course.html', {'course': course})
+    user_id = request.session["user_id"]
+    favourite_data = WnFavourite.objects.filter(user_id=user_id)
+    favourite_course = [data.course.pk for data in favourite_data if hasattr(data, "course") and data.course]
+    
+    return render(request, 'view_course.html', {
+            'course': course,
+            'liked_course' : WnCourseChoice.objects.filter(user_id=user_id,active="1").values_list("course_id",flat=True),
+            'favourite_course' : favourite_course,
+        })
 
 
 def view_institution(request, institution_id):
+    if "user_id" not in request.session:
+        return redirect("users:signin")
     institution_data = get_object_or_404(WnInstitution, pk=institution_id)
-
+    user_id = request.session["user_id"]
     # all courses related to the institution using the WnInstitutionCourse table
     course_data = WnCourse.objects.filter(wninstitutioncourse__institution=institution_data)
     course_data = course_data.select_related('degree', 'stream')
 
     degree_data = WnDegree.objects.all()
+    favourite_data = WnFavourite.objects.filter(user_id=user_id)
+    favourite_institution = [data.institution.pk for data in favourite_data if
+                             hasattr(data, "institution") and data.institution]
 
     return render(request, 'view_institution.html', {
         'course_data': course_data,
         'degree_data': degree_data,
-        'institution_data': institution_data
+        'institution_data': institution_data,
+        'favourite_institution' : favourite_institution,
+        'liked_institution' : WnInstitutionChoice.objects.filter(user_id=user_id,active="1").values_list("institution_id",flat=True)
     })
 
 
@@ -132,29 +150,29 @@ def toggle_favourite(request):
 
         if course_id:
             try:
-                course = WnCourse.objects.get(id=course_id)
-                print(wn_user)
-                print(course)
-                # created = WnFavourite.objects.create(user=wn_user, course=course)
-                ins = WnFavourite(user=wn_user, course=course)
-                ins.save()
-                if not ins:
-                    # fav.delete()
+                favourite_course = WnFavourite.objects.filter(user=wn_user,course_id = course_id)
+                if favourite_course.exists():
+                    favourite_course.delete()
                     return JsonResponse({'status': 'removed', 'type': 'course'})
+                
+                ins = WnFavourite(user=wn_user, course_id=course_id)
+                ins.save()
                 return JsonResponse({'status': 'added', 'type': 'course'})
-            except WnCourse.DoesNotExist:
-                return JsonResponse({'status': 'error', 'message': 'Course not found'}, status=404)
+            except Exception as e:
+                return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
         if institution_id:
             try:
-                institution = WnInstitution.objects.get(id=institution_id)
-                fav, created = WnFavourite.objects.get_or_create(user=wn_user, institution=institution)
-                if not created:
-                    fav.delete()
+                favourite_institution = WnFavourite.objects.filter(user=wn_user,institution_id = institution_id)
+                if favourite_institution.exists():
+                    favourite_institution.delete()
                     return JsonResponse({'status': 'removed', 'type': 'institution'})
+                
+                ins = WnFavourite(user=wn_user, institution_id=institution_id)
+                ins.save()
                 return JsonResponse({'status': 'added', 'type': 'institution'})
-            except WnInstitution.DoesNotExist:
-                return JsonResponse({'status': 'error', 'message': 'Institution not found'}, status=404)
+            except Exception as e:
+                return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
         return JsonResponse({'status': 'error', 'message': 'Missing IDs'}, status=400)
 
