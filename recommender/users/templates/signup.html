@@ -11,10 +11,11 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     {% endblock js_cdn %}
 
-    <div class="container mx-auto px-4 pt-10">
-        <div class="min-h-screen flex items-center justify-center w-full bg-white" id="auth"
-             style="background-color: white">
-            <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
+    <div class="container mx-auto px-4 overflow-y-hidden bg-gradient-to-tr from-indigo-50 to-purple-100">
+        <div class="h-screen flex items-center justify-center w-full bg-gradient-to-tr from-indigo-50 to-purple-100"
+             id="auth">
+
+            <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm mt-16">
 
                 <form method="POST" action="/signup/"
                       class="max-w-sm mx-auto bg-white p-6 shadow-md rounded-lg border bg-white">

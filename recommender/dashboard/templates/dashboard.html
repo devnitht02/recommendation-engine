@@ -987,7 +987,7 @@
                 body: formData
             }).then(response => {
                 if (!response.ok) {
-                    // If it's not OK (status 4xx or 5xx), read the error message and throw
+                    
                     return response.json().then(err => {
                         throw new Error(err.message || 'Something went wrong.');
                     });
