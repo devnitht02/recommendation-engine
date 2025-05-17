@@ -27,6 +27,7 @@ class WnState(models.Model):
 class WnUser(models.Model):
     user_name = models.CharField(max_length=255)
     hsc_percentage = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    date_of_birth = models.DateField(null=True, default=None)
     user_gender = models.CharField(max_length=20)
     school_passed_out_year = models.IntegerField(null=True, default=None)
     studied_institution_type = models.IntegerField(blank=True, null=True)
