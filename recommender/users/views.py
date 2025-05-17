@@ -23,7 +23,8 @@ from django.utils.timezone import now
 from institutions.models import WnState, WnDistrict, WnStream
 from recommender import settings
 from users.models import WnUser
-
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
 
 def is_valid_password(password):
     return bool(re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$', password))
@@ -121,50 +122,61 @@ def google_login(request):
     return JsonResponse({'status': 'error', 'message': 'Only POST requests allowed'})
 
 
+def verify_google_token(id_token_str):
+    try:
+        id_info = id_token.verify_oauth2_token(
+            id_token_str,
+            google_requests.Request(),
+            settings.GOOGLE_CLIENT_ID
+        )
+        return id_info  # contains email, name, picture, etc.
+    except ValueError:
+        return None
+
 def google_auth_callback(request):
-    print(request.body)
-    data = json.loads(request.body)
-    """Handle Google's OAuth response."""
-    code = data.get('token')
-    if not code:
-        return JsonResponse({'error': 'No authorization code provided'}, status=400)
+    try:
+        data = json.loads(request.body)
+        """Handle Google's OAuth response."""
+        code = data.get('token')
+        if not code:
+            return JsonResponse({'message': 'No authorization code provided'}, status=400)
 
-    # Exchange authorization code for access token
-    token_url = 'https://oauth2.googleapis.com/token'
-    token_data = {
-        'client_id': settings.GOOGLE_CLIENT_ID,
-        'client_secret': settings.GOOGLE_CLIENT_SECRET,
-        'code': code,
-        'redirect_uri': settings.GOOGLE_REDIRECT_URI,
-        'grant_type': 'authorization_code',
-    }
+        userinfo = verify_google_token(code)
 
-    token_response = requests.post(token_url, data=token_data)
-    token_json = token_response.json()
+        if 'email' not in userinfo:
+            return JsonResponse({'message': 'Failed to get email from Google'}, status=400)
 
-    if 'error' in token_json:
-        return JsonResponse({'error': token_json['error']}, status=400)
+        # Check if user exists in your database
+        email = userinfo['email']
+        user_name = userinfo.get('name')
+        user_profile = userinfo.get('picture')
 
-    # Get user info using the access token
-    access_token = token_json.get('access_token')
-    userinfo_url = 'https://www.googleapis.com/oauth2/v2/userinfo'
-    userinfo_response = requests.get(userinfo_url, headers={'Authorization': f'Bearer {access_token}'})
-    userinfo = userinfo_response.json()
+        user = WnUser.objects.filter(email=email).first()
+        if user:
+            #for existing user
+            request.session['user_id'] = user.pk
+            request.session['user_name'] = user.user_name
+            request.session['user_email'] = user.email
+            if user.profile_picture:
+                request.session['profile_picture'] = user.profile_picture.url
+            else:
+                if user_profile:
+                    request.session['profile_picture'] = user_profile
+            user.last_login = now()
+            user.save()
 
-    if 'email' not in userinfo:
-        return JsonResponse({'error': 'Failed to get email from Google'}, status=400)
-
-    # Check if user exists in your database
-    email = userinfo['email']
-    user_name = userinfo.get('name')
-    user, created = WnUser.objects.get_or_create(email=email, defaults={'user_name': user_name})
-
-    # Log the user in
-    login(request, user)
-
-    # Redirect to dashboard or profile page
-    return redirect('dashboard:dashboard')
-
+        else:
+            user = WnUser(user_name=user_name, email=email, password="")
+            user.save()
+            request.session['user_id'] = user.pk
+            request.session['user_name'] = user.user_name
+            request.session['user_email'] = user.email
+            if user_profile:
+                request.session['profile_picture'] = user_profile
+        # messages.success(request, "Signed in successfully.")
+        return JsonResponse({"message" : "success"})
+    except Exception as e:
+        return JsonResponse({"message" : str(e)},status=500)
 
 def signout(request):
     if 'user_id' in request.session:
@@ -205,6 +217,7 @@ def user_profile(request):
 
         wn_user.state_id = request.POST.get('state')
         wn_user.district_id = request.POST.get('district')
+        wn_user.date_of_birth = request.POST.get('date_of_birth')
 
         if request.FILES.get('profile_picture'):
             print("Saving profile picture...")
