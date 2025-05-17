@@ -4,7 +4,6 @@
 {% block css_cdn %}
     <link rel="stylesheet" href="{% static 'src/dashboard.css' %}">
     <link rel="stylesheet" href="{% static 'src/chatbot.css' %}">
-
     <style>
         #chatPanel {
             display: none;
@@ -48,17 +47,26 @@
             }
         }
     </style>
+
 {% endblock css_cdn %}
 
 {% block js_cdn %}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+
 {% endblock js_cdn %}
 
+
+
 {% block content %}
+
+
     <section class="dashboard-container">
         <!-- TOP BANNER SECTION -->
         <section class="top-banner">
+
             {# SEARCH FORM #}
             <form action="{% url 'dashboard:search_suggestions' %}" method="GET" class="max-w-md mx-auto"
                   id="search-form">
@@ -72,12 +80,14 @@
                             class="text-white absolute end-2.5 bottom-2.5 bg-purple-700 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2">
                         Search
                     </button>
+
                     <!-- Dropdown to Show Results -->
                     <ul id="suggestions-list" class="suggestion-list"
-                        style="position: absolute; width: 100%; background-color: white; border: 1px solid #ccc; display: none; margin-top: 3.42rem;">
+                        style="position: absolute; width: 100%; background-color: white; border: 1px solid #ccc; display: none; margin-top: 3.42rem; ">
                     </ul>
                 </div>
             </form>
+
 
             {#HEADINGS#}
             <div class="grid max-w-screen-xl px-4 pt-20 pb-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 lg:pt-28">
@@ -100,6 +110,8 @@
                     </div>
                 </div>
             </div>
+
+
         </section>
 
         {#COURSE TYPES LIST#}
@@ -127,6 +139,7 @@
                 <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Economics</span>
                 <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Education</span>
                 <span id="type" class="text-gray-900 text-2xl font-semibold text-uppercase">Nursing</span>
+
             </div>
         </section>
 
@@ -138,6 +151,7 @@
                 <div class="scroll-horizontal-wrapper auto-scroll py-4" style="padding: 1rem"
                      onmouseenter="this.classList.add('scroll-pause')"
                      onmouseleave="this.classList.remove('scroll-pause')">
+
                     <div class="scroll-inner flex space-x-4 px-4">
                         {% for stream in streams %}
                             <div class="course-card w-[270px] min-w-[255px] bg-white rounded-lg shadow-md overflow-hidden"
@@ -160,6 +174,7 @@
             </div>
         </section>
 
+
         <!-- TOP RATED COURSES SECTION -->
         <section class="pt-24" id="top-rated-courses">
             <div class="max-w-screen-xl px-4 mx-auto">
@@ -178,6 +193,7 @@
                                         alt="{{ course.course_name }}"
                                         onerror="this.onerror=null;this.src='https://via.placeholder.com/400x200?text=No+Image';"
                                 />
+
                                 <div class="course-content">
                                     <h5 class="course-title">
                                         <span class="course-rank">{{ course.rank }}.</span>
@@ -199,6 +215,7 @@
             </div>
         </section>
 
+
         <!-- TOP RATED INSTITUTIONS SECTION -->
         <section class="pt-24" id="top-rated-courses">
             <div class="max-w-screen-xl px-4 mx-auto">
@@ -209,6 +226,7 @@
                      style="padding: 1rem"
                      onmouseenter="this.classList.add('scroll-pause')"
                      onmouseleave="this.classList.remove('scroll-pause')">
+
                     <div class="scroll-inner">
                         {% for institution in top_ranked_institutions %}
                             <div class="course-card">
@@ -277,6 +295,7 @@
             </div>
         </section>
 
+
         <!-- TOP RECOMMENDED INSTITUTIONS SECTION -->
         <section class="pt-24" id="top-rated-courses">
             <div class="max-w-screen-xl px-4 mx-auto">
@@ -287,6 +306,7 @@
                      style="padding: 1rem"
                      onmouseenter="this.classList.add('scroll-pause')"
                      onmouseleave="this.classList.remove('scroll-pause')">
+
                     <div class="scroll-inner">
                         {% for institution in institution_hybrid %}
                             <div class="course-card">
@@ -317,6 +337,7 @@
             </div>
         </section>
 
+
         <section class="bg-white dark:bg-gray-900">
             <div class="max-w-screen-xl px-4 py-8 mx-auto lg:py-24 lg:px-6">
                 <div class="max-w-screen-md mx-auto mb-8 text-center lg:mb-12">
@@ -332,6 +353,7 @@
             </div>
         </section>
 
+
         <section class="bg-white dark:bg-gray-900">
             <div class="max-w-screen-xl px-4 pb-8 mx-auto lg:pb-24 lg:px-6">
                 <h2 class="mb-6 text-3xl font-extrabold tracking-tight text-center text-gray-900 lg:mb-8 lg:text-3xl dark:text-white">
@@ -340,9 +362,11 @@
                 <!-- CENTER ALIGNMENT FIXED -->
                 <div class="flex flex-col items-center justify-center w-full">
                     <div class="w-full max-w-2xl">
+
                         <div id="accordion-flush" data-accordion="collapse"
                              data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
                              data-inactive-classes="text-gray-500 dark:text-gray-400">
+
                             <!-- FAQ 1 -->
                             <h3 id="accordion-flush-heading-1">
                                 <button type="button"
@@ -465,17 +489,22 @@
                                     </p>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
+
             </div>
         </section>
+
 
         <section class="bg-white pt-24">
             <div class="max-w-screen-xl px-4 mx-auto">
                 <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">STORIES OF SUCCESS</h2>
 
+
                 <div id="testimonialScroll" class="pb-4">
+
                     <!-- Success Story 1 -->
                     <div class="testimonial-card flex-none">
                         <div class="w-80 h-[370px] bg-gray-100 rounded-lg p-6 shadow-md flex flex-col justify-start inner-card">
@@ -622,6 +651,7 @@
                 </div>
             </div>
         </section>
+
     </section>
 
     <button class="chat-toggle-button" onclick="toggleChat()">
@@ -644,6 +674,7 @@
             <button onclick="sendMessage()">➤</button>
         </div>
     </div>
+
 
     <!-- Modal -->
     <div id="selectionModal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
@@ -860,95 +891,45 @@
         });
     </script>
 
+
     {#CHATBOT JS#}
     <script>
         function toggleChat() {
             const panel = document.getElementById("chatPanel");
-            if (panel) {
-                panel.style.display = (panel.style.display === "none" || panel.style.display === "") ? "flex" : "none";
-            } else {
-                console.error("Chat panel not found");
-            }
+            panel.style.display = (panel.style.display === "none" || panel.style.display === "") ? "flex" : "none";
         }
 
-        const userId = "{{request.session.user_id}}";
-        if (!userId) {
-            console.error("User ID is missing. Please ensure you are logged in.");
-        } else {
-            const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-            const chatSocket = new WebSocket(protocol + window.location.host + "/ws/chat/" + userId + "/");
+        const chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/{{request.session.user_id}}/");
+        const chat = document.getElementById("chatBody");
+        const chatBody = document.getElementById("chat-container");
+        chatSocket.onmessage = function (e) {
+            document.getElementById("botTyping").style.display = "none";
+            const data = JSON.parse(e.data);
+            const botDiv = document.createElement("div");
+            botDiv.innerHTML = `<strong>Bot:</strong> ${data.message}`;
+            chat.appendChild(botDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        };
 
-            chatSocket.onopen = function () {
-                console.log("WebSocket connection established");
-            };
+        function sendMessage() {
+            const input = document.getElementById("userInput");
+            const message = input.value.trim();
 
-            chatSocket.onerror = function (error) {
-                console.error("WebSocket error:", error);
-            };
+            if (!message) return;
 
-            chatSocket.onclose = function () {
-                console.log("WebSocket connection closed");
-            };
-
-            chatSocket.onmessage = function (e) {
-                console.log("Message received:", e.data);
-                const botTyping = document.getElementById("botTyping");
-                const chat = document.getElementById("chatBody");
-                const chatBody = document.getElementById("chat-container");
-
-                if (!botTyping || !chat || !chatBody) {
-                    console.error("Chat DOM elements missing");
-                    return;
-                }
-
-                botTyping.style.display = "none";
-                try {
-                    const data = JSON.parse(e.data);
-                    const botDiv = document.createElement("div");
-                    botDiv.innerHTML = `<strong>Bot:</strong> ${data.message}`;
-                    chat.appendChild(botDiv);
-                    chatBody.scrollTop = chatBody.scrollHeight;
-                } catch (error) {
-                    console.error("Error parsing message:", error);
-                }
-            };
-
-            function sendMessage() {
-                console.log("sendMessage called");
-                const input = document.getElementById("userInput");
-                const chat = document.getElementById("chatBody");
-                const chatBody = document.getElementById("chat-container");
-                const botTyping = document.getElementById("botTyping");
-
-                if (!input || !chat || !chatBody || !botTyping) {
-                    console.error("One or more DOM elements are missing");
-                    return;
-                }
-
-                const message = input.value.trim();
-                if (!message) {
-                    console.log("Empty message, returning");
-                    return;
-                }
-
-                if (chatSocket.readyState !== WebSocket.OPEN) {
-                    console.error("WebSocket is not open. State:", chatSocket.readyState);
-                    return;
-                }
-
-                const userDiv = document.createElement("div");
-                userDiv.innerHTML = `<strong>You:</strong> ${message}`;
-                chat.appendChild(userDiv);
-                input.value = "";
-                botTyping.style.display = "block";
-                try {
-                    chatSocket.send(JSON.stringify({'message': message}));
-                    console.log("Message sent:", message);
-                } catch (error) {
-                    console.error("Error sending message:", error);
-                }
-                chatBody.scrollTop = chatBody.scrollHeight;
+            const userDiv = document.createElement("div");
+            userDiv.innerHTML = `<strong>You:</strong> ${message}`;
+            chat.appendChild(userDiv);
+            input.value = "";
+            // Show typing loader
+            document.getElementById("botTyping").style.display = "block";
+            if (chatSocket.readyState === WebSocket.OPEN) {
+                chatSocket.send(JSON.stringify({'message': message}));
+            } else {
+                console.error("WebSocket is not open. Message not sent.");
             }
+            
+            chatBody.scrollTop = chatBody.scrollHeight;
         }
 
         function showFormAlert(message, type = 'error') {
@@ -994,6 +975,14 @@
 
             const formData = new FormData(form);
 
+            // const data = {};
+
+            // // Convert FormData to plain object
+            // formData.forEach((value, key) => {
+            //     data[key] = value;
+            //     console.log(key,value);
+            // });
+
             // Send POST request
             fetch("{% url 'institutions:select_course_form' %}", {
                 method: 'POST',
@@ -1003,6 +992,7 @@
                 body: formData
             }).then(response => {
                 if (!response.ok) {
+                    
                     return response.json().then(err => {
                         throw new Error(err.message || 'Something went wrong.');
                     });
@@ -1018,6 +1008,7 @@
         }
 
         document.addEventListener("DOMContentLoaded", function () {
+
             const institutionSelectionModel = "{{institution_selection_model}}";
 
             if (institutionSelectionModel == "True") {
@@ -1068,6 +1059,9 @@
             });
         });
     </script>
+
+
+
 
     {% include 'footer.html' %}
 {% endblock content %}
