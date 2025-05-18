@@ -2,41 +2,43 @@
 {% load static %}
 
 {% block content %}
-    <section class="py-24 bg-gray-50 min-h-screen bg-gradient-to-tr from-indigo-50 to-purple-100">
-        <div class="max-w-6xl mx-auto px-6 bg-gradient-to-tr">
+    <section class="py-24 bg-gradient-to-tr from-indigo-50 to-purple-100 min-h-screen">
+        <div class="max-w-6xl mx-auto px-6">
 
             {% if favourite %}
                 <!-- Saved Courses Section -->
-                <div class="mx-4 my-10 p-6 bg-white rounded-2xl shadow-lg border border-purple-300">
-                    <div class="flex items-center justify-center mb-6">
+                <div class="mx-4 my-10 p-8 bg-white rounded-3xl shadow-2xl border border-purple-200">
+                    <div class="flex items-center justify-center mb-8">
                         <div class="flex-grow border-t border-purple-300"></div>
-                        <h3 class="text-center text-2xl font-semibold mb-6 bg-white text-white py-1 shadow"
-                            style="color: black; width: 30rem">SAVED COURSES</h3>
+                        <h1 class="text-center text-2xl font-bold text-gray-800 bg-indigo-100 py-3 px-8 shadow rounded-xl border border-indigo-200 mx-4 tracking-wide">
+                            SAVED COURSES
+                        </h1>
                         <div class="flex-grow border-t border-purple-300"></div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {% for item in favourite %}
                             {% if item.course %}
-                                <div class="bg-white hover:bg-indigo-100 transition duration-300 shadow-sm rounded-xl border border-purple-100 p-6 hover:shadow-md flex flex-col justify-between h-full">
+                                <div class="bg-white hover:bg-indigo-100 transition-all duration-300 shadow-md rounded-2xl border border-purple-100 p-6 flex flex-col justify-between h-full">
                                     <a href="{% url 'institutions:view_course' item.course.id %}" target="_blank"
                                        class="block">
                                         <h3 class="text-xl font-semibold text-purple-800 mb-2">{{ item.course.course_name }}</h3>
                                         <p class="text-sm text-gray-600 mb-4">
                                             {{ item.course.course_description|truncatewords:20 }}
                                         </p>
+                                        <p class="text-sm text-gray-500 mb-1">
+                                            <strong>Stream:</strong> {{ item.course.stream.stream_name }}
+                                        </p>
                                         <p class="text-sm text-gray-500">
-                                            <strong>Stream:</strong> {{ item.course.stream.stream_name }}</p>
-                                        <p class="text-sm text-gray-500">
-                                            <strong>Degree:</strong> {{ item.course.degree.degree_description }}</p>
+                                            <strong>Degree:</strong> {{ item.course.degree.degree_description }}
+                                        </p>
                                     </a>
                                     <form method="POST" action="{% url 'institutions:remove_favourite' %}"
                                           class="mt-auto pt-4">
                                         {% csrf_token %}
                                         <input type="hidden" name="course_id" value="{{ item.course.id }}">
                                         <button type="submit"
-                                                class="removeBtn w-full text-white text-sm font-medium py-2 rounded-lg shadow-sm transition duration-300 ease-in-out"
-                                                style="background-color: #d84040">
+                                                class="removeBtn w-full text-white text-sm font-semibold py-2 rounded-lg shadow-sm transition duration-300 ease-in-out bg-red-500 hover:bg-red-600">
                                             Remove
                                         </button>
                                     </form>
@@ -52,18 +54,19 @@
                 </div>
 
                 <!-- Saved Institutions Section -->
-                <div class="mx-4 my-10 p-6 bg-white rounded-2xl shadow-lg border border-purple-300">
-                    <div class="flex items-center justify-center mb-6">
+                <div class="mx-4 my-10 p-8 bg-white rounded-3xl shadow-2xl border border-purple-200">
+                    <div class="flex items-center justify-center mb-8">
                         <div class="flex-grow border-t border-purple-300"></div>
-                        <h3 class="text-center text-2xl font-semibold mb-6 bg-white text-white py-1 shadow"
-                            style="color: black; width: 30rem">SAVED INSTITUTIONS</h3>
+                        <h3 class="text-center text-2xl font-bold text-gray-800 bg-indigo-100 py-3 px-8 shadow rounded-xl border border-indigo-200 mx-4 tracking-wide">
+                            SAVED INSTITUTIONS
+                        </h3>
                         <div class="flex-grow border-t border-purple-300"></div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {% for item in favourite %}
                             {% if item.institution %}
-                                <div class="bg-white hover:bg-indigo-100 transition duration-300 shadow-sm rounded-xl border border-purple-100 p-6 hover:shadow-md flex flex-col justify-between h-full">
+                                <div class="bg-white hover:bg-indigo-100 transition-all duration-300 shadow-md rounded-2xl border border-purple-100 p-6 flex flex-col justify-between h-full">
                                     <a href="{% url 'institutions:view_institution' item.institution.id %}"
                                        target="_blank" class="block">
                                         <h3 class="text-xl font-semibold text-purple-800 mb-2">{{ item.institution.institution_name }}</h3>
@@ -79,8 +82,7 @@
                                         {% csrf_token %}
                                         <input type="hidden" name="institution_id" value="{{ item.institution.id }}">
                                         <button type="submit"
-                                                class="removeBtn w-full text-white text-sm font-medium py-2 rounded-lg shadow-sm transition duration-300 ease-in-out"
-                                                style="background-color: #d84040">
+                                                class="removeBtn w-full text-white text-sm font-semibold py-2 rounded-lg shadow-sm transition duration-300 ease-in-out bg-red-500 hover:bg-red-600">
                                             Remove
                                         </button>
                                     </form>
@@ -92,30 +94,27 @@
 
             {% else %}
                 <!-- Empty State -->
-                <div class="text-center text-gray-600 text-lg mt-20">
+                <div class="text-center text-gray-600 text-lg mt-24">
                     You haven’t saved any courses or institutions yet.
                 </div>
             {% endif %}
         </div>
     </section>
 
-    <!-- Button Hover JavaScript -->
     <script>
         document.querySelectorAll('.removeBtn').forEach(button => {
             button.addEventListener("mouseenter", () => {
-                button.style.backgroundColor = "#b22222";
-                button.style.boxShadow = "0 4px 12px rgba(178, 34, 34, 0.4)";
                 button.style.transform = "scale(1.03)";
+                button.style.boxShadow = "0 6px 16px rgba(220, 38, 38, 0.35)";
             });
 
             button.addEventListener("mouseleave", () => {
-                button.style.backgroundColor = "#d84040";
-                button.style.boxShadow = "none";
                 button.style.transform = "scale(1)";
+                button.style.boxShadow = "none";
             });
 
             button.addEventListener("mousedown", () => {
-                button.style.transform = "scale(0.97)";
+                button.style.transform = "scale(0.96)";
             });
 
             button.addEventListener("mouseup", () => {

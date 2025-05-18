@@ -14,25 +14,26 @@
 
     <div class="bg-gradient-to-tr from-indigo-50 to-purple-100 pt-24">
 
-        {# SEARCH FORM #}
         <form action="{% url 'institutions:search_suggestions_courses' %}" method="GET"
-              class=" bg-white max-w-md mx-auto"
+              class="bg-white max-w-md mx-auto"
               id="search-form" style="margin-top: 4rem; margin-bottom: 10rem">
             {% csrf_token %}
             <label for="default-search" class="mb-2 text-sm font-medium text-purple-900 sr-only">Search</label>
+
             <div class="relative search-div">
-                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-4 pointer-events-none">
                     <svg class="w-4 h-4 text-purple-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                         fill="none"
-                         viewBox="0 0 20 20">
+                         fill="none" viewBox="0 0 20 20">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                     </svg>
                 </div>
-                <input type="search" id="default-search" class="block w-full p-4 ps-10 text-sm text-purple-900 border
-                border-purple-300 rounded-lg bg-purple-50 focus:ring-purple-500 focus:border-purple-500"
-                       placeholder="   &nbsp;&nbsp;Search for Degrees and Institutions..." required
+
+                <input type="search" id="default-search"
+                       class="block w-full py-4 pl-12 pr-36 text-sm text-purple-900 border border-purple-300 rounded-lg bg-purple-50 focus:ring-purple-500 focus:border-purple-500"
+                       placeholder="Search for Degrees and Institutions..." required
                        style="border-radius: 1rem; border: #5521b5;"/>
+
                 <button type="submit"
                         class="text-white absolute end-2.5 bottom-2.5 bg-purple-700 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2">
                     Search
@@ -40,23 +41,26 @@
 
                 <!-- Dropdown to Show Results -->
                 <ul id="suggestions-list" class="suggestion-list"
-                    style="position: absolute; width: 100%; background-color: white; border: 1px solid #ccc; display: none; margin-top: 3.42rem; ">
+                    style="position: absolute; width: 100%; background-color: white; border: 1px solid #ccc; display: none; margin-top: 3.42rem;">
                 </ul>
             </div>
         </form>
 
+
         <!-- Recommended Section Card -->
         <div class="mx-6 my-10 p-6 bg-white rounded-2xl shadow-lg border border-purple-300">
-            <h4 class="text-center text-3xl font-semibold mb-6 bg-white text-white py-2 shadow"
-                style="width: 30rem; margin-left: 31rem;border-radius: 5px; color: black">RECOMMENDED FOR YOU</h4>
+            <h4 class="text-center text-3xl font-bold text-gray-800 bg-indigo-100 py-3 px-6 shadow-sm mx-auto rounded-xl border border-purple-300 w-fit mb-8 tracking-wide">
+                RECOMMENDED FOR YOU
+            </h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {% for course in recommend_course %}
-                    <div class="relative p-6 bg-white border border-purple-500 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
-                        <img src="
+                    <a href="{% url 'institutions:view_course' course.id %}" class="flex-1">
+                        <div class="relative p-6 bg-white border border-purple-500 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
+                            <img src="
                                 {% static 'assets/images/degrees.jpeg' %}"
-                             alt="{{ course.course_name }}"
-                             class="w-full h-40 object-cover rounded-md mb-4">
-                        <a href="{% url 'institutions:view_course' course.id %}" class="flex-1">
+                                 alt="{{ course.course_name }}"
+                                 class="w-full h-40 object-cover rounded-md mb-4">
+
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
                                 {{ course.course_name }}
                             </h5>
@@ -66,21 +70,21 @@
                             <p class="font-normal text-gray-700">Stream:
                                 <span class="text-blue-500">{{ course.stream.stream_name|default:"No Stream Available" }}</span>
                             </p>
-                        </a>
-                        <div class="text-end" style="text-align: end;">
-                            <button type="button" class="like-btn text-red-600 hover:text-pink-500 me-5"
-                                    data-course-id="{{ course.id }}" title="Like this course"
-                                    style="margin-right: 15px;">
-                                <i
-                                        class="{% if course.pk in liked_course %}fa-solid{% else %}fa-regular{% endif %} fa-heart fa-lg"></i>
-                            </button>
-                            <button type="button" class="bookmark-btn text-purple-700 hover:text-yellow-400"
-                                    data-course-id="{{ course.id }}" title="Bookmark this course">
-                                <i class="{% if course.pk in favourite_course %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg"
-                                   style="color: #5521b5;"></i>
-                            </button>
+
+                            <div class="text-end" style="text-align: end;">
+                                <button type="button" class="like-btn text-red-600 hover:text-pink-500 me-5"
+                                        data-course-id="{{ course.id }}" title="Like this course"
+                                        style="margin-right: 15px;">
+                                    <i class="{% if course.pk in liked_course %}fa-solid{% else %}fa-regular{% endif %} fa-heart fa-lg"></i>
+                                </button>
+                                <button type="button" class="bookmark-btn text-purple-700 hover:text-yellow-400"
+                                        data-course-id="{{ course.id }}" title="Bookmark this course">
+                                    <i class="{% if course.pk in favourite_course %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg"
+                                       style="color: #5521b5;"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 {% empty %}
                     <p class="text-center text-gray-700 col-span-3">No courses available.</p>
                 {% endfor %}
@@ -89,16 +93,18 @@
 
         <!-- All Courses Section Card -->
         <div class="mx-6 my-10 p-6 bg-white rounded-2xl shadow-lg border border-purple-300">
-            <h4 class="text-center text-3xl font-semibold mb-6 bg-white text-white py-2 shadow"
-                style="color: black;width: 30rem; margin-left: 31rem; border-radius: 5px">ALL COURSES</h4>
+            <h4 class="text-center text-3xl font-bold text-gray-800 bg-indigo-100 py-3 px-6 shadow-sm mx-auto rounded-xl border border-purple-300 w-fit mb-8 tracking-wide">
+                ALL DEGREES
+            </h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {% for course in course_data %}
-                    <div class="relative p-6 bg-white border border-purple-500 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
-                        <img src="
+                    <a href="{% url 'institutions:view_course' course.id %}" class="flex-1">
+                        <div class="relative p-6 bg-white border border-purple-500 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
+                            <img src="
                                 {% static 'assets/images/all_courses.png' %}"
-                             alt="{{ course.course_name }}"
-                             class="w-full h-40 object-cover rounded-md mb-4">
-                        <a href="{% url 'institutions:view_course' course.id %}" class="flex-1">
+                                 alt="{{ course.course_name }}"
+                                 class="w-full h-40 object-cover rounded-md mb-4">
+
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
                                 {{ course.course_name }}
                             </h5>
@@ -108,21 +114,23 @@
                             <p class="font-normal text-gray-700">Stream:
                                 <span class="text-blue-500">{{ course.stream.stream_name|default:"No Stream Available" }}</span>
                             </p>
-                        </a>
-                        <div class="text-end" style="text-align: end;">
-                            <button type="button" class="like-btn text-red-600 hover:text-pink-500 me-5"
-                                    data-course-id="{{ course.id }}" title="Like this course"
-                                    style="margin-right: 15px;">
-                                <i
-                                        class="{% if course.pk in liked_course %}fa-solid{% else %}fa-regular{% endif %} fa-heart fa-lg"></i>
-                            </button>
-                            <button type="button" class="bookmark-btn text-purple-700 hover:text-yellow-400"
-                                    data-course-id="{{ course.id }}" title="Bookmark this course">
-                                <i class="{% if course.pk in favourite_course %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg"
-                                   style="color: #5521b5;"></i>
-                            </button>
+
+                            <div class="text-end" style="text-align: end;">
+                                <button type="button" class="like-btn text-red-600 hover:text-pink-500 me-5"
+                                        data-course-id="{{ course.id }}" title="Like this course"
+                                        style="margin-right: 15px;">
+                                    <i
+                                            class="{% if course.pk in liked_course %}fa-solid{% else %}fa-regular{% endif %} fa-heart fa-lg"></i>
+                                </button>
+                                <button type="button" class="bookmark-btn text-purple-700 hover:text-yellow-400"
+                                        data-course-id="{{ course.id }}" title="Bookmark this course">
+                                    <i class="{% if course.pk in favourite_course %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg"
+                                       style="color: #5521b5;"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    </a>
+
                 {% empty %}
                     <p class="text-center text-gray-700 col-span-3">No courses available.</p>
                 {% endfor %}
@@ -289,7 +297,7 @@
 
 
 
-{#    {% include 'footer.html' %}#}
+    {#    {% include 'footer.html' %}#}
 
 
 {% endblock content %}
