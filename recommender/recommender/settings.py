@@ -14,6 +14,7 @@ import configparser
 import os
 from pathlib import Path
 
+import dj_database_url
 import pymysql
 from django.conf import settings
 
@@ -111,20 +112,42 @@ pymysql.install_as_MySQLdb()
 
 DATABASES = {
     'default': {
+        # Local database configuration
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'st_recommendation',
-        'PORT': '3306',
-        'HOST': '127.0.0.1',
         'USER': 'root',
         'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
         'OPTIONS': {
-            'autocommit': 'True',
-            'charset': 'utf8mb4'
-
-        }
-
+            'autocommit': True,
+            'charset': 'utf8mb4',
+        },
+    },
+    'railway': {
+        # Railway database configuration
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'st_recommendation',
+        'USER': 'root',
+        'PASSWORD': 'wbNFlesvPDoCWtrKCaQayrxhjLMDyCLY',
+        'HOST': 'turntable.proxy.rlwy.net',
+        'PORT': '27548',
+        'OPTIONS': {
+            'autocommit': True,
+            'charset': 'utf8mb4',
+        },
     }
 }
+
+# Determine which database to use based on the environment
+if 'DATABASE_URL' in os.environ:
+    DATABASES['default'] = dj_database_url.parse(os.environ['DATABASE_URL'], conn_max_age=600)
+
+# Optionally, add custom options to the default database
+DATABASES['default'].setdefault('OPTIONS', {}).update({
+    'autocommit': True,
+    'charset': 'utf8mb4',
+})
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

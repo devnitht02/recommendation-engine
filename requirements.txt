@@ -61,6 +61,7 @@ defusedxml==0.7.1
 Deprecated==1.2.18
 diskcache==5.6.3
 distro==1.9.0
+dj-database-url==2.3.0
 Django==4.2
 django-appconf==1.1.0
 django-compressor==4.5.1
