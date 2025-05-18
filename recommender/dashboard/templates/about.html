@@ -1,87 +1,86 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <!-- Hero Section -->
-    <section class="relative overflow-hidden bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-50 pt-32 pb-24">
-        <div class="max-w-6xl mx-auto px-6 flex flex-col items-center text-center space-y-8">
+<!-- Hero Section -->
+<section class="relative overflow-hidden bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-50 pt-32 pb-24">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col items-center text-center space-y-10">
 
-            <h1 class="text-center text-3xl font-semibold mb-6 bg-white text-white py-2 shadow"
-                style="color: black; width: 30rem">
-                ABOUT US
-            </h1>
+        <h3 class="text-3xl font-bold text-gray-800 bg-white py-3 px-6 shadow-md w-full max-w-xl mx-auto rounded-2xl border border-indigo-200 tracking-wide">
+            ABOUT US
+        </h3>
 
-            <p class="text-xl text-gray-700 max-w-2xl leading-relaxed">
-                Empowering students to navigate higher education with clarity and confidence.
-            </p>
+        <p class="text-lg text-gray-700 max-w-2xl leading-relaxed px-4">
+            Empowering students to navigate higher education with clarity and confidence.
+        </p>
 
-            <div class="w-full max-w-4xl rounded-xl overflow-hidden shadow-lg">
-                <img src="https://images.unsplash.com/photo-1606761568499-6d2451b23c66?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                     alt="Students in learning environment" class="w-full object-cover h-[300px]">
-            </div>
+        <div class="w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl ring-1 ring-purple-100">
+            <img src="https://images.unsplash.com/photo-1606761568499-6d2451b23c66?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                 alt="Students in learning environment"
+                 class="w-full object-cover h-[300px] grayscale-0 hover:grayscale transition duration-300 ease-in-out">
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Content Section -->
-    <section class="bg-white py-24">
-        <div class="max-w-5xl mx-auto px-6 space-y-24">
+<!-- Content Section -->
+<section class="bg-white py-24">
+    <div class="max-w-5xl mx-auto px-6 space-y-24">
 
-            <!-- Intro -->
-            <div class="text-center space-y-6" style="margin-bottom: 3rem ">
-                <p class="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
-                    Our platform is designed to assist students in making well informed decisions about their higher
-                    education and future careers.
-                    Recognizing the uncertainties many students face after completing their 10+2 education, especially
-                    in underserved regions,
-                    we have built a solution that provides clarity, direction, and personalized recommendations.
+        <!-- Intro -->
+        <div class="text-center space-y-6 mb-16">
+            <p class="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
+                Our platform is designed to assist students in making well-informed decisions about their higher
+                education and future careers.
+                Recognizing the uncertainties many students face after completing their 10+2 education, especially
+                in underserved regions,
+                we have built a solution that provides clarity, direction, and personalized recommendations.
+            </p>
+        </div>
+
+        <!-- Feature Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+
+            <!-- Vision -->
+            <div class="bg-gradient-to-tr from-indigo-50 to-purple-100 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition duration-300 space-y-4">
+                <div class="flex justify-center">
+                    <i data-lucide="eye" class="w-10 h-10 text-indigo-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-indigo-800">Our Vision</h3>
+                <p class="text-gray-700 text-sm leading-relaxed">
+                    To be a guiding light for every student seeking clarity after 10+2, by offering equal access to
+                    educational opportunities
+                    and pathways, regardless of geographic or socioeconomic barriers.
                 </p>
             </div>
 
-            <!-- Feature Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-
-                <!-- Vision -->
-                <div class="bg-gradient-to-tr from-indigo-50 to-purple-100 rounded-2xl p-8 shadow-lg space-y-4">
-                    <div class="flex justify-center">
-                        <i data-lucide="eye" class="w-10 h-10 text-indigo-600"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold text-indigo-800">Our Vision</h3>
-                    <p class="text-gray-700 text-sm leading-relaxed">
-                        To be a guiding light for every student seeking clarity after 10+2, by offering equal access to
-                        educational opportunities
-                        and pathways, regardless of geographic or socioeconomic barriers.
-                    </p>
+            <!-- Mission -->
+            <div class="bg-gradient-to-tr from-indigo-50 to-purple-100 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition duration-300 space-y-4">
+                <div class="flex justify-center">
+                    <i data-lucide="target" class="w-10 h-10 text-indigo-600"></i>
                 </div>
+                <h3 class="text-xl font-semibold text-indigo-800">Our Mission</h3>
+                <p class="text-gray-700 text-sm leading-relaxed">
+                    We aim to simplify the decision making process for students transitioning from school to higher
+                    education,
+                    using a hybrid recommendation system that integrates data and empathy.
+                </p>
+            </div>
 
-                <!-- Mission -->
-                <div class="bg-gradient-to-tr from-indigo-50 to-purple-100 rounded-2xl p-8 shadow-lg space-y-4">
-                    <div class="flex justify-center">
-                        <i data-lucide="target" class="w-10 h-10 text-indigo-600"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold text-indigo-800">Our Mission</h3>
-                    <p class="text-gray-700 text-sm leading-relaxed">
-                        We aim to simplify the decision-making process for students transitioning from school to higher
-                        education,
-                        using a hybrid recommendation system that integrates data and empathy.
-                    </p>
+            <!-- Why We Exist -->
+            <div class="bg-gradient-to-tr from-indigo-50 to-purple-100 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition duration-300 space-y-4">
+                <div class="flex justify-center">
+                    <i data-lucide="life-buoy" class="w-10 h-10 text-indigo-600"></i>
                 </div>
-
-                <!-- Why We Exist -->
-                <div class="bg-gradient-to-tr from-indigo-50 to-purple-100 rounded-2xl p-8 shadow-lg space-y-4">
-                    <div class="flex justify-center">
-                        <i data-lucide="life-buoy" class="w-10 h-10 text-indigo-600"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold text-indigo-800">Why We Exist</h3>
-                    <p class="text-gray-700 text-sm leading-relaxed">
-                        Many students lack adequate guidance. This platform bridges the gap between potential and
-                        opportunity —
-                        one student at a time, regardless of their background.
-                    </p>
-                </div>
-
+                <h3 class="text-xl font-semibold text-indigo-800">Why We Exist</h3>
+                <p class="text-gray-700 text-sm leading-relaxed">
+                    Many students lack adequate guidance. This platform bridges the gap between potential and
+                    opportunity,
+                    one student at a time, regardless of their background.
+                </p>
             </div>
 
         </div>
-    </section>
 
+    </div>
+</section>
 
 {% endblock %}
