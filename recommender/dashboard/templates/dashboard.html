@@ -5,6 +5,22 @@
     <link rel="stylesheet" href="{% static 'src/dashboard.css' %}">
     <link rel="stylesheet" href="{% static 'src/chatbot.css' %}">
     <style>
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.25s ease-out;
+        }
+
         #chatPanel {
             display: none;
         }
@@ -72,18 +88,29 @@
                   id="search-form">
                 {#{% csrf_token %}#}
                 <label for="default-search" class="mb-2 text-sm font-medium text-purple-900 sr-only">Search</label>
+
                 <div class="relative search-div">
+
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                        <svg class="w-5 h-5 text-purple-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                             fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                  stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                        </svg>
+                    </div>
+
                     <input type="search" id="default-search"
-                           class="block w-full p-4 ps-10 text-sm text-purple-900 border border-purple-300 rounded-lg bg-purple-50 focus:ring-purple-500 focus:border-purple-500"
-                           placeholder="Search for Degrees and Institutions..." required>
+                           class="block w-full py-4 pl-12 pr-10 text-sm text-purple-900 border border-purple-300 rounded-lg bg-purple-50 focus:ring-purple-500 focus:border-purple-500 shadow-sm transition"
+                           placeholder="Search for Degrees and Institutions..." required
+                           aria-label="Search input field for degrees and institutions"/>
+
                     <button type="submit"
-                            class="text-white absolute end-2.5 bottom-2.5 bg-purple-700 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2">
+                            class="text-white absolute end-2.5 bottom-2.5 bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2 transition shadow">
                         Search
                     </button>
 
-                    <!-- Dropdown to Show Results -->
                     <ul id="suggestions-list" class="suggestion-list"
-                        style="position: absolute; width: 100%; background-color: white; border: 1px solid #ccc; display: none; margin-top: 3.42rem; ">
+                        style="position: absolute; width: 100%; background-color: white; border: 1px solid #ccc; display: none; margin-top: 3.42rem; border-radius: 0.75rem; box-shadow: 0 6px 12px rgba(0,0,0,0.05); z-index: 10;">
                     </ul>
                 </div>
             </form>
@@ -654,24 +681,44 @@
 
     </section>
 
-    <button class="chat-toggle-button" onclick="toggleChat()">
-        ✉
+    <!-- Chat Toggle Button -->
+    <button class="chat-toggle-button fixed bottom-6 right-6 z-50 bg-purple-700 hover:bg-purple-800 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition"
+            onclick="toggleChat()" style="color: black">
+        <img src="{% static 'assets/images/chatbot.png' %}" alt="chatbot-image"/>
     </button>
 
-    <div class="chat-panel" id="chatPanel">
-        <div class="chat-header">PathFinder Assistant</div>
-        <div class="chat-body" id="chat-container">
+    <!-- Chat Panel -->
+    <div class="chat-panel fixed bottom-24 right-6 w-80 max-w-sm bg-white rounded-xl shadow-2xl border border-purple-200 z-50 hidden flex flex-col overflow-hidden"
+         id="chatPanel">
+
+        <!-- Header -->
+        <div class="chat-header bg-purple-700 text-white px-4 py-3 font-semibold flex justify-between items-center">
+            PathFinder Assistant
+            <button onclick="toggleChat()" class="text-white hover:text-gray-300 text-lg font-bold">&times;</button>
+        </div>
+
+        <!-- Body -->
+        <div class="chat-body flex-1 p-4 space-y-2 overflow-y-auto text-sm" id="chat-container">
             <div id="chatBody">
-                <div><strong>Bot:</strong> Hey! How can I help you today?</div>
+                <div class="flex justify-start">
+                    <div class="bg-purple-100 text-purple-900 p-2 px-3 rounded-lg mb-1 max-w-xs text-sm shadow-sm">
+                        <strong>Bot:</strong> Hey! How can I help you today?
+                    </div>
+                </div>
             </div>
             <div id="botTyping" style="display: none;">
-                <div class="loader"></div>
+                <div class="loader w-4 h-4 border-2 border-t-purple-500 border-gray-300 rounded-full animate-spin mx-auto my-2"></div>
             </div>
         </div>
-        <div class="chat-footer">
-            <input type="text" id="userInput" placeholder="Type here..."
+
+        <!-- Footer -->
+        <div class="chat-footer p-3 border-t flex gap-2">
+            <input type="text" id="userInput" placeholder="Type your message..."
+                   class="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400 text-sm"
                    onkeypress="if(event.key === 'Enter'){sendMessage()}"/>
-            <button onclick="sendMessage()">➤</button>
+            <button onclick="sendMessage()"
+                    class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">➤
+            </button>
         </div>
     </div>
 
@@ -892,44 +939,92 @@
     </script>
 
 
-    {#CHATBOT JS#}
     <script>
+
         function toggleChat() {
             const panel = document.getElementById("chatPanel");
-            panel.style.display = (panel.style.display === "none" || panel.style.display === "") ? "flex" : "none";
+            const isVisible = panel.style.display === "flex";
+
+            if (isVisible) {
+                // Manually closed: clear memory
+                localStorage.removeItem("chatHistory");
+                localStorage.removeItem("chatOpen");
+                panel.style.display = "none";
+            } else {
+                // Reopen and restore
+                localStorage.setItem("chatOpen", "true");
+                panel.style.display = "flex";
+                restoreChatFromMemory();
+            }
         }
+
+        // On page load, reopen chat if it was previously open
+        document.addEventListener("DOMContentLoaded", () => {
+            const chatPanel = document.getElementById("chatPanel");
+            if (localStorage.getItem("chatOpen") === "true") {
+                chatPanel.style.display = "flex";
+                restoreChatFromMemory();
+            }
+        });
 
         const chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/{{request.session.user_id}}/");
         const chat = document.getElementById("chatBody");
         const chatBody = document.getElementById("chat-container");
-        chatSocket.onmessage = function (e) {
-            document.getElementById("botTyping").style.display = "none";
-            const data = JSON.parse(e.data);
-            const botDiv = document.createElement("div");
-            botDiv.innerHTML = `<strong>Bot:</strong> ${data.message}`;
-            chat.appendChild(botDiv);
-            chatBody.scrollTop = chatBody.scrollHeight;
-        };
 
         function sendMessage() {
             const input = document.getElementById("userInput");
             const message = input.value.trim();
-
             if (!message) return;
 
             const userDiv = document.createElement("div");
-            userDiv.innerHTML = `<strong>You:</strong> ${message}`;
+            userDiv.className = "flex justify-end animate-fade-in";
+            userDiv.innerHTML = `
+            <div class="bg-gray-100 text-gray-900 p-2 px-3 rounded-lg mb-1 max-w-xs text-sm shadow-md">
+                <strong>You:</strong> ${message}
+            </div>`;
             chat.appendChild(userDiv);
+            saveToMemory(userDiv.outerHTML);
             input.value = "";
-            // Show typing loader
+
             document.getElementById("botTyping").style.display = "block";
             if (chatSocket.readyState === WebSocket.OPEN) {
                 chatSocket.send(JSON.stringify({'message': message}));
-            } else {
-                console.error("WebSocket is not open. Message not sent.");
             }
-            
+
             chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        chatSocket.onmessage = function (e) {
+            document.getElementById("botTyping").style.display = "none";
+            const data = JSON.parse(e.data);
+
+            const botDiv = document.createElement("div");
+            botDiv.className = "flex justify-start animate-fade-in";
+            botDiv.innerHTML = `
+            <div class="bg-purple-100 text-purple-900 p-2 px-3 rounded-lg mb-1 max-w-xs text-sm shadow-md">
+                <strong>Bot:</strong> ${data.message}
+            </div>`;
+            chat.appendChild(botDiv);
+            saveToMemory(botDiv.outerHTML);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        };
+
+        // Use localStorage for cross-page persistence
+        function saveToMemory(html) {
+            let history = JSON.parse(localStorage.getItem("chatHistory") || "[]");
+            history.push(html);
+            localStorage.setItem("chatHistory", JSON.stringify(history));
+        }
+
+        function restoreChatFromMemory() {
+            const saved = localStorage.getItem("chatHistory");
+            if (saved) {
+                const messages = JSON.parse(saved);
+                messages.forEach(msg => {
+                    chat.insertAdjacentHTML("beforeend", msg);
+                });
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
         }
 
         function showFormAlert(message, type = 'error') {
@@ -938,8 +1033,7 @@
 
             if (!alertBox || !alertText) return;
 
-            alertBox.classList.remove('hidden');
-            alertBox.classList.remove('bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
+            alertBox.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
 
             if (type === 'error') {
                 alertBox.classList.add('bg-red-100', 'text-red-700');
@@ -992,7 +1086,7 @@
                 body: formData
             }).then(response => {
                 if (!response.ok) {
-                    
+
                     return response.json().then(err => {
                         throw new Error(err.message || 'Something went wrong.');
                     });
@@ -1005,6 +1099,7 @@
                 console.error('Error:', error);
                 showFormAlert(error.message || 'Submission failed. Please try again.');
             });
+        
         }
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -1058,7 +1153,11 @@
                     });
             });
         });
+
     </script>
+
+
+
 
 
 
