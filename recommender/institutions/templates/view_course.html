@@ -2,155 +2,156 @@
 {% load static %}
 
 {% block css_cdn %}
-<link rel="stylesheet" href="{% static 'src/view_course.css' %}">
+
 {% endblock css_cdn %}
 
 {% block content %}
-<!-- Page Wrapper with background + spacing -->
-<div class="bg-white pt-36 pb-20 px-4 flex justify-center">
-    <!-- Fixed-width centered card -->
-    <div class="w-full max-w-xl bg-white border border-purple-300 shadow-lg rounded-2xl p-8">
-        <div class="flex flex-row">
-            <!-- Title -->
-            <h1 class="text-3xl font-extrabold text-center text-gray-900 mb-8">{{ course.course_name }}</h1>
-            <div class="text-center">
-                <button type="button" class="like-btn text-red-600 hover:text-pink-500 me-5"
-                    data-course-id="{{ course.id }}" title="Like this course">
-                    <i
-                        class="{% if course.pk in liked_course %}fa-solid{% else %}fa-regular{% endif %} fa-heart fa-xl"></i>
+
+    <!-- Page Wrapper with background + spacing -->
+    <div class="bg-gradient-to-tr from-indigo-50 to-purple-100 pt-36 pb-20 px-4 flex justify-center">
+        <!-- Fixed-width centered card -->
+        <div class="w-full max-w-xl bg-white border border-purple-300 shadow-lg rounded-2xl p-8 relative">
+            <!-- Button Container (absolute) -->
+            <div class="absolute top-8 right-8 flex flex-col items-end space-y-3">
+                <button type="button" class="like-btn text-red-600 hover:text-pink-500"
+                        data-course-id="{{ course.id }}" title="Like this course">
+                    <i class="{% if course.pk in liked_course %}fa-solid{% else %}fa-regular{% endif %} fa-heart fa-xl"></i>
                 </button>
-                <button type="button" class="bookmark-btn text-purple-700 hover:text-yellow-400 mt-4"
-                    data-course-id="{{ course.id }}" title="Bookmark this course">
+                <button type="button" class="bookmark-btn text-purple-700 hover:text-yellow-400"
+                        data-course-id="{{ course.id }}" title="Bookmark this course">
                     <i class="{% if course.pk in favourite_course %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-xl"
-                        style="color: #5521b5;"></i>
+                       style="color: #5521b5;"></i>
                 </button>
-            </div>
-        </div>
-        <!-- Info Block -->
-        <div class="space-y-6 text-lg text-gray-800">
-            <!-- Description -->
-            <div>
-                <p class="text-xl font-semibold text-gray-700 flex items-center mb-2">
-                    <i class="fa-solid fa-book-open fa-lg text-purple-600 mr-2"></i>
-                    Course Description:
-                </p>
-                <p class="pl-7">{{ course.course_description }}</p>
             </div>
 
-            <!-- Degree -->
-            <div>
-                <p class="text-xl font-semibold text-gray-700 flex items-center">
-                    <i class="fa-solid fa-user-graduate fa-lg text-purple-600 mr-2"></i>
-                    Degree:
-                    <span class="ml-2 font-normal text-gray-800">
+            <!-- Title -->
+            <h1 class="text-3xl font-extrabold text-center text-gray-900 mb-12 break-words pr-16">
+                {{ course.course_name }}
+            </h1>
+
+            <!-- Info Block -->
+            <div class="space-y-6 text-lg text-gray-800">
+                <!-- Description -->
+                <div>
+                    <p class="text-xl font-semibold text-gray-700 flex items-center mb-2">
+                        <i class="fa-solid fa-book-open fa-lg text-purple-600 mr-2"></i>
+                        Course Description:
+                    </p>
+                    <p class="pl-7">{{ course.course_description }}</p>
+                </div>
+
+                <!-- Degree -->
+                <div>
+                    <p class="text-xl font-semibold text-gray-700 flex items-center">
+                        <i class="fa-solid fa-user-graduate fa-lg text-purple-600 mr-2"></i>
+                        Degree:
+                        <span class="ml-2 font-normal text-gray-800">
                         {{ course.degree.degree_description|default:"Not Available" }}
                     </span>
-                </p>
-            </div>
+                    </p>
+                </div>
 
-            <!-- Stream -->
-            <div>
-                <p class="text-xl font-semibold text-gray-700 flex items-center">
-                    <i class="fa-solid fa-graduation-cap fa-lg text-purple-600 mr-2"></i>
-                    Stream:
-                    <span class="ml-2 font-normal text-gray-800">
+                <!-- Stream -->
+                <div>
+                    <p class="text-xl font-semibold text-gray-700 flex items-center">
+                        <i class="fa-solid fa-graduation-cap fa-lg text-purple-600 mr-2"></i>
+                        Stream:
+                        <span class="ml-2 font-normal text-gray-800">
                         {{ course.stream.stream_name|default:"Not Available" }}
                     </span>
-                </p>
+                    </p>
+                </div>
+
+                <!-- Duration -->
+                <div>
+                    <p class="text-xl font-semibold text-gray-700 flex items-center">
+                        <i class="fa-solid fa-clock fa-lg text-purple-600 mr-2"></i>
+                        Duration:
+                        <span class="ml-2 font-normal">{{ course.duration_years }} Years</span>
+                    </p>
+                </div>
+
+                <!-- Price -->
+                <div>
+                    <p class="text-xl font-semibold text-gray-700 flex items-center">
+                        <i class="fa-solid fa-credit-card fa-lg text-purple-600 mr-2"></i>
+                        Price:
+                        <span class="ml-2 font-normal">INR(₹) {{ course.degree_price }}</span>
+                    </p>
+                </div>
             </div>
 
-            <!-- Duration -->
-            <div>
-                <p class="text-xl font-semibold text-gray-700 flex items-center">
-                    <i class="fa-solid fa-clock fa-lg text-purple-600 mr-2"></i>
-                    Duration:
-                    <span class="ml-2 font-normal">{{ course.duration_years }} Years</span>
-                </p>
+            <!-- Back Button -->
+            <div class="mt-10 text-center">
+                <a href="{% url 'institutions:courses' %}"
+                   class="bg-purple-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-700 transition duration-300">
+                    ← Back to Courses
+                </a>
             </div>
-
-            <!-- Price -->
-            <div>
-                <p class="text-xl font-semibold text-gray-700 flex items-center">
-                    <i class="fa-solid fa-credit-card fa-lg text-purple-600 mr-2"></i>
-                    Price:
-                    <span class="ml-2 font-normal">INR(₹) {{ course.degree_price }}</span>
-                </p>
-            </div>
-        </div>
-
-        <!-- Back Button -->
-        <div class="mt-10 text-center">
-            <a href="{% url 'institutions:courses' %}"
-                class="bg-purple-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-700 transition duration-300">
-                ← Back to Courses
-            </a>
         </div>
     </div>
-</div>
-<script>
-    $(document).on('click', '.bookmark-btn', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
 
-        const button = $(this);
-        const icon = button.find('i');
-        const courseId = button.data('course-id') || null;
-        const institutionId = button.data('institution-id') || null;
 
-        $.ajax({
-            url: "{% url 'institutions:toggle_favourite' %}",
-            type: "POST",
-            headers: { 'X-Requested-With': 'XMLHttpRequest' },
-            data: {
-                course_id: courseId,
-                institution_id: institutionId,
-                csrfmiddlewaretoken: '{{ csrf_token }}'
-            },
-            success: function (response) {
-                if (response.status === 'added') {
-                    icon.removeClass('fa-regular').addClass('fa-solid');
-                } else if (response.status === 'removed') {
-                    icon.removeClass('fa-solid').addClass('fa-regular');
+    <script>
+        $(document).on('click', '.bookmark-btn', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const button = $(this);
+            const icon = button.find('i');
+            const courseId = button.data('course-id') || null;
+            const institutionId = button.data('institution-id') || null;
+
+            $.ajax({
+                url: "{% url 'institutions:toggle_favourite' %}",
+                type: "POST",
+                headers: {'X-Requested-With': 'XMLHttpRequest'},
+                data: {
+                    course_id: courseId,
+                    institution_id: institutionId,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function (response) {
+                    if (response.status === 'added') {
+                        icon.removeClass('fa-regular').addClass('fa-solid');
+                    } else if (response.status === 'removed') {
+                        icon.removeClass('fa-solid').addClass('fa-regular');
+                    }
+                },
+                error: function (xhr) {
+                    if (xhr.status === 403) {
+                        alert("You must log in to bookmark items.");
+                    } else {
+                        alert("Error while bookmarking. Please try again.");
+                    }
                 }
-            },
-            error: function (xhr) {
-                if (xhr.status === 403) {
-                    alert("You must log in to bookmark items.");
-                } else {
-                    alert("Error while bookmarking. Please try again.");
+            });
+        });
+
+        $('.like-btn').click(function () {
+            let button = $(this);
+            let icon = button.find('i');
+            let courseId = button.data('course-id');
+
+            icon.toggleClass('fa-regular fa-solid');
+
+            $.ajax({
+                url: '/like-course/',
+                type: 'POST',
+                data: {
+                    course_id: courseId,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function (response) {
+                    console.log('Liked successfully');
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error liking course:', error);
+                    icon.toggleClass('fa-regular fa-solid');
                 }
-            }
+            });
         });
-    });
+    </script>
 
-    // For user like
-    $('.like-btn').click(function () {
-        let button = $(this);
-        let icon = button.find('i');
-        let courseId = button.data('course-id');
 
-        // Toggle icon class
-        icon.toggleClass('fa-regular fa-solid');
-
-        // Send AJAX request
-        $.ajax({
-            url: '/like-course/',
-            type: 'POST',
-            data: {
-                course_id: courseId,
-                csrfmiddlewaretoken: '{{ csrf_token }}'
-            },
-            success: function (response) {
-                console.log('Liked successfully');
-            },
-            error: function (xhr, status, error) {
-                console.error('Error liking course:', error);
-
-                // Optionally revert icon if error occurs
-                icon.toggleClass('fa-regular fa-solid');
-            }
-        });
-    });
-</script>
-{% include 'footer.html' %}
 {% endblock content %}
