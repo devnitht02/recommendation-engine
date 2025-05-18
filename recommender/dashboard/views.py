@@ -1,15 +1,16 @@
 import configparser
 import os
 import smtplib
+from datetime import timedelta
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from datetime import timedelta
+
 from django.contrib import messages
 from django.http import JsonResponse
-from django.utils import timezone
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
-from users.models import WnUser
+from django.utils import timezone
+
 from institutions.models import WnCourse, WnStream, WnState, WnSelectedCourse
 from institutions.models import WnInstitution
 from recommendations.services.course_hybrid import CourseHybrid
@@ -17,22 +18,24 @@ from recommendations.services.institution_hybrid import InstitutionHybrid
 from recommendations.services.recommendation_service import RecommendationService
 from recommender import settings
 from recommender.models import WnContact
+from users.models import WnUser
 
 
 def user_selection_model(user_id):
     registration_data = WnUser.objects.filter(pk=user_id).first()
     if not registration_data:
         return False
-    
+
     input_plus_10 = registration_data.created_date + timedelta(days=10)
-    today = timezone.now() 
+    today = timezone.now()
     if input_plus_10 > today:
         return False
-    
-    if(WnSelectedCourse.objects.filter(user_id=user_id).exists()):
+
+    if (WnSelectedCourse.objects.filter(user_id=user_id).exists()):
         return False
-    
+
     return True
+
 
 def dashboard(request):
     if "user_id" not in request.session:
@@ -57,7 +60,7 @@ def dashboard(request):
         "course_hybrid": course_hybrid,
         "streams": streams,
         'MEDIA_URL': settings.MEDIA_URL,
-        'states' : WnState.objects.filter(active=1),
+        'states': WnState.objects.filter(active=1),
         'institution_selection_model': user_selection_model(user_id),
     }
 
