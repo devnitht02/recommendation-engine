@@ -6,175 +6,172 @@
 {% endblock css_cdn %}
 
 {% block content %}
-    <!-- Contact Page Layout -->
-    <div class="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 flex items-center justify-center px-4 py-24">
-        <div class="w-full max-w-xl bg-white border border-purple-100 rounded-3xl shadow-xl p-10 space-y-6">
+<!-- Contact Page Layout -->
+<div class="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 flex items-center justify-center px-4 py-24">
+    <div class="w-full max-w-xl bg-white border border-purple-100 rounded-3xl shadow-2xl p-10 space-y-6">
 
-            <h1 class="text-center text-3xl font-semibold text-black bg-white py-2 shadow w-full max-w-xl mx-auto mb-6">
-                GET IN TOUCH
-            </h1>
-            <p class="text-center text-gray-500">We’d love to hear from you. Send us a message and we’ll respond as soon
-                as possible.</p>
+        <h1 class="text-center text-3xl font-bold text-gray-800 bg-indigo-100 py-3 shadow w-full max-w-xl mx-auto mb-6 rounded-lg border">
+            GET IN TOUCH
+        </h1>
+        <p class="text-center text-gray-500 text-sm mb-4 leading-relaxed">
+            We’d love to hear from you. Send us a message and we’ll respond as soon as possible.
+        </p>
 
-            <form action="{% url 'dashboard:contact_page' %}" method="POST" class="space-y-6" id="contact-form">
-                {% csrf_token %}
+        <form action="{% url 'dashboard:contact_page' %}" method="POST" class="space-y-6" id="contact-form">
+            {% csrf_token %}
 
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                    <input type="text" id="name" name="name" placeholder="John Doe"
-                           class="mt-1 block w-full rounded-xl border border-gray-300 px-4 py-2 shadow-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500 text-sm"
-                           required>
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <input type="text" id="name" name="name" placeholder="John Doe"
+                       class="block w-full rounded-xl border border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                       required>
+            </div>
+
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com"
+                       class="block w-full rounded-xl border border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                       required>
+            </div>
+
+            <div>
+                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                <textarea id="message" name="message" rows="5" placeholder="Write your message..."
+                          class="block w-full rounded-xl border border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500 resize-none"
+                          required></textarea>
+            </div>
+
+            <button type="submit" id="send-message"
+                    class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl transition duration-300 shadow-lg">
+                Send Message
+            </button>
+
+            <!-- Loading Spinner -->
+            <div id="form-loading" class="flex justify-center mt-4 hidden">
+                <div role="status">
+                    <svg aria-hidden="true" class="w-6 h-6 text-purple-600 animate-spin fill-purple-700"
+                         viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M100 50.59a50 50 0 1 1-10.67-31.49l-8.6 6.4a41.67 41.67 0 1 0 8.62 29.34h10.65z"
+                              fill="currentColor"/>
+                    </svg>
+                    <span class="sr-only">Loading...</span>
                 </div>
+            </div>
 
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="email" id="email" name="email" placeholder="you@example.com"
-                           class="mt-1 block w-full rounded-xl border border-gray-300 px-4 py-2 shadow-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500 text-sm"
-                           required>
-                </div>
-
-                <div>
-                    <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
-                    <textarea id="message" name="message" rows="4" placeholder="Write your message..."
-                              class="mt-1 block w-full rounded-xl border border-gray-300 px-4 py-2 shadow-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500 text-sm resize-none"
-                              required></textarea>
-                </div>
-
-                <button type="submit" id="send-message"
-                        class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl transition duration-300 shadow-lg">
-                    Send Message
-                </button>
-
-                <!-- Loading Spinner -->
-                <div id="form-loading" class="flex justify-center mt-4 hidden">
-                    <div role="status">
-                        <svg aria-hidden="true" class="w-6 h-6 text-purple-600 animate-spin fill-purple-700"
-                             viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M100 50.59a50 50 0 1 1-10.67-31.49l-8.6 6.4a41.67 41.67 0 1 0 8.62 29.34h10.65z"
-                                  fill="currentColor"/>
-                        </svg>
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-
-                <!-- Unified Info Popup -->
-                <div id="info-popup"
-                     class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 hidden z-50 flex items-center justify-center">
-                    <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm text-center">
-                        <!-- Loading spinner -->
-                        <div id="popup-loader" class="flex justify-center mb-4 hidden">
-                            <div role="status">
-                                <svg aria-hidden="true" class="w-8 h-8 text-purple-500 animate-spin fill-purple-700"
-                                     viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M100 50.59a50 50 0 1 1-10.67-31.49l-8.6 6.4a41.67 41.67 0 1 0 8.62 29.34h10.65z"
-                                          fill="currentColor"/>
-                                </svg>
-                            </div>
+            <!-- Unified Info Popup -->
+            <div id="info-popup"
+                 class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 hidden z-50 flex items-center justify-center">
+                <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm text-center relative">
+                    <!-- Loading spinner -->
+                    <div id="popup-loader" class="flex justify-center mb-4 hidden">
+                        <div role="status">
+                            <svg aria-hidden="true" class="w-8 h-8 text-purple-500 animate-spin fill-purple-700"
+                                 viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M100 50.59a50 50 0 1 1-10.67-31.49l-8.6 6.4a41.67 41.67 0 1 0 8.62 29.34h10.65z"
+                                      fill="currentColor"/>
+                            </svg>
                         </div>
-
-                        <h2 class="text-2xl font-semibold text-purple-700 mb-2" id="popup-title">Message</h2>
-                        <p class="text-gray-600 mb-4" id="popup-message"></p>
-
-                        <a href="#" id="popup-button"
-                           data-url-home="{% url 'dashboard:dashboard' %}"
-                           class="hidden text-white bg-purple-600 hover:bg-purple-700 font-medium py-2 px-4 rounded-lg transition">
-                            Close
-                        </a>
                     </div>
+
+                    <h2 class="text-xl font-semibold text-purple-700 mb-2" id="popup-title">Message</h2>
+                    <p class="text-gray-600 text-sm mb-4" id="popup-message"></p>
+
+                    <a href="#" id="popup-button"
+                       data-url-home="{% url 'dashboard:dashboard' %}"
+                       class="hidden inline-block text-white bg-purple-600 hover:bg-purple-700 font-medium py-2 px-4 rounded-lg transition">
+                        Close
+                    </a>
                 </div>
+            </div>
 
-            </form>
+        </form>
 
-        </div>
     </div>
+</div>
 
+<script>
+    $(document).ready(function () {
+        $('#send-message').click(function (e) {
+            e.preventDefault();
 
-    <script>
-        $(document).ready(function () {
-            $('#send-message').click(function (e) {
-                e.preventDefault();
+            const name = $('#name').val().trim();
+            const email = $('#email').val().trim();
+            const message = $('#message').val().trim();
 
-                const name = $('#name').val().trim();
-                const email = $('#email').val().trim();
-                const message = $('#message').val().trim();
-
-                if (!name || !email || !message) {
-                    showPopup("Validation Error", "All fields are required.", "validation");
-                    return;
-                }
-
-                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailPattern.test(email)) {
-                    showPopup("Invalid Email", "Please enter a valid email address.", "validation");
-                    return;
-                }
-
-                const form = $('#contact-form')[0];
-                const formData = new FormData(form);
-
-                showPopup("", "", "loading");
-
-                $.ajax({
-                    url: $(form).attr('action'),
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    headers: {'X-Requested-With': 'XMLHttpRequest'},
-                    success: function (response) {
-                        if (response.status === "success") {
-                            showPopup("Message Sent", "", "success");
-                            form.reset();
-                        } else if (response.status === "error" && response.reason === "duplicate") {
-                            showPopup("Already Sent", "You've already submitted a message with this email.", "validation");
-                        } else if (response.status === "error" && response.reason === "email_fail") {
-                            showPopup("Email Failed", "There was a problem sending the email. Try again later.", "error");
-                        } else {
-                            showPopup("Unexpected Error", "An unexpected issue occurred.", "error");
-                        }
-                    },
-                    error: function () {
-                        showPopup("Server Error", "Unable to send message right now. Please try again.", "error");
-                    }
-                });
-            });
-
-            function showPopup(title, message, status) {
-                $('#popup-title').text(title);
-                $('#popup-message').text(message);
-                $('#info-popup').removeClass('hidden');
-
-                const popupBtn = $('#popup-button');
-                const popupLoader = $('#popup-loader');
-                const homeUrl = popupBtn.data("url-home");
-
-                if (status === "loading") {
-                    popupLoader.removeClass('hidden');
-                    popupBtn.addClass('hidden');
-                    $('#popup-title').text("Processing...");
-                    $('#popup-message').text("Please wait while we send your message...");
-                    return;
-                }
-
-                popupLoader.addClass('hidden');
-
-                if (status === "success") {
-                    $('#popup-title').text("Thank You!");
-                    $('#popup-message').text("Thank you for your email. We'll be in touch with you soon.");
-                    popupBtn.addClass('hidden');
-
-                    setTimeout(() => {
-                        window.location.href = homeUrl;
-                    }, 1000);
-                } else {
-                    popupBtn.text("Close").removeClass('hidden').attr("href", "#").off("click").on("click", function (e) {
-                        e.preventDefault();
-                        $('#info-popup').addClass('hidden');
-                    });
-                }
+            if (!name || !email || !message) {
+                showPopup("Validation Error", "All fields are required.", "validation");
+                return;
             }
+
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                showPopup("Invalid Email", "Please enter a valid email address.", "validation");
+                return;
+            }
+
+            const form = $('#contact-form')[0];
+            const formData = new FormData(form);
+
+            showPopup("", "", "loading");
+
+            $.ajax({
+                url: $(form).attr('action'),
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: {'X-Requested-With': 'XMLHttpRequest'},
+                success: function (response) {
+                    if (response.status === "success") {
+                        showPopup("Message Sent", "", "success");
+                        form.reset();
+                    } else if (response.status === "error" && response.reason === "duplicate") {
+                        showPopup("Already Sent", "You've already submitted a message with this email.", "validation");
+                    } else if (response.status === "error" && response.reason === "email_fail") {
+                        showPopup("Email Failed", "There was a problem sending the email. Try again later.", "error");
+                    } else {
+                        showPopup("Unexpected Error", "An unexpected issue occurred.", "error");
+                    }
+                },
+                error: function () {
+                    showPopup("Server Error", "Unable to send message right now. Please try again.", "error");
+                }
+            });
         });
 
+        function showPopup(title, message, status) {
+            $('#popup-title').text(title);
+            $('#popup-message').text(message);
+            $('#info-popup').removeClass('hidden');
 
-    </script>
+            const popupBtn = $('#popup-button');
+            const popupLoader = $('#popup-loader');
+            const homeUrl = popupBtn.data("url-home");
+
+            if (status === "loading") {
+                popupLoader.removeClass('hidden');
+                popupBtn.addClass('hidden');
+                $('#popup-title').text("Processing...");
+                $('#popup-message').text("Please wait while we send your message...");
+                return;
+            }
+
+            popupLoader.addClass('hidden');
+
+            if (status === "success") {
+                $('#popup-title').text("Thank You!");
+                $('#popup-message').text("Thank you for your email. We'll be in touch with you soon.");
+                popupBtn.addClass('hidden');
+                setTimeout(() => {
+                    window.location.href = homeUrl;
+                }, 1000);
+            } else {
+                popupBtn.text("Close").removeClass('hidden').attr("href", "#").off("click").on("click", function (e) {
+                    e.preventDefault();
+                    $('#info-popup').addClass('hidden');
+                });
+            }
+        }
+    });
+</script>
 {% endblock content %}
