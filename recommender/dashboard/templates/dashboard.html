@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{% static 'src/dashboard.css' %}">
     <link rel="stylesheet" href="{% static 'src/chatbot.css' %}">
     <style>
-    
+
         @keyframes fade-in {
             from {
                 opacity: 0;
@@ -90,37 +90,50 @@
                 <label for="default-search" class="mb-2 text-sm font-medium text-purple-900 sr-only">Search</label>
 
                 <div class="relative search-div">
-
+                    <!-- Search Icon -->
                     <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                        <svg class="w-5 h-5 text-purple-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                             fill="none" viewBox="0 0 20 20">
+                        <svg class="w-5 h-5 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                             viewBox="0 0 20 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                   stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                         </svg>
                     </div>
 
+                    <!-- Search Input -->
                     <input type="search" id="default-search"
-                           class="block w-full py-4 pl-12 pr-10 text-sm text-purple-900 border border-purple-300 rounded-lg bg-purple-50 focus:ring-purple-500 focus:border-purple-500 shadow-sm transition"
-                           placeholder="Search for Degrees and Institutions..." required
-                           aria-label="Search input field for degrees and institutions"/>
+                           class="block w-full py-4 pl-12 pr-24 text-sm text-purple-900 border border-purple-300 rounded-lg bg-purple-50 focus:ring-purple-500 focus:border-purple-500 shadow-sm transition"
+                           placeholder="Search for Degrees and Institutions..." required/>
 
+                    <!-- Clear Button -->
+                    <button type="button" onclick="clearSearch()"
+                            class="absolute right-24 top-1/2 -translate-y-1/2 text-red-500 focus:outline-none z-20"
+                            title="Clear">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+
+                    <!-- Search Button -->
                     <button type="submit"
-                            class="text-white absolute end-2.5 bottom-2.5 bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2 transition shadow">
+                            class="text-white absolute right-2.5 bottom-2.5 bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2 transition shadow">
                         Search
                     </button>
 
+                    <!-- Suggestions -->
                     <ul id="suggestions-list" class="suggestion-list"
                         style="position: absolute; width: 100%; background-color: white; border: 1px solid #ccc; display: none; margin-top: 3.42rem; border-radius: 0.75rem; box-shadow: 0 6px 12px rgba(0,0,0,0.05); z-index: 10;">
                     </ul>
                 </div>
+
             </form>
 
 
             {#HEADINGS#}
             <div class="grid max-w-screen-xl px-4 pt-20 pb-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 lg:pt-28">
                 <div class="mr-auto place-self-center lg:col-span-7 heading-div">
-                    <h1
-                            class="max-w-2xl mb-4 text-4xl font-extrabold leading-none tracking-tight md:text-5xl xl:text-6xl
+                    <h1 class="max-w-2xl mb-4 text-4xl font-extrabold leading-none tracking-tight md:text-5xl xl:text-6xl
                               heading1">
                         Discover the Best Degree & Institution for You </h1>
                     <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl heading2"
@@ -1099,7 +1112,7 @@
                 console.error('Error:', error);
                 showFormAlert(error.message || 'Submission failed. Please try again.');
             });
-        
+
         }
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -1153,6 +1166,15 @@
                     });
             });
         });
+
+        function clearSearch() {
+            const input = document.getElementById('default-search');
+            input.value = '';
+            input.focus();
+
+            const suggestionList = document.getElementById('suggestions-list');
+            if (suggestionList) suggestionList.style.display = 'none';
+        }
 
     </script>
 

@@ -28,17 +28,17 @@ section.top-banner {
 
 .heading-div {
     position: relative;
-    right: 12rem;
-    top: 1rem;
+    right: 13rem;
+    top: 2rem;
     z-index: 1;
 }
 
 
 .search-div {
-    width: 260%;
+    width: 225%;
     position: relative;
     bottom: 14rem;
-    left: 27rem;
+    left: 24rem;
     border: solid mediumpurple;
     border-radius: 16px;
     background-color: white;
