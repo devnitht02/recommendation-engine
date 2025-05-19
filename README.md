@@ -4,7 +4,7 @@
 
 ---
 
-![Final Product](https://github.com/devnith02/recommendation-engine/raw/main/static/assets/images/final-product)
+![Final Product](https://github.com/devinith02/recommendation-engine/raw/main/static/assets/images/final-product/final-product.png)
 
 
 ## 🔍 Overview
