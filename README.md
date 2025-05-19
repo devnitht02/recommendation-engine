@@ -4,6 +4,9 @@
 
 ---
 
+![Final Product](https://github.com/devnith02/recommendation-engine/raw/main/static/assets/images/final-product)
+
+
 ## 🔍 Overview
 
 **Pathfinder** is a hybrid academic recommendation engine tailored to assist students in making informed educational decisions. 
