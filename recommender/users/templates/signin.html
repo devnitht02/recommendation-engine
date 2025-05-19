@@ -14,7 +14,8 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <div class="container mx-auto px-4 overflow-y-hidden bg-gradient-to-tr from-indigo-50 to-purple-100">
-        <div class="h-screen flex items-center justify-center w-full bg-gradient-to-tr from-indigo-50 to-purple-100" id="auth">
+        <div class="h-screen flex items-center justify-center w-full bg-gradient-to-tr from-indigo-50 to-purple-100"
+             id="auth">
             <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
 
                 <form method="POST" action="/signin/" class="max-w-sm mx-auto bg-white p-6 shadow-md rounded-lg border"
@@ -91,7 +92,7 @@
 
         function handleCredentialResponse(response) {
             const data = response.credential;
-            console.log(data)
+
             const userData = {
                 token: data
             };
@@ -101,16 +102,17 @@
                 body: JSON.stringify(userData),
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken' : "{{csrf_token}}"
+                    'X-CSRFToken': "{{csrf_token}}"
                 }
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
-                        window.location.href = '/dashboard:dashboard';
+                    if (data.message == 'success') {
+                        window.location.href = '{% url "dashboard:dashboard" %}';
                     } else {
                         alert("Authentication failed.");
                     }
+
                 });
         }
 

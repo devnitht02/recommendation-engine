@@ -23,7 +23,7 @@ adaptive learning, and chatbot integration to provide inclusive guidance.
 
 ### 📋 Prerequisites
 
-* **Python 3.8+**
+* **Python 3.10+**
 * **Docker Desktop**
 
   * Enable WSL2 integration

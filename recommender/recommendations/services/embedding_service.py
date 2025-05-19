@@ -5,9 +5,10 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class EmbeddingService:
     _model = None
-    
+
     @classmethod
     def get_model(cls):
         if cls._model is None:
@@ -20,7 +21,7 @@ class EmbeddingService:
                 logger.error(f"Failed to load embedding model: {str(e)}")
                 raise
         return cls._model
-    
+
     @classmethod
     def generate_embeddings(cls, texts: list) -> np.ndarray:
         """Generate embeddings for a list of text strings"""
