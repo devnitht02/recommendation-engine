@@ -124,19 +124,7 @@ DATABASES = {
             'charset': 'utf8mb4',
         },
     },
-    'railway': {
-        # Railway database configuration
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'st_recommendation',
-        'USER': 'root',
-        'PASSWORD': 'wbNFlesvPDoCWtrKCaQayrxhjLMDyCLY',
-        'HOST': 'turntable.proxy.rlwy.net',
-        'PORT': '27548',
-        'OPTIONS': {
-            'autocommit': True,
-            'charset': 'utf8mb4',
-        },
-    }
+
 }
 
 # Determine which database to use based on the environment
