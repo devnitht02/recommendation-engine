@@ -200,7 +200,7 @@
 </header>
 
 
-<main class=" ">
+<main>
     {% block content %}
 
 
@@ -227,7 +227,7 @@
 
         const greetingEl = document.getElementById("dynamic-greeting");
         const userName = greetingEl.getAttribute("data-username");
-        greetingEl.textContent = `${greeting} ${userName}`;
+        greetingEl.textContent = `${greeting}, ${userName}`;
     });
 
     function showLogoutPopup() {
