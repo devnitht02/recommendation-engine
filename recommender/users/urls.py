@@ -28,4 +28,5 @@ urlpatterns = [
 
                   path('google-callback/', views.google_auth_callback, name='google_callback'),
 
+
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

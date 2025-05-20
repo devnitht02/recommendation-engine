@@ -76,6 +76,12 @@
                             Forgot your password?
                         </a>
                     </div>
+                    <!-- Google Sign-In Spinner-->
+                    <div id="google-loader" class="flex items-center justify-center mt-4 hidden">
+                        <div class="w-6 h-6 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                        <span class="ml-2 text-sm text-gray-600">Signing you in...</span>
+                    </div>
+
                 </form>
 
                 <!-- Tailwind Modal -->
@@ -111,11 +117,12 @@
         });
 
         function handleCredentialResponse(response) {
-            const data = response.credential;
+            // Show spinner, hide Google button
+            document.querySelector('.g_id_signin').style.display = 'none';
+            document.getElementById('google-loader').classList.remove('hidden');
 
-            const userData = {
-                token: data
-            };
+            const data = response.credential;
+            const userData = {token: data};
 
             fetch('{% url "users:google_callback" %}', {
                 method: 'POST',
@@ -127,12 +134,19 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.message == 'success') {
+                    if (data.message === 'success') {
                         window.location.href = '{% url "dashboard:dashboard" %}';
                     } else {
                         alert("Authentication failed.");
+                        // Restore button, hide spinner
+                        document.querySelector('.g_id_signin').style.display = '';
+                        document.getElementById('google-loader').classList.add('hidden');
                     }
-
+                })
+                .catch(() => {
+                    alert("Error occurred.");
+                    document.querySelector('.g_id_signin').style.display = '';
+                    document.getElementById('google-loader').classList.add('hidden');
                 });
         }
 

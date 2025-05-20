@@ -26,6 +26,7 @@ from users.models import WnUser
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
+
 def is_valid_password(password):
     return bool(re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$', password))
 
@@ -56,26 +57,31 @@ def signup(request):
 def signin(request):
     if request.method == 'POST':
         list(messages.get_messages(request))
+
         email = request.POST.get("email")
         password = request.POST.get("password")
 
         user = WnUser.objects.filter(email=email).first()
 
         if not user and not is_valid_password(password):
-            messages.error(request, "Both email and password are invalid.")
-            return redirect('users:signin')
+            return render(request, "signin_popup.html", {
+                "error": "Both email and password are invalid."
+            })
 
         if not user:
-            messages.error(request, "No account found with that email.")
-            return redirect('users:signin')
+            return render(request, "signin_popup.html", {
+                "error": "No account found with that email."
+            })
 
         if not is_valid_password(password):
-            messages.error(request, "Password format is invalid. It must include uppercase, lowercase, and a digit.")
-            return redirect('users:signin')
+            return render(request, "signin_popup.html", {
+                "error": "Password format is invalid. It must include uppercase, lowercase, and a digit."
+            })
 
         if not check_password(password, user.password):
-            messages.error(request, "Incorrect password.")
-            return redirect('users:signin')
+            return render(request, "signin_popup.html", {
+                "error": "Incorrect password."
+            })
 
         # Valid login
         request.session['user_id'] = user.id
@@ -83,10 +89,11 @@ def signin(request):
         request.session['user_email'] = user.email
         if user.profile_picture:
             request.session['profile_picture'] = user.profile_picture.url
-        messages.success(request, "Signed in successfully.")
         user.last_login = now()
         user.save()
-        return redirect('dashboard:dashboard')
+        return render(request, "signin_popup.html", {
+            "success": True
+        })
 
     return render(request, 'signin.html')
 
@@ -133,6 +140,7 @@ def verify_google_token(id_token_str):
     except ValueError:
         return None
 
+
 def google_auth_callback(request):
     try:
         data = json.loads(request.body)
@@ -174,16 +182,17 @@ def google_auth_callback(request):
             if user_profile:
                 request.session['profile_picture'] = user_profile
         # messages.success(request, "Signed in successfully.")
-        return JsonResponse({"message" : "success"})
+        return JsonResponse({"message": "success"})
     except Exception as e:
-        return JsonResponse({"message" : str(e)},status=500)
+        return JsonResponse({"message": str(e)}, status=500)
+
+
+from django.shortcuts import render, redirect
 
 def signout(request):
     if 'user_id' in request.session:
         request.session.flush()
-        messages.success(request, "You have been logged out.")
-    else:
-        messages.warning(request, "You are not logged in.")
+        return render(request, 'logout_popup.html')
     return redirect('dashboard:dashboard')
 
 
