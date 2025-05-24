@@ -14,7 +14,7 @@ class CourseHybrid:
         user = WnUser.objects.filter(pk=user_id).first()
         data = {
             "user_name": user.user_name,
-            "stream" : user.stream
+            "stream": user.stream
         }
         if hasattr(user, "state"):
             data["state_name"] = user.state.name
@@ -35,14 +35,18 @@ class CourseHybrid:
             data["district_choice"].append(choice.district.name)
 
         data["favourite_courses"] = []
-        favourite_courses = WnFavourite.objects.select_related("course","course__stream","course__degree").filter(user_id = user_id,course__isnull = False)
+        favourite_courses = WnFavourite.objects.select_related("course", "course__stream", "course__degree").filter(
+            user_id=user_id, course__isnull=False)
         for course in favourite_courses:
-            data["favourite_courses"].append(f"{course.course.course_name} {course.course.stream.stream_name} {course.course.degree.degree_name} degree_description")
+            data["favourite_courses"].append(
+                f"{course.course.course_name} {course.course.stream.stream_name} {course.course.degree.degree_name} degree_description")
 
         data["course_choice"] = []
-        favourite_courses = WnCourseChoice.objects.select_related("course","course__stream","course__degree").filter(user_id = user_id,active="1")
+        favourite_courses = WnCourseChoice.objects.select_related("course", "course__stream", "course__degree").filter(
+            user_id=user_id, active="1")
         for course in favourite_courses:
-            data["course_choice"].append(f"{course.course.course_name} {course.course.stream.stream_name} {course.course.degree.degree_name} degree_description")
+            data["course_choice"].append(
+                f"{course.course.course_name} {course.course.stream.stream_name} {course.course.degree.degree_name} degree_description")
 
         return data
 
@@ -63,22 +67,27 @@ class CourseHybrid:
         print(query)
         ins = RecommendationService()
         results = ins.recommend_course(query, top_n)
+        print(f"CB SIMILARITY SCORE FOR COURSES:\n {results}")
 
         results.rename(columns={"object_id": "course_id", "similarity": "cb_score"}, inplace=True)
         cb_df = results[['course_id', 'cb_score']]
 
         collab = CourseCollaborative()
         cf_df = collab.recommend(user_id, top_n)
+        print(f"CF CORE FOR COURSES:\n {cf_df}")
         if cf_df.empty:
             return cb_df
 
         hybrid_df = pd.merge(cb_df, cf_df, on="course_id", how="outer")
+        print(f"HYBRID SCORES FOR COURSES:\n {hybrid_df}")
         # Fill missing scores with 0
         hybrid_df["cb_score"] = hybrid_df["cb_score"].fillna(0)
         hybrid_df["cf_score"] = hybrid_df["cf_score"].fillna(0)
         scaler = MinMaxScaler()
         hybrid_df["cb_score_scaled"] = scaler.fit_transform(hybrid_df["cb_score"].values.reshape(-1, 1)).flatten()
         hybrid_df["cf_score_scaled"] = scaler.fit_transform(hybrid_df["cf_score"].values.reshape(-1, 1)).flatten()
+
+        print(f"HYBRID SCORES FOR COURSES:\n {hybrid_df}")
 
         # Combine using weights
         alpha = 0.4

@@ -62,7 +62,7 @@ class ChatBotService:
 
     def __llm(self, prompt):
         groq_client = Groq(
-            # This is the default and can be omitted
+            # The default api key
             api_key="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",
         )
 
@@ -81,7 +81,7 @@ class ChatBotService:
         # Create chat completion
         chat_completion = groq_client.chat.completions.create(
             messages=messages,
-            model="llama3-70b-8192",  # This is the supported model in Groq
+            model="llama3-70b-8192",  # The supported model in Groq
         )
 
         # Print the result

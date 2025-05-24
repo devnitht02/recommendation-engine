@@ -50,8 +50,9 @@
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {% for institution in recommend_institution %}
-                    <a href="{% url 'institutions:view_institution' institution.id %}" class="flex-1">
-                        <div class="relative p-6 bg-white border border-purple-200 rounded-2xl shadow hover:shadow-lg hover:bg-indigo-50 transition duration-300 h-full flex flex-col justify-between">
+
+                    <div class="relative p-6 bg-white border border-purple-200 rounded-2xl shadow hover:shadow-lg hover:bg-indigo-50 transition duration-300 h-full flex flex-col justify-between">
+                        <a href="{% url 'institutions:view_institution' institution.id %}" class="flex-1">
                             <img src="{% static 'assets/images/institutions.jpeg' %}"
                                  alt="{{ course.course_name }}"
                                  class="w-full h-40 object-cover rounded-md mb-4 shadow-sm">
@@ -61,23 +62,23 @@
                                     class="text-blue-600 font-medium">{{ institution.state.name }}</span></p>
                             <p class="text-sm text-gray-600">District: <span
                                     class="text-blue-600 font-medium">{{ institution.district.name }}</span></p>
-
-                            <div class="text-end" style="text-align: end;">
-                                <button type="button" class="like-btn text-red-600 hover:text-pink-500 me-5"
-                                        data-institution-id="{{ institution.id }}" title="Like this institution"
-                                        style="margin-right: 15px;">
-                                    <i
-                                            class="{% if institution.pk in liked_institution %}fa-solid{% else %}fa-regular{% endif %} fa-heart fa-lg"></i>
-                                </button>
-                                <button type="button" class="bookmark-btn text-purple-700 hover:text-yellow-400"
-                                        data-institution-id="{{ institution.id }}" title="Bookmark this institution">
-                                    <i class="{% if institution.pk in favourite_institution %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg"
-                                       style="color: #5521b5;"></i>
-                                </button>
-                            </div>
-
+                        </a>
+                        <div class="text-end" style="text-align: end;">
+                            <button type="button" class="like-btn text-red-600 hover:text-pink-500 me-5"
+                                    data-institution-id="{{ institution.id }}" title="Like this institution"
+                                    style="margin-right: 15px;">
+                                <i
+                                        class="{% if institution.pk in liked_institution %}fa-solid{% else %}fa-regular{% endif %} fa-heart fa-lg"></i>
+                            </button>
+                            <button type="button" class="bookmark-btn text-purple-700 hover:text-yellow-400"
+                                    data-institution-id="{{ institution.id }}" title="Bookmark this institution">
+                                <i class="{% if institution.pk in favourite_institution %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg"
+                                   style="color: #5521b5;"></i>
+                            </button>
                         </div>
-                    </a>
+
+                    </div>
+
                 {% empty %}
                     <p class="text-center text-gray-700 col-span-3">No institutions available.</p>
                 {% endfor %}

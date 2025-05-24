@@ -10,14 +10,15 @@ from sklearn.preprocessing import LabelEncoder
 # For Data
 from institutions.models import WnCourseChoice, WnSelectedCourse
 
+
 class CourseCollaborative:
 
     def get_course_choice(self):
-        data = WnCourseChoice.objects.filter(active=1).values("user_id","course_id")
+        data = WnCourseChoice.objects.filter(active=1).values("user_id", "course_id")
         return pd.DataFrame(list(data))
-    
+
     def get_selected_course(self):
-        data = WnSelectedCourse.objects.filter(active=1).values("user_id","course_id")
+        data = WnSelectedCourse.objects.filter(active=1).values("user_id", "course_id")
         return pd.DataFrame(list(data))
 
     def train_svd_model(self):
@@ -52,13 +53,13 @@ class CourseCollaborative:
 
         # Overwrite with stronger weight if selected
         for row in selected_df.itertuples():
-            interaction_matrix[row.user_idx, row.course_idx] = 10 
+            interaction_matrix[row.user_idx, row.course_idx] = 10
 
         """ Apply TruncatedSVD """
         svd = TruncatedSVD(n_components=5, random_state=42)
         user_latent = svd.fit_transform(interaction_matrix)
         course_latent = svd.components_.T
-        
+
         numpy_dir = "ml_files/numpy"
         os.makedirs(numpy_dir, exist_ok=True)
 
@@ -96,9 +97,8 @@ class CourseCollaborative:
             print("Model trained and latent matrices loaded.")
 
         return user_latent, course_latent, interaction_matrix, course_encoder, user_encoder
-    
 
-    def recommend(self,user_id,top_n = 5):
+    def recommend(self, user_id, top_n=5):
         user_latent, course_latent, interaction_matrix, course_encoder, user_encoder = self.load_or_train()
 
         try:
@@ -116,9 +116,10 @@ class CourseCollaborative:
             top_courses = course_encoder.inverse_transform(top_n_indices)
             top_scores = scores[top_n_indices]
             return pd.DataFrame({
-                        "course_id": top_courses,
-                        "cf_score": top_scores
-                    })
+                "course_id": top_courses,
+                "cf_score": top_scores
+            })
 
         except Exception as e:
+            print(f"content based error: {e}")
             return pd.DataFrame({})

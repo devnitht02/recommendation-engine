@@ -54,8 +54,9 @@
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {% for course in recommend_course %}
-                    <a href="{% url 'institutions:view_course' course.id %}" class="flex-1">
-                        <div class="relative p-6 bg-white border border-purple-500 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
+
+                    <div class="relative p-6 bg-white border border-purple-500 rounded-lg shadow-sm hover:bg-gray-100 h-full flex flex-col justify-between">
+                        <a href="{% url 'institutions:view_course' course.id %}" class="flex-1">
                             <img src="
                                 {% static 'assets/images/degrees.jpeg' %}"
                                  alt="{{ course.course_name }}"
@@ -70,21 +71,22 @@
                             <p class="font-normal text-gray-700">Stream:
                                 <span class="text-blue-500">{{ course.stream.stream_name|default:"No Stream Available" }}</span>
                             </p>
+                        </a>
 
-                            <div class="text-end" style="text-align: end;">
-                                <button type="button" class="like-btn text-red-600 hover:text-pink-500 me-5"
-                                        data-course-id="{{ course.id }}" title="Like this course"
-                                        style="margin-right: 15px;">
-                                    <i class="{% if course.pk in liked_course %}fa-solid{% else %}fa-regular{% endif %} fa-heart fa-lg"></i>
-                                </button>
-                                <button type="button" class="bookmark-btn text-purple-700 hover:text-yellow-400"
-                                        data-course-id="{{ course.id }}" title="Bookmark this course">
-                                    <i class="{% if course.pk in favourite_course %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg"
-                                       style="color: #5521b5;"></i>
-                                </button>
-                            </div>
+                        <div class="text-end" style="text-align: end;">
+                            <button type="button" class="like-btn text-red-600 hover:text-pink-500 me-5"
+                                    data-course-id="{{ course.id }}" title="Like this course"
+                                    style="margin-right: 15px;">
+                                <i class="{% if course.pk in liked_course %}fa-solid{% else %}fa-regular{% endif %} fa-heart fa-lg"></i>
+                            </button>
+                            <button type="button" class="bookmark-btn text-purple-700 hover:text-yellow-400"
+                                    data-course-id="{{ course.id }}" title="Bookmark this course">
+                                <i class="{% if course.pk in favourite_course %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark fa-lg"
+                                   style="color: #5521b5;"></i>
+                            </button>
                         </div>
-                    </a>
+                    </div>
+
                 {% empty %}
                     <p class="text-center text-gray-700 col-span-3">No courses available.</p>
                 {% endfor %}

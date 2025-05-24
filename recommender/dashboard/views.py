@@ -75,6 +75,8 @@ def search_suggestions(request):
         ins = RecommendationService()
         search_data = ins.global_search(query)
 
+        # search_data = search_engine.search(query)
+
         course_results = WnCourse.objects.filter(course_name__icontains=query)
 
         institution_results = WnInstitution.objects.filter(institution_name__icontains=query)

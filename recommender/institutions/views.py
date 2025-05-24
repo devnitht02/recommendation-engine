@@ -17,24 +17,35 @@ from .models import WnInstitution, WnCourse
 def institutions(request):
     institution_data = WnInstitution.objects.select_related("state", "district")
     wn_user = None
+
     if request.user.is_authenticated:
         wn_user = WnUser.objects.filter(email=request.user.email).first()
+
+    # Prevent KeyError on unauthenticated session
+    if 'user_id' not in request.session:
+        return redirect('users:signin')
 
     user_id = request.session["user_id"]
 
     favourite_data = WnFavourite.objects.filter(user_id=user_id)
-    favourite_institution = [data.institution.pk for data in favourite_data if
-                             hasattr(data, "institution") and data.institution]
+    favourite_institution = [
+        data.institution.pk for data in favourite_data
+        if hasattr(data, "institution") and data.institution
+    ]
 
     search_suggestion_institutions = request.GET.get('query', '')
+
     context = {
-                'institution_data': institution_data,
-                'search_suggestions_institutions': search_suggestion_institutions,
-                'wn_user': wn_user,
-                'favourite_institution' : favourite_institution,
-                'recommend_institution': InstitutionHybrid().get_hybrid_institutions(user_id,9),
-                'liked_institution' : WnInstitutionChoice.objects.filter(user_id=user_id,active="1").values_list("institution_id",flat=True)
-            }
+        'institution_data': institution_data,
+        'search_suggestions_institutions': search_suggestion_institutions,
+        'wn_user': wn_user,
+        'favourite_institution': favourite_institution,
+        'recommend_institution': InstitutionHybrid().get_hybrid_institutions(user_id, 9),
+        'liked_institution': WnInstitutionChoice.objects.filter(
+            user_id=user_id, active="1"
+        ).values_list("institution_id", flat=True)
+    }
+
     return render(request, 'institutions.html', context)
 
 

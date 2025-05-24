@@ -15,22 +15,25 @@ class InstitutionHybrid:
         user = WnUser.objects.filter(pk=user_id).first()
         data = {
             "user_name": user.user_name,
-            "stream" : user.stream
+            "stream": user.stream
         }
         if hasattr(user, "state"):
             data["state_name"] = user.state.name
 
         if hasattr(user, "district"):
-            data["state_name"] = user.district.name
+            data["district_name"] = user.district.name
 
         stream_choice = WnStreamChoice.objects.filter(user_id=user_id).first()
         if stream_choice:
             data["stream_choice"] = stream_choice.stream.stream_name
 
         data["institution_choice"] = []
-        institution_choice = WnInstitutionChoice.objects.select_related("institution","institution__state","institution__district").filter(user_id = user_id,active='1')
+        institution_choice = WnInstitutionChoice.objects.select_related("institution", "institution__state",
+                                                                        "institution__district").filter(user_id=user_id,
+                                                                                                        active='1')
         for institution in institution_choice:
-            data["institution_choice"].append(f"{institution.institution.institution_name} {institution.institution.state.name} {institution.institution.district.name}")
+            data["institution_choice"].append(
+                f"{institution.institution.institution_name} {institution.institution.state.name} {institution.institution.district.name}")
 
         location_choice = WnLocationChoice.objects.filter(user_id=user)
         data["state_choice"] = []
@@ -41,28 +44,25 @@ class InstitutionHybrid:
             data["district_choice"].append(choice.district.name)
 
         data["favourite_institutions"] = []
-        favourite_institutions = WnFavourite.objects.select_related("institution","institution__state","institution__district").filter(user_id = user_id,institution__isnull = False)
+        favourite_institutions = WnFavourite.objects.select_related("institution", "institution__state",
+                                                                    "institution__district").filter(user_id=user_id,
+                                                                                                    institution__isnull=False)
         for institution in favourite_institutions:
-            data["favourite_institutions"].append(f"{institution.institution.institution_name} {institution.institution.state.name} {institution.institution.district.name}")
+            data["favourite_institutions"].append(
+                f"{institution.institution.institution_name} {institution.institution.state.name} {institution.institution.district.name}")
 
-        # queryset = WnUser.objects.filter(pk=user_id).values(
-        #     "hsc_percentage",
-        #     "user_gender", # LEFT JOIN
-        #     stream_choice=F('wnstreamchoice__stream__stream_name'),  # LEFT JOIN
-        #     state_choice=F('wnlocationchoice__state__name'),        # LEFT JOIN
-        #     district_choice=F('wnlocationchoice__district__name'),   # LEFT JOIN
-        # )
         return data
 
     def recommend(self, user_id, top_n):
         data = self.get_user_data(user_id)
+        print(data)
 
         states = set(data["state_choice"])
         districts = set(data["district_choice"])
 
         query = data.get("stream_choice", "") + " ".join(
             f"{district}" for district in districts) + " ".join(f"{state}" for state in states)
-        
+
         if data["stream"]:
             query += f' {data["stream"]} '
 
@@ -72,18 +72,23 @@ class InstitutionHybrid:
         if data["institution_choice"]:
             query += " ".join(f"{institution}" for institution in data["institution_choice"])
 
+        print(f"USERS QUERY: {query}")
+
         ins = RecommendationService()
         results = ins.recommend_institution(query, top_n)
+        print(f"COSINE SIMILARITY SCORE FOR INSTITUTIONS:\n {results}")
 
         results.rename(columns={"object_id": "institution_id", "similarity": "cb_score"}, inplace=True)
         cb_df = results[['institution_id', 'cb_score']]
 
         collab = InstitutionCollaborative()
         cf_df = collab.recommend(user_id, top_n)
+        print(f"CF SCORE FOR INSTITUTIONS:\n {cf_df}")
         if cf_df.empty:
             return cb_df
 
         hybrid_df = pd.merge(cb_df, cf_df, on="institution_id", how="outer")
+        print(f"HYBRID SCORES FOR INSTITUTIONS:\n {hybrid_df}")
         # Fill missing scores with 0
         hybrid_df["cb_score"] = hybrid_df["cb_score"].fillna(0)
         hybrid_df["cf_score"] = hybrid_df["cf_score"].fillna(0)
@@ -95,9 +100,11 @@ class InstitutionHybrid:
         alpha = 0.4
         beta = 0.6
         hybrid_df["hybrid_score"] = alpha * hybrid_df["cb_score_scaled"] + beta * hybrid_df["cf_score_scaled"]
+        print(f"HYBRID SCORES FOR INSTITUTIONS AFTER SCALING:\n {hybrid_df}")
 
         # Sort and get Top-N
         top_hybrid = hybrid_df.sort_values("hybrid_score", ascending=False).head(top_n)
+        print(f"TOP HYBRID SCORE:\n {hybrid_df}")
         return top_hybrid
 
     def get_hybrid_institutions(self, user_id, top_n=10):

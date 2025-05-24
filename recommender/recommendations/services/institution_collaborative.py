@@ -10,14 +10,15 @@ from sklearn.preprocessing import LabelEncoder
 # For Data
 from institutions.models import WnInstitutionChoice, WnSelectedCourse
 
+
 class InstitutionCollaborative:
 
     def get_institution_choice(self):
-        data = WnInstitutionChoice.objects.filter(active=1).values("user_id","institution_id")
+        data = WnInstitutionChoice.objects.filter(active=1).values("user_id", "institution_id")
         return pd.DataFrame(list(data))
-    
+
     def get_selected_institution(self):
-        data = WnSelectedCourse.objects.filter(active=1).values("user_id","institution_id")
+        data = WnSelectedCourse.objects.filter(active=1).values("user_id", "institution_id")
         return pd.DataFrame(list(data))
 
     def train_svd_model(self):
@@ -52,13 +53,13 @@ class InstitutionCollaborative:
 
         # Overwrite with stronger weight if selected
         for row in selected_df.itertuples():
-            interaction_matrix[row.user_idx, row.institution_idx] = 10 
+            interaction_matrix[row.user_idx, row.institution_idx] = 10
 
         """ Apply TruncatedSVD """
         svd = TruncatedSVD(n_components=5, random_state=42)
         user_latent = svd.fit_transform(interaction_matrix)
         institution_latent = svd.components_.T
-        
+
         numpy_dir = "ml_files/numpy"
         os.makedirs(numpy_dir, exist_ok=True)
 
@@ -96,9 +97,8 @@ class InstitutionCollaborative:
             print("Model trained and latent matrices loaded.")
 
         return user_latent, institution_latent, interaction_matrix, institution_encoder, user_encoder
-    
 
-    def recommend(self,user_id,top_n = 5):
+    def recommend(self, user_id, top_n=5):
         user_latent, institution_latent, interaction_matrix, institution_encoder, user_encoder = self.load_or_train()
 
         try:
@@ -116,9 +116,10 @@ class InstitutionCollaborative:
             top_institutions = institution_encoder.inverse_transform(top_n_indices)
             top_scores = scores[top_n_indices]
             return pd.DataFrame({
-                        "institution_id": top_institutions,
-                        "cf_score": top_scores
-                    })
+                "institution_id": top_institutions,
+                "cf_score": top_scores
+            })
 
         except Exception as e:
+            print(f"collaborative error: {e}")
             return pd.DataFrame({})
