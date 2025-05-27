@@ -16,6 +16,7 @@ from institutions.models import WnInstitution
 from recommendations.services.course_hybrid import CourseHybrid
 from recommendations.services.institution_hybrid import InstitutionHybrid
 from recommendations.services.recommendation_service import RecommendationService
+from recommendations.services.search_utils import search_engine
 from recommender import settings
 from recommender.models import WnContact
 from users.models import WnUser
@@ -72,10 +73,10 @@ def search_suggestions(request):
     print(f"Query received: {query}")
 
     if query:
-        ins = RecommendationService()
-        search_data = ins.global_search(query)
+        # ins = RecommendationService()
+        # search_data = ins.global_search(query)
 
-        # search_data = search_engine.search(query)
+        search_data = search_engine.search(query)
 
         course_results = WnCourse.objects.filter(course_name__icontains=query)
 

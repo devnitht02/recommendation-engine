@@ -104,7 +104,7 @@ class InstitutionHybrid:
 
         # Sort and get Top-N
         top_hybrid = hybrid_df.sort_values("hybrid_score", ascending=False).head(top_n)
-        print(f"TOP HYBRID SCORE:\n {hybrid_df}")
+        print(f"TOP N HYBRID RECOMMENDATIONS FOR INSTITUTIONS:\n {top_hybrid}")
         return top_hybrid
 
     def get_hybrid_institutions(self, user_id, top_n=10):
