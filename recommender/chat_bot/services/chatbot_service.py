@@ -5,6 +5,7 @@ from qdrant_client.models import VectorParams, Distance, PointStruct
 from groq import Groq
 import pandas as pd
 from transformers import pipeline
+from recommender.settings import CHATBOT_APIKEY
 import uuid
 
 model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
@@ -63,7 +64,7 @@ class ChatBotService:
     def __llm(self, prompt):
         groq_client = Groq(
             # The default api key
-            api_key="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",
+            api_key=CHATBOT_APIKEY,
         )
 
         messages = [

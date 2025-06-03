@@ -31,6 +31,7 @@ GOOGLE_REDIRECT_URI = config.get("google", "GOOGLE_REDIRECT_URI", fallback=None)
 COMPRESS_ROOT = os.path.join(BASE_DIR, 'static')
 SMTP_EMAIL = config.get('EMAIL', 'SMTP_EMAIL')
 SMTP_PASSWORD = config.get('EMAIL', 'SMTP_PASSWORD')
+CHATBOT_APIKEY = config.get('groq', 'CHATBOT_APIKEY')
 
 ALLOWED_HOSTS = ['*']
 
